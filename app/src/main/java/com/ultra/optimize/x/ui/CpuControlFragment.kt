@@ -47,15 +47,18 @@ class CpuControlFragment : Fragment() {
     private fun setupGovernors() {
         if (!RootManager.isRooted()) {
             binding.rvGovernors.visibility = View.GONE
+            binding.tvLabelGovernors.text = "Root Access Required for Governor Control"
             return
         }
 
         val governors = CpuManager.getAvailableGovernors()
         val currentGovernor = RootManager.runCommand("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor").trim()
+        binding.tvCurrentGovernor.text = "Current Governor: $currentGovernor"
         
         binding.rvGovernors.layoutManager = LinearLayoutManager(requireContext())
         binding.rvGovernors.adapter = GovernorAdapter(governors, currentGovernor) { governor ->
             CpuManager.setGovernor(governor)
+            binding.tvCurrentGovernor.text = "Current Governor: $governor"
             Toast.makeText(requireContext(), "Governor set to $governor", Toast.LENGTH_SHORT).show()
         }
     }

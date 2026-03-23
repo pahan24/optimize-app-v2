@@ -1,0 +1,28 @@
+{
+  "project_info": {
+    "project_number": "433122361304",
+    "project_id": "gen-lang-client-0329199730",
+    "storage_bucket": "gen-lang-client-0329199730.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433122361304:android:51ff87891c93ce193b7cad",
+        "android_client_info": {
+          "package_name": "com.ultra.optimize.x"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "AIzaSyDULppD8aguDgmDTDwdtgZKgfftLSi4IUM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

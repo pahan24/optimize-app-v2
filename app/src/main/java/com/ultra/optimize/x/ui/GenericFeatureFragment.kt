@@ -35,6 +35,21 @@ class GenericFeatureFragment : Fragment() {
             binding.btnApply.text = "APPLYING..."
             
             Thread {
+                // Execute root commands based on feature
+                if (com.ultra.optimize.x.utils.RootManager.isRooted()) {
+                    when (title) {
+                        "Battery Saver" -> {
+                            com.ultra.optimize.x.utils.RootManager.runCommand("settings put global low_power 1")
+                        }
+                        "Network Optimizer" -> {
+                            com.ultra.optimize.x.utils.RootManager.runCommand("sysctl -w net.ipv4.tcp_fastopen=3")
+                        }
+                        "Game Boost" -> {
+                            com.ultra.optimize.x.utils.RootManager.runCommand("am set-standby-bucket com.ultra.optimize.x active")
+                        }
+                    }
+                }
+                
                 Thread.sleep(1500)
                 activity?.runOnUiThread {
                     binding.btnApply.isEnabled = true

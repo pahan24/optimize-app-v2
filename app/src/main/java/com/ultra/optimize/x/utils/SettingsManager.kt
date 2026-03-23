@@ -39,5 +39,8 @@ class SettingsManager(context: Context) {
             val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
             prefs.edit().putBoolean(key, value).apply()
         }
+
+        fun isLoggedIn(context: Context): Boolean = getSetting(context, "is_logged_in", false)
+        fun setLoggedIn(context: Context, loggedIn: Boolean) = saveSetting(context, "is_logged_in", loggedIn)
     }
 }
