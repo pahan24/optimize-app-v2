@@ -429,6 +429,15 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_fps_meter"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" />
+                    <TextView style="@style/FeatureTextStyle" android:text="FPS Meter" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_game_tools"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">

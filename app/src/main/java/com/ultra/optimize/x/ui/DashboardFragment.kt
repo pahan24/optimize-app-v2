@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.ultra.optimize.x.R
 import com.ultra.optimize.x.databinding.FragmentDashboardBinding
 import com.ultra.optimize.x.utils.*
