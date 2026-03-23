@@ -460,7 +460,7 @@
                 android:id="@+id/card_free_fire"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_compass" app:tint="@color/accent_red" />
+                    <androidx.appcompat.widget.AppCompatImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_compass" app:tint="@color/accent_red" />
                     <TextView style="@style/FeatureTextStyle" android:text="Free Fire" android:textColor="@color/accent_red" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
