@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Ultra Optimize X</string>
+    <string name="boost">BOOST</string>
+    <string name="ram_usage">RAM Usage</string>
+    <string name="cpu_usage">CPU Usage</string>
+    <string name="temperature">Temperature</string>
+    <string name="root_access">Root Access</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="device_info">Device Info</string>
+    <string name="game_boost">Game Boost</string>
+    <string name="storage_cleaner">Storage Cleaner</string>
+    <string name="cpu_control">CPU Control</string>
+    <string name="gpu_info">GPU Info</string>
+    <string name="battery_saver">Battery Saver</string>
+    <string name="app_manager">App Manager</string>
+    <string name="network_optimizer">Network Opt</string>
+    <string name="display_tweaks">Display Tweaks</string>
+    <string name="kernel_tweaks">Kernel Tweaks</string>
+    <string name="system_debloater">Debloater</string>
+    <string name="dns_changer">DNS Changer</string>
+    <string name="charging_booster">Charge Boost</string>
+    <string name="auto_clean">Auto Clean</string>
+    <string name="lag_fixer">Lag Fixer</string>
+    <string name="lag_fixer_desc">Reduce system latency and UI lag by optimizing animation scales and background processes.</string>
+    <string name="apply_lag_fix">FIX SYSTEM LAG</string>
+    <string name="free_fire_optimizer">Free Fire Optimizer</string>
+    <string name="ff_desc">Optimize system resources, touch sensitivity, and network for the ultimate Free Fire experience.</string>
+    <string name="apply_ff_boost">BOOST FREE FIRE</string>
+    <string name="ff_boosted">Free Fire optimized for maximum performance!</string>
+    <string name="fps_meter_title">FPS Meter</string>
+    <string name="fps_meter_desc">Display real-time FPS overlay on your screen to monitor game performance.</string>
+    <string name="crosshair_title">Crosshair Pro</string>
+    <string name="crosshair_desc">Add a custom crosshair overlay for better aiming in FPS games like Free Fire.</string>
+</resources>

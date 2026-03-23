@@ -1,0 +1,58 @@
+package com.ultra.optimize.x.ui
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.ultra.optimize.x.databinding.FragmentGenericFeatureBinding
+
+class GenericFeatureFragment : Fragment() {
+    private var _binding: FragmentGenericFeatureBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentGenericFeatureBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        
+        val title = arguments?.getString("featureTitle") ?: "Feature"
+        val settingsManager = com.ultra.optimize.x.utils.SettingsManager(requireContext())
+        val featureKey = title.lowercase().replace(" ", "_") + "_enabled"
+
+        binding.tvFeatureTitle.text = title
+        binding.btnBack.setOnClickListener { findNavController().popBackStack() }
+        
+        binding.switchFeature.isChecked = settingsManager.isFeatureEnabled(featureKey)
+
+        binding.btnApply.setOnClickListener {
+            binding.btnApply.isEnabled = false
+            binding.btnApply.text = "APPLYING..."
+            
+            Thread {
+                Thread.sleep(1500)
+                activity?.runOnUiThread {
+                    binding.btnApply.isEnabled = true
+                    binding.btnApply.text = "APPLIED"
+                    Toast.makeText(requireContext(), "$title Tweaks Applied!", Toast.LENGTH_SHORT).show()
+                }
+            }.start()
+        }
+
+        binding.switchFeature.setOnCheckedChangeListener { _, isChecked ->
+            settingsManager.setFeatureEnabled(featureKey, isChecked)
+            val status = if (isChecked) "Enabled" else "Disabled"
+            Toast.makeText(requireContext(), "$title $status", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}

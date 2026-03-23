@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dashboardFragment">
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.ultra.optimize.x.ui.DashboardFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_dashboard_to_settings"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_gameBoost"
+            app:destination="@id/gameBoostFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_cpuControl"
+            app:destination="@id/cpuControlFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_cleaner"
+            app:destination="@id/cleanerFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_thermalControl"
+            app:destination="@id/thermalControlFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_batterySaver"
+            app:destination="@id/genericFeatureFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_appManager"
+            app:destination="@id/genericFeatureFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_networkOpt"
+            app:destination="@id/genericFeatureFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_displayTweaks"
+            app:destination="@id/genericFeatureFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_kernelTweaks"
+            app:destination="@id/genericFeatureFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_debloater"
+            app:destination="@id/genericFeatureFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_dnsChanger"
+            app:destination="@id/genericFeatureFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_chargeBoost"
+            app:destination="@id/genericFeatureFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_autoClean"
+            app:destination="@id/genericFeatureFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_fpsMeter"
+            app:destination="@id/genericFeatureFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_lagFixer"
+            app:destination="@id/lagFixerFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_freeFire"
+            app:destination="@id/freeFireFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_gameTools"
+            app:destination="@id/gameToolsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/genericFeatureFragment"
+        android:name="com.ultra.optimize.x.ui.GenericFeatureFragment"
+        android:label="Feature"
+        tools:layout="@layout/fragment_generic_feature">
+        <argument
+            android:name="featureTitle"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.ultra.optimize.x.ui.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/gameBoostFragment"
+        android:name="com.ultra.optimize.x.ui.GameBoostFragment"
+        android:label="Game Boost"
+        tools:layout="@layout/fragment_game_boost" />
+
+    <fragment
+        android:id="@+id/cpuControlFragment"
+        android:name="com.ultra.optimize.x.ui.CpuControlFragment"
+        android:label="CPU Control"
+        tools:layout="@layout/fragment_cpu_control" />
+
+    <fragment
+        android:id="@+id/cleanerFragment"
+        android:name="com.ultra.optimize.x.ui.CleanerFragment"
+        android:label="Cleaner"
+        tools:layout="@layout/fragment_cleaner" />
+
+    <fragment
+        android:id="@+id/thermalControlFragment"
+        android:name="com.ultra.optimize.x.ui.ThermalControlFragment"
+        android:label="Thermal Control"
+        tools:layout="@layout/fragment_thermal_control" />
+
+    <fragment
+        android:id="@+id/lagFixerFragment"
+        android:name="com.ultra.optimize.x.ui.LagFixerFragment"
+        android:label="Lag Fixer"
+        tools:layout="@layout/fragment_lag_fixer" />
+
+    <fragment
+        android:id="@+id/freeFireFragment"
+        android:name="com.ultra.optimize.x.ui.FreeFireFragment"
+        android:label="Free Fire Optimizer"
+        tools:layout="@layout/fragment_free_fire" />
+
+    <fragment
+        android:id="@+id/gameToolsFragment"
+        android:name="com.ultra.optimize.x.ui.GameToolsFragment"
+        android:label="Game Tools"
+        tools:layout="@layout/fragment_game_tools" />
+
+</navigation>
