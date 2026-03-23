@@ -9,7 +9,11 @@ import android.os.Looper
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ultra.optimize.x.databinding.FragmentCpuControlBinding
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.ultra.optimize.x.adapter.GovernorAdapter
 import com.ultra.optimize.x.utils.CpuManager
+import com.ultra.optimize.x.utils.RootManager
 import com.ultra.optimize.x.utils.Utils
 
 class CpuControlFragment : Fragment() {
@@ -36,7 +40,24 @@ class CpuControlFragment : Fragment() {
         binding.tvCpuModel.text = "CPU: ${Utils.getCpuInfo()}"
         binding.tvCores.text = "Cores: ${Runtime.getRuntime().availableProcessors()}"
 
+        setupGovernors()
         handler.post(updateRunnable)
+    }
+
+    private fun setupGovernors() {
+        if (!RootManager.isRooted()) {
+            binding.rvGovernors.visibility = View.GONE
+            return
+        }
+
+        val governors = CpuManager.getAvailableGovernors()
+        val currentGovernor = RootManager.runCommand("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor").trim()
+        
+        binding.rvGovernors.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvGovernors.adapter = GovernorAdapter(governors, currentGovernor) { governor ->
+            CpuManager.setGovernor(governor)
+            Toast.makeText(requireContext(), "Governor set to $governor", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun updateStats() {

@@ -41,11 +41,7 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        val deviceName = com.ultra.optimize.x.utils.Utils.getDeviceName()
-        val androidVer = com.ultra.optimize.x.utils.Utils.getAndroidVersion()
-        binding.tvDeviceName.text = "Device: $deviceName"
-        binding.tvAndroidVersion.text = androidVer
-
+        setupDeviceInfo()
         checkRoot()
         setupListeners()
         

@@ -33,6 +33,11 @@ class ThermalControlFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnBack.setOnClickListener { findNavController().popBackStack() }
         
+        binding.switchCoolDown.isChecked = ThermalManager.isAutoCoolDownEnabled(requireContext())
+        binding.switchCoolDown.setOnCheckedChangeListener { _, isChecked ->
+            ThermalManager.setAutoCoolDownEnabled(requireContext(), isChecked)
+        }
+
         handler.post(updateRunnable)
     }
 

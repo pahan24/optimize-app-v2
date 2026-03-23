@@ -1,6 +1,7 @@
 package com.ultra.optimize.x.utils
 
 import java.io.File
+import com.ultra.optimize.x.utils.SettingsManager
 
 object ThermalManager {
 
@@ -36,5 +37,13 @@ object ThermalManager {
     fun getBatteryCurrent(context: android.content.Context): Int {
         val batteryManager = context.getSystemService(android.content.Context.BATTERY_SERVICE) as android.os.BatteryManager
         return batteryManager.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CURRENT_NOW) / 1000 // Convert to mA
+    }
+
+    fun isAutoCoolDownEnabled(context: android.content.Context): Boolean {
+        return SettingsManager.getSetting(context, "auto_cool_down")
+    }
+
+    fun setAutoCoolDownEnabled(context: android.content.Context, enabled: Boolean) {
+        SettingsManager.saveSetting(context, "auto_cool_down", enabled)
     }
 }
