@@ -151,9 +151,10 @@ if $cygwin ; then
 fi
 
 # Collect all arguments for the java command, following the shell quoting and substitution rules
-set -- "$@" \
+set -- \
     "-Dorg.gradle.appname=$APP_BASE_NAME" \
     -classpath "$CLASSPATH" \
-    org.gradle.wrapper.GradleWrapperMain
+    org.gradle.wrapper.GradleWrapperMain \
+    "$@"
 
 eval exec '"$JAVACMD"' '"$@"'
