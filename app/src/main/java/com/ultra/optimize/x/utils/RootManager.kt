@@ -40,6 +40,10 @@ object RootManager {
         return output
     }
 
+    fun execute(command: String) {
+        runCommand(command)
+    }
+
     fun requestRoot(): Boolean {
         return try {
             val process = Runtime.getRuntime().exec("su")

@@ -29,5 +29,15 @@ class SettingsManager(context: Context) {
         const val KEY_AUTO_CLEAN = "auto_clean_enabled"
         const val KEY_FPS_METER = "fps_meter_enabled"
         const val KEY_COOL_DOWN = "cool_down_enabled"
+
+        fun getSetting(context: Context, key: String, defaultValue: Boolean = false): Boolean {
+            val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
+            return prefs.getBoolean(key, defaultValue)
+        }
+
+        fun saveSetting(context: Context, key: String, value: Boolean) {
+            val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
+            prefs.edit().putBoolean(key, value).apply()
+        }
     }
 }
