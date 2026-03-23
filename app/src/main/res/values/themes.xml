@@ -49,4 +49,12 @@
         <item name="android:textSize">10sp</item>
         <item name="android:gravity">center</item>
     </style>
+
+    <style name="NeonButtonStyle" parent="Widget.Material3.Button">
+        <item name="android:textColor">@color/black</item>
+        <item name="backgroundTint">@color/neon_blue</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
 </resources>
