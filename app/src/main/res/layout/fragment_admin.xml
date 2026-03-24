@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        app:cardBackgroundColor="@color/bg_card"
+        app:cardBackgroundColor="@color/card_bg"
         app:cardCornerRadius="12dp"
         app:strokeColor="@color/accent_orange"
         app:strokeWidth="1dp">
