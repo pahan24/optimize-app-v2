@@ -42,8 +42,8 @@ class LoginFragment : Fragment() {
             val username = binding.etUsername.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
 
-            if (username != "ultrax") {
-                binding.tilUsername.error = "Invalid username"
+            if (username.isEmpty()) {
+                binding.tilUsername.error = "Enter username"
                 return
             }
 

@@ -24,7 +24,9 @@ import {
   Moon,
   User as UserIcon,
   KeyRound,
-  AlertCircle
+  AlertCircle,
+  Check,
+  X
 } from 'lucide-react';
 import { auth, logOut, onAuthStateChanged, User, db, signInWithGoogle } from './firebase';
 import { getDoc, updateDoc, doc, setDoc, collection, onSnapshot, query, orderBy, addDoc, deleteDoc } from 'firebase/firestore';
@@ -1295,6 +1297,14 @@ function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+
+  useEffect(() => {
+    if (feedback) {
+      const timer = setTimeout(() => setFeedback(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [feedback]);
 
   useEffect(() => {
     const q = query(collection(db, 'sessions'), orderBy('createdAt', 'desc'));
@@ -1315,7 +1325,9 @@ function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }
         status: currentStatus === 'active' ? 'expired' : 'active',
         lastActive: new Date().toISOString()
       });
+      setFeedback({ message: `Session ${currentStatus === 'active' ? 'terminated' : 'reactivated'}`, type: 'success' });
     } catch (error) {
+      setFeedback({ message: 'Update failed', type: 'error' });
       handleFirestoreError(error, OperationType.UPDATE, `sessions/${id}`);
     }
   };
@@ -1325,7 +1337,9 @@ function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }
       const sessionRef = doc(db, 'sessions', id);
       await deleteDoc(sessionRef);
       setConfirmDelete(null);
+      setFeedback({ message: 'Session deleted permanently', type: 'success' });
     } catch (error) {
+      setFeedback({ message: 'Deletion failed', type: 'error' });
       handleFirestoreError(error, OperationType.DELETE, `sessions/${id}`);
     }
   };
@@ -1337,8 +1351,9 @@ function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }
         isUsed: false,
         createdAt: new Date().toISOString()
       });
-      alert('Test OTP (123456) seeded successfully!');
+      setFeedback({ message: 'Test OTP (123456) seeded!', type: 'success' });
     } catch (error) {
+      setFeedback({ message: 'Seeding failed', type: 'error' });
       handleFirestoreError(error, OperationType.WRITE, 'otps/123456');
     }
   };
@@ -1367,8 +1382,22 @@ function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }
       <div className={`w-full rounded-[2.5rem] p-6 border flex-1 overflow-hidden flex flex-col relative z-10 transition-colors ${theme === 'dark' ? 'bg-[#1E293B] border-white/5 shadow-2xl' : 'bg-white border-slate-100 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)]'}`}>
         <div className="flex items-center justify-between mb-6">
           <span className={`text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Active Connections</span>
-          <div className="px-2 py-1 bg-[#10B981]/10 rounded-md">
-            <span className="text-[8px] font-bold text-[#10B981]">{sessions.filter(s => s.status === 'active').length} ONLINE</span>
+          <div className="flex items-center gap-2">
+            <AnimatePresence>
+              {feedback && (
+                <motion.span
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  className={`text-[8px] font-bold uppercase tracking-widest ${feedback.type === 'success' ? 'text-[#10B981]' : 'text-red-500'}`}
+                >
+                  {feedback.message}
+                </motion.span>
+              )}
+            </AnimatePresence>
+            <div className="px-2 py-1 bg-[#10B981]/10 rounded-md">
+              <span className="text-[8px] font-bold text-[#10B981]">{sessions.filter(s => s.status === 'active').length} ONLINE</span>
+            </div>
           </div>
         </div>
 
@@ -1405,13 +1434,13 @@ function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }
                         onClick={() => deleteSession(sess.id)}
                         className="p-1.5 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-all"
                       >
-                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <Check className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => setConfirmDelete(null)}
                         className={`p-1.5 rounded-lg transition-all ${theme === 'dark' ? 'bg-white/10 text-white' : 'bg-slate-200 text-slate-900'}`}
                       >
-                        <Smartphone className="w-3.5 h-3.5 rotate-180" />
+                        <X className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   ) : (
