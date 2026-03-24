@@ -38,6 +38,13 @@ class SettingsFragment : Fragment() {
             settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_ROOT_MODE, isChecked)
         }
 
+        if (com.ultra.optimize.x.utils.SettingsManager.isAdmin(requireContext())) {
+            binding.btnAdminPanel.visibility = View.VISIBLE
+            binding.btnAdminPanel.setOnClickListener {
+                findNavController().navigate(R.id.action_settings_to_admin)
+            }
+        }
+
         binding.btnLogout.setOnClickListener {
             com.ultra.optimize.x.utils.SettingsManager.setLoggedIn(requireContext(), false)
             findNavController().navigate(R.id.action_settings_to_login)

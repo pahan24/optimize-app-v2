@@ -46,10 +46,6 @@ class DashboardFragment : Fragment() {
         setupListeners()
         animateEntrance()
         
-        if (SettingsManager.isAdmin(requireContext())) {
-            binding.cardAdminPanel.visibility = View.VISIBLE
-        }
-        
         handler.post(updateRunnable)
     }
 
@@ -75,7 +71,6 @@ class DashboardFragment : Fragment() {
             binding.cardGameTools,
             binding.cardSettings,
             binding.cardLagFixer,
-            binding.cardAdminPanel,
             binding.cardFreeFire
         )
 
@@ -188,10 +183,6 @@ class DashboardFragment : Fragment() {
 
         binding.cardLagFixer.setOnClickListener {
             findNavController().navigate(R.id.action_dashboard_to_lagFixer)
-        }
-
-        binding.cardAdminPanel.setOnClickListener {
-            findNavController().navigate(R.id.action_dashboard_to_admin)
         }
 
         binding.cardFreeFire.setOnClickListener {

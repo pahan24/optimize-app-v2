@@ -438,6 +438,24 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_lag_fixer"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_send" />
+                    <TextView style="@style/FeatureTextStyle" android:text="@string/lag_fixer" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_free_fire"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <androidx.appcompat.widget.AppCompatImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_compass" app:tint="@color/accent_red" />
+                    <TextView style="@style/FeatureTextStyle" android:text="Free Fire" android:textColor="@color/accent_red" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_game_tools"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
@@ -452,35 +470,6 @@
                 <LinearLayout style="@style/FeatureContentStyle">
                     <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_set_as" />
                     <TextView style="@style/FeatureTextStyle" android:text="Settings" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_lag_fixer"
-                style="@style/FeatureCardStyle">
-                <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_send" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/lag_fixer" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_admin_panel"
-                style="@style/FeatureCardStyle"
-                android:visibility="gone">
-                <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_info_details" app:tint="@color/accent_orange" />
-                    <TextView style="@style/FeatureTextStyle" android:text="Admin Panel" android:textColor="@color/accent_orange" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Row 7 -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_free_fire"
-                style="@style/FeatureCardStyle">
-                <LinearLayout style="@style/FeatureContentStyle">
-                    <androidx.appcompat.widget.AppCompatImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_compass" app:tint="@color/accent_red" />
-                    <TextView style="@style/FeatureTextStyle" android:text="Free Fire" android:textColor="@color/accent_red" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

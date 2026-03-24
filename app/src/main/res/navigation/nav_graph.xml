@@ -93,9 +93,6 @@
         <action
             android:id="@+id/action_dashboard_to_gameTools"
             app:destination="@id/gameToolsFragment" />
-        <action
-            android:id="@+id/action_dashboard_to_admin"
-            app:destination="@id/adminFragment" />
     </fragment>
 
     <fragment
@@ -118,6 +115,9 @@
             app:destination="@id/loginFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settings_to_admin"
+            app:destination="@id/adminFragment" />
     </fragment>
 
     <fragment
