@@ -79,6 +79,16 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_logout"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="LOGOUT"
+                android:textColor="@color/accent_red"
+                app:rippleColor="@color/accent_red" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

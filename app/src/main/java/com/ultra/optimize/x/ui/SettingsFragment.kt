@@ -36,6 +36,11 @@ class SettingsFragment : Fragment() {
         binding.switchRootMode.setOnCheckedChangeListener { _, isChecked ->
             settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_ROOT_MODE, isChecked)
         }
+
+        binding.btnLogout.setOnClickListener {
+            com.ultra.optimize.x.utils.SettingsManager.setLoggedIn(requireContext(), false)
+            findNavController().navigate(R.id.action_settings_to_login)
+        }
     }
 
     override fun onDestroyView() {

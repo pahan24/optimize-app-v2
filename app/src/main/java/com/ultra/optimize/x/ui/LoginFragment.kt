@@ -86,7 +86,7 @@ class LoginFragment : Fragment() {
                 if (document.exists()) {
                     val isUsed = document.getBoolean("isUsed") ?: true
                     if (!isUsed) {
-                        // Mark as used
+                        // Mark as used immediately
                         db.collection("otps").document(password)
                             .update("isUsed", true)
                             .addOnSuccessListener {
@@ -97,10 +97,10 @@ class LoginFragment : Fragment() {
                                 showError("Login failed. Please try again.")
                             }
                     } else {
-                        showError("This password has already been used.")
+                        showError("This OTP has already been used.")
                     }
                 } else {
-                    showError("Invalid password.")
+                    showError("Invalid OTP password.")
                 }
             }
             .addOnFailureListener {

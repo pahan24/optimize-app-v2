@@ -21,13 +21,74 @@ import {
   Target,
   Crosshair,
   Sun,
-  Moon
+  Moon,
+  User as UserIcon,
+  KeyRound,
+  AlertCircle
 } from 'lucide-react';
-import { auth, signInWithGoogle, logOut, onAuthStateChanged, User } from './firebase';
+import { auth, logOut, onAuthStateChanged, User, db, signInWithGoogle } from './firebase';
+import { getDoc, updateDoc, doc, setDoc, collection, onSnapshot, query, orderBy, addDoc, deleteDoc } from 'firebase/firestore';
+
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId: string | undefined;
+    email: string | null | undefined;
+    emailVerified: boolean | undefined;
+    isAnonymous: boolean | undefined;
+    tenantId: string | null | undefined;
+    providerInfo: {
+      providerId: string;
+      displayName: string | null;
+      email: string | null;
+      photoUrl: string | null;
+    }[];
+  }
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      emailVerified: auth.currentUser?.emailVerified,
+      isAnonymous: auth.currentUser?.isAnonymous,
+      tenantId: auth.currentUser?.tenantId,
+      providerInfo: auth.currentUser?.providerData.map(provider => ({
+        providerId: provider.providerId,
+        displayName: provider.displayName,
+        email: provider.email,
+        photoUrl: provider.photoURL
+      })) || []
+    },
+    operationType,
+    path
+  }
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [username, setUsername] = useState('');
+  const [otp, setOtp] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(localStorage.getItem('sessionId'));
+  const [sessionStatus, setSessionStatus] = useState<'active' | 'expired' | null>(null);
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [isBoosting, setIsBoosting] = useState(false);
@@ -36,6 +97,7 @@ export default function App() {
   const [temp, setTemp] = useState(38);
   const [isRooted, setIsRooted] = useState(true);
   const [selectedFeature, setSelectedFeature] = useState('');
+  const isAdmin = user?.email === 'bpahan685@gmail.com';
   
   // Simulated Persistence
   const [featureStates, setFeatureStates] = useState<Record<string, boolean>>({
@@ -74,6 +136,36 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
+  // Session Monitor
+  useEffect(() => {
+    if (!sessionId) return;
+
+    const sessionRef = doc(db, 'sessions', sessionId);
+    const unsubscribe = onSnapshot(sessionRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setSessionStatus(data.status);
+        if (data.status === 'expired') {
+          // Remote logout
+          setUser(null);
+          setSessionId(null);
+          localStorage.removeItem('sessionId');
+          setCurrentPage('login');
+        }
+      } else {
+        // Session document deleted
+        setUser(null);
+        setSessionId(null);
+        localStorage.removeItem('sessionId');
+        setCurrentPage('login');
+      }
+    }, (error) => {
+      handleFirestoreError(error, OperationType.GET, `sessions/${sessionId}`);
+    });
+
+    return () => unsubscribe();
+  }, [sessionId]);
+
   // Simulate real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
@@ -84,6 +176,75 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  const handleLogin = async () => {
+    if (!username.trim()) {
+      setLoginError('Enter Username');
+      return;
+    }
+    if (otp.length !== 6) {
+      setLoginError('Enter 6-digit OTP');
+      return;
+    }
+
+    setIsLoggingIn(true);
+    setLoginError('');
+
+    try {
+      const otpDocRef = doc(db, 'otps', otp);
+      let otpDocSnap;
+      try {
+        otpDocSnap = await getDoc(otpDocRef);
+      } catch (error) {
+        handleFirestoreError(error, OperationType.GET, `otps/${otp}`);
+      }
+
+      if (otpDocSnap && otpDocSnap.exists()) {
+        const otpData = otpDocSnap.data();
+        if (otpData && !otpData.isUsed) {
+          try {
+            await updateDoc(otpDocRef, { isUsed: true });
+            
+            // Create Session
+            const sessionData = {
+              userId: 'web-preview-user',
+              username: username,
+              status: 'active',
+              createdAt: new Date().toISOString(),
+              lastActive: new Date().toISOString()
+            };
+            
+            const sessionCollection = collection(db, 'sessions');
+            const sessionDocRef = await addDoc(sessionCollection, sessionData);
+            const newSessionId = sessionDocRef.id;
+            
+            setSessionId(newSessionId);
+            localStorage.setItem('sessionId', newSessionId);
+            setSessionStatus('active');
+          } catch (error) {
+            console.error('Session creation failed:', error);
+            handleFirestoreError(error, OperationType.WRITE, `sessions/new`);
+          }
+          // For web preview, we simulate a logged in user
+          setUser({ uid: 'web-preview-user', email: 'ultrax@optimize.x', displayName: 'UltraX User' } as any);
+        } else {
+          setLoginError('OTP already used');
+        }
+      } else {
+        setLoginError('Invalid OTP password');
+      }
+    } catch (error) {
+      if (error instanceof Error && error.message.startsWith('{')) {
+        // This is our structured error
+        setLoginError('Permission Denied');
+      } else {
+        setLoginError('Connection Error');
+      }
+      console.error(error);
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
   const handleBoost = () => {
     setIsBoosting(true);
     setTimeout(() => {
@@ -91,6 +252,53 @@ export default function App() {
       setRamUsage(42);
       setCpuUsage(15);
     }, 2000);
+  };
+
+  const handleLogout = async () => {
+    if (sessionId) {
+      try {
+        const sessionRef = doc(db, 'sessions', sessionId);
+        await updateDoc(sessionRef, { status: 'expired' });
+      } catch (error) {
+        console.error('Failed to expire session on logout:', error);
+      }
+    }
+    await logOut();
+    setUser(null);
+    setCurrentPage('dashboard');
+    setSessionId(null);
+    localStorage.removeItem('sessionId');
+  };
+
+  const handleAdminLogin = async () => {
+    try {
+      setIsLoggingIn(true);
+      const result = await signInWithGoogle();
+      if (result.user.email === 'bpahan685@gmail.com') {
+        // Create Session for Admin
+        const sessionData = {
+          userId: result.user.uid,
+          username: result.user.displayName || 'Admin',
+          status: 'active',
+          createdAt: new Date().toISOString(),
+          lastActive: new Date().toISOString()
+        };
+        const sessionCollection = collection(db, 'sessions');
+        const sessionDocRef = await addDoc(sessionCollection, sessionData);
+        setSessionId(sessionDocRef.id);
+        localStorage.setItem('sessionId', sessionDocRef.id);
+        setSessionStatus('active');
+        setCurrentPage('dashboard');
+      } else {
+        await logOut();
+        setLoginError('Access Denied: Admin Only');
+      }
+    } catch (error) {
+      console.error('Admin login failed:', error);
+      setLoginError('Admin Login Failed');
+    } finally {
+      setIsLoggingIn(false);
+    }
   };
 
   const renderPage = () => {
@@ -102,11 +310,12 @@ export default function App() {
           onToggle={toggleFeature} 
           theme={theme}
           onToggleTheme={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
-          onLogout={async () => {
-            await logOut();
-            setCurrentPage('dashboard');
-          }}
+          onLogout={handleLogout}
+          isAdmin={isAdmin}
+          onOpenAdmin={() => setCurrentPage('admin')}
         />;
+      case 'admin':
+        return <AdminDashboard onBack={() => setCurrentPage('settings')} theme={theme} />;
       case 'game-boost':
         return <GameBoostPage 
           onBack={() => setCurrentPage('dashboard')} 
@@ -472,18 +681,80 @@ export default function App() {
                 </p>
               </motion.div>
               
-              <motion.button
+              <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6 }}
-                whileHover={{ scale: 1.02, boxShadow: '0 20px 40px rgba(0,0,0,0.05)' }}
-                whileTap={{ scale: 0.98 }}
-                onClick={signInWithGoogle}
-                className={`w-full py-5 rounded-2xl font-black flex items-center justify-center gap-4 shadow-2xl tracking-tight ${theme === 'dark' ? 'bg-white text-slate-900' : 'bg-slate-900 text-white'}`}
+                className="w-full space-y-4"
               >
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-6 h-6" alt="Google" />
-                CONTINUE WITH GOOGLE
-              </motion.button>
+                <div className="relative">
+                  <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className={`w-full pl-12 pr-4 py-4 rounded-2xl font-bold outline-none transition-all ${theme === 'dark' ? 'bg-slate-800/50 text-white focus:bg-slate-800' : 'bg-slate-100 text-slate-900 focus:bg-slate-200'}`}
+                  />
+                </div>
+                
+                <div className="relative">
+                  <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="6-Digit OTP"
+                    maxLength={6}
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                    className={`w-full pl-12 pr-4 py-4 rounded-2xl font-bold outline-none transition-all ${theme === 'dark' ? 'bg-slate-800/50 text-white focus:bg-slate-800' : 'bg-slate-100 text-slate-900 focus:bg-slate-200'}`}
+                  />
+                </div>
+
+                {loginError && (
+                  <motion.div 
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="flex items-center gap-2 text-red-500 text-xs font-bold px-2"
+                  >
+                    <AlertCircle className="w-4 h-4" />
+                    {loginError}
+                  </motion.div>
+                )}
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleLogin}
+                  disabled={isLoggingIn}
+                  className={`w-full py-5 rounded-2xl font-black flex items-center justify-center gap-4 shadow-2xl tracking-tight transition-all ${isLoggingIn ? 'opacity-70 cursor-not-allowed' : ''} ${theme === 'dark' ? 'bg-[#38BDF8] text-white hover:bg-[#0EA5E9]' : 'bg-slate-900 text-white hover:bg-slate-800'}`}
+                >
+                  {isLoggingIn ? (
+                    <Activity className="w-6 h-6 animate-spin" />
+                  ) : (
+                    <>
+                      <LogIn className="w-6 h-6" />
+                      AUTHENTICATE
+                    </>
+                  )}
+                </motion.button>
+
+                <div className="flex items-center gap-4 py-2">
+                  <div className={`h-[1px] flex-1 ${theme === 'dark' ? 'bg-slate-800' : 'bg-slate-100'}`} />
+                  <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">OR</span>
+                  <div className={`h-[1px] flex-1 ${theme === 'dark' ? 'bg-slate-800' : 'bg-slate-100'}`} />
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleAdminLogin}
+                  disabled={isLoggingIn}
+                  className={`w-full py-4 rounded-2xl font-black flex items-center justify-center gap-3 border transition-all ${theme === 'dark' ? 'bg-white/5 border-white/10 text-white hover:bg-white/10' : 'bg-white border-slate-200 text-slate-900 hover:bg-slate-50'}`}
+                >
+                  <ShieldCheck className="w-5 h-5 text-[#38BDF8]" />
+                  <span className="text-xs uppercase tracking-widest">Admin Access</span>
+                </motion.button>
+              </motion.div>
               
               <motion.div
                 initial={{ opacity: 0 }}
@@ -503,7 +774,7 @@ export default function App() {
                   </div>
                 </div>
                 <p className="text-[9px] text-slate-400 text-center uppercase tracking-[0.2em] font-bold mt-4">
-                  Secure Authentication via Firebase
+                  Secure OTP Authentication
                 </p>
               </motion.div>
             </div>
@@ -532,7 +803,16 @@ export default function App() {
   );
 }
 
-function SettingsPage({ onBack, states, onToggle, theme, onToggleTheme, onLogout }: { onBack: () => void, states: any, onToggle: (k: string) => void, theme: string, onToggleTheme: () => void, onLogout: () => void }) {
+function SettingsPage({ onBack, states, onToggle, theme, onToggleTheme, onLogout, isAdmin, onOpenAdmin }: { 
+  onBack: () => void, 
+  states: any, 
+  onToggle: (k: string) => void, 
+  theme: string, 
+  onToggleTheme: () => void, 
+  onLogout: () => void,
+  isAdmin: boolean,
+  onOpenAdmin: () => void
+}) {
   return (
     <motion.div 
       initial={{ opacity: 0, x: 50 }}
@@ -544,6 +824,20 @@ function SettingsPage({ onBack, states, onToggle, theme, onToggleTheme, onLogout
         <h2 className={`text-xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Settings</h2>
       </div>
       <div className="space-y-4 flex-1">
+        {isAdmin && (
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onOpenAdmin}
+            className={`w-full p-5 rounded-2xl border flex items-center gap-4 transition-all ${theme === 'dark' ? 'bg-[#38BDF8]/10 border-[#38BDF8]/30 text-[#38BDF8]' : 'bg-[#38BDF8]/5 border-[#38BDF8]/20 text-[#38BDF8]'}`}
+          >
+            <ShieldCheck className="w-6 h-6" />
+            <div className="flex flex-col items-start">
+              <span className="text-sm font-bold uppercase tracking-tight">Admin Control</span>
+              <span className="text-[10px] opacity-60">Manage User Sessions</span>
+            </div>
+          </motion.button>
+        )}
         <div className={`rounded-2xl p-5 flex justify-between items-center border transition-colors ${theme === 'dark' ? 'bg-[#1E293B] border-white/5' : 'bg-slate-50 border-slate-100 shadow-sm'}`}>
           <div className="flex flex-col">
             <span className={`text-sm font-bold ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>Dark Mode</span>
@@ -993,6 +1287,147 @@ function LagFixerPage({ onBack, isEnabled, onToggle, theme }: { onBack: () => vo
           </div>
         ) : 'INITIALIZE FIX'}
       </motion.button>
+    </motion.div>
+  );
+}
+
+function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }) {
+  const [sessions, setSessions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+
+  useEffect(() => {
+    const q = query(collection(db, 'sessions'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const sessList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setSessions(sessList);
+      setLoading(false);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, 'sessions');
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const toggleSession = async (id: string, currentStatus: string) => {
+    try {
+      const sessionRef = doc(db, 'sessions', id);
+      await updateDoc(sessionRef, {
+        status: currentStatus === 'active' ? 'expired' : 'active',
+        lastActive: new Date().toISOString()
+      });
+    } catch (error) {
+      handleFirestoreError(error, OperationType.UPDATE, `sessions/${id}`);
+    }
+  };
+
+  const deleteSession = async (id: string) => {
+    try {
+      const sessionRef = doc(db, 'sessions', id);
+      await deleteDoc(sessionRef);
+      setConfirmDelete(null);
+    } catch (error) {
+      handleFirestoreError(error, OperationType.DELETE, `sessions/${id}`);
+    }
+  };
+
+  const seedTestOtp = async () => {
+    try {
+      const otpDocRef = doc(db, 'otps', '123456');
+      await setDoc(otpDocRef, {
+        isUsed: false,
+        createdAt: new Date().toISOString()
+      });
+      alert('Test OTP (123456) seeded successfully!');
+    } catch (error) {
+      handleFirestoreError(error, OperationType.WRITE, 'otps/123456');
+    }
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="p-6 h-full flex flex-col items-center relative"
+    >
+      <BackgroundEffects theme={theme} />
+      
+      <div className="flex items-center justify-between mb-8 w-full relative z-10">
+        <div className="flex items-center gap-4">
+          <Smartphone className="w-6 h-6 text-[#38BDF8] rotate-180 cursor-pointer" onClick={onBack} />
+          <h2 className={`text-xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Session Manager</h2>
+        </div>
+        <button
+          onClick={seedTestOtp}
+          className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900'}`}
+        >
+          <KeyRound className="w-5 h-5" />
+        </button>
+      </div>
+
+      <div className={`w-full rounded-[2.5rem] p-6 border flex-1 overflow-hidden flex flex-col relative z-10 transition-colors ${theme === 'dark' ? 'bg-[#1E293B] border-white/5 shadow-2xl' : 'bg-white border-slate-100 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)]'}`}>
+        <div className="flex items-center justify-between mb-6">
+          <span className={`text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Active Connections</span>
+          <div className="px-2 py-1 bg-[#10B981]/10 rounded-md">
+            <span className="text-[8px] font-bold text-[#10B981]">{sessions.filter(s => s.status === 'active').length} ONLINE</span>
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+          {loading ? (
+            <div className="flex items-center justify-center h-40">
+              <Activity className="w-6 h-6 animate-spin text-[#38BDF8]" />
+            </div>
+          ) : sessions.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-40 opacity-40">
+              <Database className="w-8 h-8 mb-2" />
+              <span className="text-[10px] font-bold uppercase tracking-widest">No Sessions Found</span>
+            </div>
+          ) : (
+            sessions.map((sess) => (
+              <div key={sess.id} className={`p-4 rounded-2xl border flex items-center justify-between transition-colors ${theme === 'dark' ? 'bg-black/20 border-white/5' : 'bg-slate-50 border-slate-100'}`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-2 h-2 rounded-full ${sess.status === 'active' ? 'bg-[#10B981] shadow-[0_0_8px_#10B981]' : 'bg-slate-500'}`} />
+                  <div className="flex flex-col">
+                    <span className={`text-xs font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{sess.username}</span>
+                    <span className="text-[8px] text-slate-500 font-mono">{sess.id.substring(0, 12)}...</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => toggleSession(sess.id, sess.status)}
+                    className={`px-3 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${sess.status === 'active' ? 'bg-[#F43F5E]/10 text-[#F43F5E] hover:bg-[#F43F5E] hover:text-white' : 'bg-[#10B981]/10 text-[#10B981] hover:bg-[#10B981] hover:text-white'}`}
+                  >
+                    {sess.status === 'active' ? 'Terminate' : 'Reactivate'}
+                  </button>
+                  {confirmDelete === sess.id ? (
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => deleteSession(sess.id)}
+                        className="p-1.5 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-all"
+                      >
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => setConfirmDelete(null)}
+                        className={`p-1.5 rounded-lg transition-all ${theme === 'dark' ? 'bg-white/10 text-white' : 'bg-slate-200 text-slate-900'}`}
+                      >
+                        <Smartphone className="w-3.5 h-3.5 rotate-180" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setConfirmDelete(sess.id)}
+                      className={`p-1.5 rounded-lg transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-red-500/20 hover:text-red-500' : 'bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-500'}`}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </motion.div>
   );
 }
