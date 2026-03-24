@@ -9,13 +9,13 @@
     <!-- Shield -->
     <path
         android:fillColor="@color/neon_blue"
-        android:pathData="M54,15 L25,28 L25,55 C25,75 54,93 54,93 C54,93 83,75 83,55 L83,28 Z" />
+        android:pathData="M54,10 L20,25 L20,55 C20,80 54,98 54,98 C54,98 88,80 88,55 L88,25 Z" />
     <!-- Shield Inner -->
     <path
         android:fillColor="@color/dark_bg"
-        android:pathData="M54,20 L30,31 L30,55 C30,72 54,88 54,88 C54,88 78,72 78,55 L78,31 Z" />
+        android:pathData="M54,15 L25,28 L25,55 C25,75 54,93 54,93 C54,93 83,75 83,55 L83,28 Z" />
     <!-- Bolt -->
     <path
         android:fillColor="@color/neon_blue_glow"
-        android:pathData="M54,35 L40,55 L50,55 L45,75 L68,48 L58,48 L65,35 Z" />
+        android:pathData="M54,30 L35,55 L48,55 L40,80 L73,45 L60,45 L68,30 Z" />
 </vector>

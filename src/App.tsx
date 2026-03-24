@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { auth, logOut, onAuthStateChanged, User, db, signInWithGoogle } from './firebase';
 import { getDoc, updateDoc, doc, setDoc, collection, onSnapshot, query, orderBy, addDoc, deleteDoc } from 'firebase/firestore';
+import { Logo } from './components/Logo';
 
 enum OperationType {
   CREATE = 'create',
@@ -380,9 +381,12 @@ export default function App() {
             
             {/* Header */}
             <div className="flex justify-between items-center mb-6 relative z-10">
-              <h1 className="text-xl font-black text-[#38BDF8] tracking-tight">
-                ULTRA OPTIMIZE <span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>X</span>
-              </h1>
+              <div className="flex items-center gap-3">
+                <Logo className="w-8 h-8" />
+                <h1 className="text-xl font-black text-[#38BDF8] tracking-tight">
+                  ULTRA OPTIMIZE <span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>X</span>
+                </h1>
+              </div>
               <div className="flex items-center gap-4">
                 <motion.div
                   whileHover={{ scale: 1.1 }}
@@ -663,9 +667,9 @@ export default function App() {
                   opacity: { delay: 0.2 },
                   y: { repeat: Infinity, duration: 3, ease: "easeInOut" }
                 }}
-                className="w-24 h-24 bg-gradient-to-br from-[#38BDF8] to-[#0EA5E9] rounded-[2.5rem] flex items-center justify-center mb-10 shadow-[0_20px_50px_rgba(56,189,248,0.2)]"
+                className="w-24 h-24 bg-gradient-to-br from-[#38BDF8] to-[#0EA5E9] rounded-[2.5rem] flex items-center justify-center mb-10 shadow-[0_20px_50px_rgba(56,189,248,0.2)] overflow-hidden"
               >
-                <Zap className="w-12 h-12 text-white fill-current" />
+                <Logo className="w-16 h-16 object-contain" />
               </motion.div>
               
               <motion.div
