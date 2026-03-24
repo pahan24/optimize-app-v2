@@ -42,5 +42,8 @@ class SettingsManager(context: Context) {
 
         fun isLoggedIn(context: Context): Boolean = getSetting(context, "is_logged_in", false)
         fun setLoggedIn(context: Context, loggedIn: Boolean) = saveSetting(context, "is_logged_in", loggedIn)
+        
+        fun isAdmin(context: Context): Boolean = getSetting(context, "is_admin", false)
+        fun setAdmin(context: Context, isAdmin: Boolean) = saveSetting(context, "is_admin", isAdmin)
     }
 }

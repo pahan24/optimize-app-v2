@@ -464,6 +464,16 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_admin_panel"
+                style="@style/FeatureCardStyle"
+                android:visibility="gone">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_info_details" app:tint="@color/accent_orange" />
+                    <TextView style="@style/FeatureTextStyle" android:text="Admin Panel" android:textColor="@color/accent_orange" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Row 7 -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_free_fire"

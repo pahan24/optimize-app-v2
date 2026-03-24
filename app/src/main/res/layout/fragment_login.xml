@@ -90,6 +90,28 @@
             android:textSize="18sp"
             app:cornerRadius="20dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:text="OR"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_admin_login"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:fontFamily="sans-serif-black"
+            android:text="ADMIN ACCESS"
+            android:textColor="@color/neon_blue"
+            android:textSize="14sp"
+            app:cornerRadius="20dp"
+            app:strokeColor="@color/neon_blue"
+            app:strokeWidth="2dp" />
+
         <ProgressBar
             android:id="@+id/progress_login"
             android:layout_width="wrap_content"

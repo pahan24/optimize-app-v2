@@ -33,4 +33,5 @@
     <string name="crosshair_title">Crosshair Pro</string>
     <string name="crosshair_desc">Add a custom crosshair overlay for better aiming in FPS games like Free Fire.</string>
     <string name="thermal_control">Thermal Control</string>
+    <string name="default_web_client_id">433122361304-dummy.apps.googleusercontent.com</string>
 </resources>
