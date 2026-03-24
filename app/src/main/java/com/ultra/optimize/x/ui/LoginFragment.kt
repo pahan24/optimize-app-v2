@@ -44,12 +44,12 @@ class LoginFragment : Fragment() {
 
             if (username.isEmpty()) {
                 binding.tilUsername.error = "Enter username"
-                return
+                return@setOnClickListener
             }
 
             if (password.isEmpty()) {
                 binding.tilPassword.error = "Enter password"
-                return
+                return@setOnClickListener
             }
 
             performLogin(password)
