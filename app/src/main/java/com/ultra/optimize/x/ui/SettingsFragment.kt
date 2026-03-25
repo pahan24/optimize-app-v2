@@ -27,6 +27,7 @@ class SettingsFragment : Fragment() {
         binding.switchNotifications.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_NOTIFICATIONS, true)
         binding.switchAutoBoost.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_AUTO_BOOST)
         binding.switchRootMode.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_ROOT_MODE)
+        binding.switchDarkMode.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_DARK_MODE, true)
 
         binding.switchNotifications.setOnCheckedChangeListener { _, isChecked ->
             settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_NOTIFICATIONS, isChecked)
@@ -36,6 +37,12 @@ class SettingsFragment : Fragment() {
         }
         binding.switchRootMode.setOnCheckedChangeListener { _, isChecked ->
             settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_ROOT_MODE, isChecked)
+        }
+        binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
+            settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_DARK_MODE, isChecked)
+            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
+                if (isChecked) androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES else androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+            )
         }
 
         if (com.ultra.optimize.x.utils.SettingsManager.isAdmin(requireContext())) {

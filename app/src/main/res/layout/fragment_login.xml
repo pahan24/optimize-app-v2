@@ -14,30 +14,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_logo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginBottom="32dp"
-            android:src="@drawable/ic_launcher" />
-
         <TextView
             android:id="@+id/tv_welcome"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:fontFamily="sans-serif-black"
-            android:text="ULTRA OPTIMIZE X"
-            android:textColor="@color/neon_blue"
-            android:textSize="28sp" />
+            android:text="Welcome Back"
+            android:textColor="@color/text_white"
+            android:textSize="32sp"
+            android:letterSpacing="-0.02" />
 
         <TextView
             android:id="@+id/tv_subtitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="48dp"
-            android:text="Secure Access Portal"
-            android:textColor="@color/text_muted"
+            android:text="Enter your credentials to continue"
+            android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -48,14 +42,19 @@
             android:layout_marginBottom="16dp"
             android:hint="Username"
             app:boxStrokeColor="@color/neon_blue"
-            app:hintTextColor="@color/neon_blue">
+            app:hintTextColor="@color/neon_blue"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:textColor="@color/text_white" />
+                android:textColor="@color/text_white"
+                android:fontFamily="sans-serif-medium" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -64,30 +63,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:hint="One-Time Password"
+            android:hint="Password"
             app:boxStrokeColor="@color/neon_blue"
             app:hintTextColor="@color/neon_blue"
             app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/neon_blue">
+            app:passwordToggleTint="@color/neon_blue"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:textColor="@color/text_white" />
+                android:textColor="@color/text_white"
+                android:fontFamily="sans-serif-medium" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="56dp"
             android:backgroundTint="@color/neon_blue"
             android:fontFamily="sans-serif-black"
             android:text="LOGIN"
             android:textColor="@color/bg_dark"
-            android:textSize="18sp"
-            app:cornerRadius="20dp" />
+            android:textSize="14sp"
+            android:letterSpacing="0.1"
+            app:cornerRadius="12dp" />
 
         <TextView
             android:layout_width="wrap_content"

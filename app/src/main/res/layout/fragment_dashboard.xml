@@ -35,49 +35,182 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_device_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Device: Loading..."
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp" />
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/neon_blue"
+                    android:alpha="0.5" />
 
-                <TextView
-                    android:id="@+id/tv_android_version"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Android: Loading..."
-                    android:textColor="@color/text_secondary" />
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/tv_cpu_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="CPU: Loading..."
-                    android:textColor="@color/text_secondary" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
 
-                <TextView
-                    android:id="@+id/tv_storage_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Storage: Loading..."
-                    android:textColor="@color/text_secondary" />
+                        <ImageView
+                            android:id="@+id/iv_device_icon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_centerVertical="true"
+                            android:src="@android:drawable/ic_menu_call"
+                            app:tint="@color/neon_blue" />
 
-                <TextView
-                    android:id="@+id/tv_root_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Root Access: Checking..."
-                    android:textColor="@color/accent_red"
-                    android:textStyle="bold" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_toEndOf="@id/iv_device_icon"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-black"
+                                android:text="DEVICE MODEL"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="8sp"
+                                android:letterSpacing="0.2" />
+
+                            <TextView
+                                android:id="@+id/tv_device_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-black"
+                                android:text="Samsung Galaxy S24 Ultra"
+                                android:textColor="@color/text_white"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/shape_circle"
+                            android:backgroundTint="#10B981"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="2dp"
+                            android:text="SECURE"
+                            android:textColor="@color/white"
+                            android:textSize="8sp"
+                            android:fontFamily="sans-serif-black" />
+                    </RelativeLayout>
+
+                    <GridLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnCount="2">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical"
+                            android:layout_marginBottom="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-black"
+                                android:text="OS VERSION"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="8sp"
+                                android:letterSpacing="0.2" />
+
+                            <TextView
+                                android:id="@+id/tv_android_version"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Android 14 (API 34)"
+                                android:textColor="@color/text_primary"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical"
+                            android:layout_marginBottom="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-black"
+                                android:text="STORAGE STATUS"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="8sp"
+                                android:letterSpacing="0.2" />
+
+                            <TextView
+                                android:id="@+id/tv_storage_info"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="412 GB / 512 GB"
+                                android:textColor="@color/text_primary"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-black"
+                                android:text="PROCESSOR"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="8sp"
+                                android:letterSpacing="0.2" />
+
+                            <TextView
+                                android:id="@+id/tv_cpu_info"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Snapdragon 8 Gen 3"
+                                android:textColor="@color/text_primary"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-black"
+                                android:text="ROOT ACCESS"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="8sp"
+                                android:letterSpacing="0.2" />
+
+                            <TextView
+                                android:id="@+id/tv_root_status"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-black"
+                                android:text="AUTHORIZED"
+                                android:textColor="@color/accent_green"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+                    </GridLayout>
+                </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -172,7 +305,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            app:indicatorColor="@color/accent_red"
+                            app:indicatorColor="#3B82F6"
                             app:indicatorSize="80dp"
                             app:trackColor="@color/bg_dark"
                             app:trackCornerRadius="4dp"
@@ -433,7 +566,7 @@
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
                     <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" />
-                    <TextView style="@style/FeatureTextStyle" android:text="FPS Meter" />
+                    <TextView style="@style/FeatureTextStyle" android:text="FPS" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -450,8 +583,8 @@
                 android:id="@+id/card_free_fire"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <androidx.appcompat.widget.AppCompatImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_compass" app:tint="@color/accent_red" />
-                    <TextView style="@style/FeatureTextStyle" android:text="Free Fire" android:textColor="@color/accent_red" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_compass" />
+                    <TextView style="@style/FeatureTextStyle" android:text="Free Fire" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

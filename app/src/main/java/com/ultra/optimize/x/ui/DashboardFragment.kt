@@ -94,10 +94,10 @@ class DashboardFragment : Fragment() {
         val availableStorage = Utils.getAvailableStorage()
         val totalRam = Utils.formatBytes(Utils.getTotalRam(requireContext()))
 
-        binding.tvDeviceName.text = "Device: $deviceName"
+        binding.tvDeviceName.text = deviceName
         binding.tvAndroidVersion.text = androidVer
-        binding.tvCpuInfo.text = "CPU: $cpuInfo"
-        binding.tvStorageInfo.text = "Storage: $availableStorage / $totalStorage"
+        binding.tvCpuInfo.text = cpuInfo
+        binding.tvStorageInfo.text = "$availableStorage / $totalStorage"
         
         // Add RAM info to device info card as well
         val ramInfo = "RAM: $totalRam"
@@ -108,10 +108,10 @@ class DashboardFragment : Fragment() {
     private fun checkRoot() {
         isRooted = RootManager.isRooted()
         if (isRooted) {
-            binding.tvRootStatus.text = "Root Access: Enabled"
+            binding.tvRootStatus.text = "AUTHORIZED"
             binding.tvRootStatus.setTextColor(resources.getColor(R.color.accent_green))
         } else {
-            binding.tvRootStatus.text = "Root Access: Disabled"
+            binding.tvRootStatus.text = "DENIED"
             binding.tvRootStatus.setTextColor(resources.getColor(R.color.accent_red))
         }
     }
@@ -276,7 +276,7 @@ class DashboardFragment : Fragment() {
             handler.post {
                 if (_binding != null) {
                     binding.btnBoost.isEnabled = true
-                    binding.btnBoost.text = "BOOST"
+                    binding.btnBoost.text = "BOOST SYSTEM"
                     Toast.makeText(requireContext(), "System Optimized!", Toast.LENGTH_SHORT).show()
                     updateStats()
                 }
