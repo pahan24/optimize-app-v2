@@ -33,6 +33,13 @@ class LagFixerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Set Spannable Title
+        val title = "LAG\nFIXER"
+        val spannable = android.text.SpannableString(title)
+        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), com.ultra.optimize.x.R.color.neon_blue)
+        spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 0, 3, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvTitle.text = spannable
+
         val isEnabled = SettingsManager.getSetting(requireContext(), "lag_fixer")
         binding.switchFeature.isChecked = isEnabled
         binding.progressLag.progress = if (isEnabled) 100 else 40

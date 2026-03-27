@@ -28,6 +28,13 @@ class GameToolsFragment : Fragment() {
 
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
 
+        // Set Spannable Title
+        val title = "GAME\nTOOLS"
+        val spannable = android.text.SpannableString(title)
+        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 0, 4, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvTitle.text = spannable
+
         val fpsEnabled = SettingsManager.getSetting(requireContext(), "fps_meter_enabled")
         val crosshairEnabled = SettingsManager.getSetting(requireContext(), "crosshair_enabled")
         

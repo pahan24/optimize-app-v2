@@ -111,7 +111,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
-                        android:src="@android:drawable/ic_menu_day"
+                        android:src="@drawable/ic_sun"
                         app:tint="@color/text_secondary" />
                 </com.google.android.material.card.MaterialCardView>
 
@@ -127,7 +127,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
-                        android:src="@android:drawable/ic_menu_preferences"
+                        android:src="@drawable/ic_settings"
                         app:tint="@color/text_secondary" />
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -170,7 +170,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_centerVertical="true"
-                            android:src="@android:drawable/ic_menu_call"
+                            android:src="@drawable/ic_smartphone"
                             app:tint="@color/neon_blue" />
 
                         <LinearLayout
@@ -541,7 +541,7 @@
             android:layout_marginTop="24dp"
             android:text="@string/boost"
             android:textSize="18sp"
-            app:icon="@android:drawable/ic_menu_compass"
+            app:icon="@drawable/ic_zap"
             app:iconGravity="textStart"
             app:iconPadding="12dp"
             app:iconSize="24dp"
@@ -556,24 +556,13 @@
             android:columnCount="2"
             app:layout_constraintTop_toBottomOf="@id/btn_boost">
 
-            <!-- Row 1 -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_game_boost"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_compass" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <TextView style="@style/FeatureTextStyle" android:text="@string/game_boost" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/ram_cleaner_sub"
-                            android:textColor="@color/text_muted"
-                            android:textSize="9sp" />
-                    </LinearLayout>
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" />
+                    <TextView style="@style/FeatureTextStyle" android:text="@string/game_boost" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/ram_cleaner_sub" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -581,7 +570,7 @@
                 android:id="@+id/card_cpu_control"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_manage" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_cpu" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/cpu_control" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/cpu_cooler_sub" />
                 </LinearLayout>
@@ -591,7 +580,7 @@
                 android:id="@+id/card_storage_cleaner"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_delete" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_trash" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/storage_cleaner" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/storage_manager_sub" />
                 </LinearLayout>
@@ -602,7 +591,7 @@
                 android:id="@+id/card_thermal_control"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_info_details" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_thermometer" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/thermal_control" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/running_smooth" />
                 </LinearLayout>
@@ -612,7 +601,7 @@
                 android:id="@+id/card_battery_saver"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_lock_idle_low_battery" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_battery" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/battery_saver" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/battery_saver_sub" />
                 </LinearLayout>
@@ -622,7 +611,7 @@
                 android:id="@+id/card_app_manager"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_sort_by_size" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_layers" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/app_manager" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/optimization_active" />
                 </LinearLayout>
@@ -633,7 +622,7 @@
                 android:id="@+id/card_network_optimizer"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/presence_online" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_wifi" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/network_optimizer" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/optimization_active" />
                 </LinearLayout>
@@ -643,7 +632,7 @@
                 android:id="@+id/card_display_tweaks"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_gallery" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_monitor" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/display_tweaks" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/running_smooth" />
                 </LinearLayout>
@@ -653,7 +642,7 @@
                 android:id="@+id/card_kernel_tweaks"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_preferences" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_settings_2" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/kernel_tweaks" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/system_optimized" />
                 </LinearLayout>
@@ -664,7 +653,7 @@
                 android:id="@+id/card_system_debloater"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_close_clear_cancel" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_shield_off" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/system_debloater" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/system_optimized" />
                 </LinearLayout>
@@ -674,7 +663,7 @@
                 android:id="@+id/card_dns_changer"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_share" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_globe" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/dns_changer" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/optimization_active" />
                 </LinearLayout>
@@ -684,7 +673,7 @@
                 android:id="@+id/card_charging_booster"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_lock_power_off" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/charging_booster" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/protection_on" />
                 </LinearLayout>
@@ -695,7 +684,7 @@
                 android:id="@+id/card_auto_clean"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_recent_history" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_clock" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/auto_clean" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/system_optimized" />
                 </LinearLayout>
@@ -705,7 +694,7 @@
                 android:id="@+id/card_fps_meter"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_activity" />
                     <TextView style="@style/FeatureTextStyle" android:text="FPS" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/running_smooth" />
                 </LinearLayout>
@@ -715,7 +704,7 @@
                 android:id="@+id/card_lag_fixer"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_send" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_mouse_pointer" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/lag_fixer" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/optimization_active" />
                 </LinearLayout>
@@ -725,7 +714,7 @@
                 android:id="@+id/card_free_fire"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_compass" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_target" />
                     <TextView style="@style/FeatureTextStyle" android:text="Free Fire" android:textColor="#F97316" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/optimization_active" />
                 </LinearLayout>
@@ -735,7 +724,7 @@
                 android:id="@+id/card_game_tools"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_view" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_gamepad_2" />
                     <TextView style="@style/FeatureTextStyle" android:text="Game Tools" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/running_smooth" />
                 </LinearLayout>
@@ -745,7 +734,7 @@
                 android:id="@+id/card_settings"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_set_as" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_settings" />
                     <TextView style="@style/FeatureTextStyle" android:text="Settings" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/protection_on" />
                 </LinearLayout>

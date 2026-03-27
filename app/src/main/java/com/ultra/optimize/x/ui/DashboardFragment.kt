@@ -57,7 +57,7 @@ class DashboardFragment : Fragment() {
 
         val isDarkMode = SettingsManager.isDarkMode(requireContext())
         binding.ivThemeIcon.setImageResource(
-            if (isDarkMode) android.R.drawable.ic_menu_day else android.R.drawable.ic_menu_month
+            if (isDarkMode) R.drawable.ic_sun else R.drawable.ic_moon
         )
     }
 

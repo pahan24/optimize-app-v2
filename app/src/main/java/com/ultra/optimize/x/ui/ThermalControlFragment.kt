@@ -32,6 +32,13 @@ class ThermalControlFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnBack.setOnClickListener { findNavController().popBackStack() }
+
+        // Set Spannable Title
+        val title = "THERMAL\nCONTROL"
+        val spannable = android.text.SpannableString(title)
+        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 0, 7, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvTitle.text = spannable
         
         binding.switchCoolDown.isChecked = ThermalManager.isAutoCoolDownEnabled(requireContext())
         binding.switchCoolDown.setOnCheckedChangeListener { _, isChecked ->

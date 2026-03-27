@@ -34,6 +34,13 @@ class GameBoostFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnBack.setOnClickListener { findNavController().popBackStack() }
+
+        // Set Spannable Title
+        val title = "GAME\nBOOST"
+        val spannable = android.text.SpannableString(title)
+        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 0, 4, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvTitle.text = spannable
         
         binding.btnActivate.setOnClickListener {
             binding.btnActivate.isEnabled = false

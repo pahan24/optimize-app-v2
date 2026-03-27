@@ -1,44 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_dark"
-    android:orientation="vertical"
     android:padding="24dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <View
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/bg_glow_blue"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="-100dp"
+        android:layout_marginEnd="-100dp"
+        android:alpha="0.05" />
+
+    <View
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/bg_glow_red"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="-100dp"
+        android:layout_marginStart="-100dp"
+        android:alpha="0.05" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btnBack"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/neon_blue" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginBottom="32dp">
+        android:layout_marginStart="16dp"
+        android:fontFamily="sans-serif-black"
+        android:text="FREE FIRE"
+        android:textColor="@color/text_white"
+        android:textSize="24sp"
+        android:lineSpacingMultiplier="0.9"
+        android:letterSpacing="-0.02"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
+        app:layout_constraintTop_toTopOf="@id/btnBack" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/btnBack"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/ic_back"
-            app:tint="@color/neon_blue" />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:fontFamily="sans-serif-black"
-            android:text="@string/free_fire_optimizer"
-            android:textColor="@color/text_white"
-            android:textSize="24sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Optimize game settings for maximum performance"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/card_ff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="24dp"
         app:cardBackgroundColor="@color/card_bg"
         app:cardCornerRadius="24dp"
-        app:cardElevation="0dp">
+        app:cardElevation="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tvSubtitle">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,13 +112,15 @@
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
+        android:id="@+id/layout_auto_boost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:background="@drawable/shape_card_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="20dp"
-        android:layout_marginBottom="16dp">
+        app:layout_constraintTop_toBottomOf="@id/card_ff">
 
         <TextView
             android:layout_width="0dp"
@@ -106,13 +140,15 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layout_sensitivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:background="@drawable/shape_card_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="20dp"
-        android:layout_marginBottom="32dp">
+        app:layout_constraintTop_toBottomOf="@id/layout_auto_boost">
 
         <TextView
             android:layout_width="0dp"
@@ -131,20 +167,13 @@
             app:trackTint="@color/bg_dark" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnApply"
+        style="@style/NeonButtonStyle"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:backgroundTint="@color/accent_red"
-        android:fontFamily="sans-serif-black"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="@string/apply_ff_boost"
-        android:textColor="@color/text_white"
-        android:textSize="16sp"
-        app:cornerRadius="20dp" />
+        app:layout_constraintTop_toBottomOf="@id/layout_sensitivity" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

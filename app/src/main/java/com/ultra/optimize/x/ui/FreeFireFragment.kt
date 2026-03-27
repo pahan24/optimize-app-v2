@@ -34,6 +34,13 @@ class FreeFireFragment : Fragment() {
 
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
 
+        // Set Spannable Title
+        val title = "FREE\nFIRE"
+        val spannable = android.text.SpannableString(title)
+        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), com.ultra.optimize.x.R.color.neon_blue)
+        spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 0, 4, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvTitle.text = spannable
+
         val autoBoost = SettingsManager.getSetting(requireContext(), "ff_auto_boost")
         val sensitivity = SettingsManager.getSetting(requireContext(), "ff_sensitivity")
         

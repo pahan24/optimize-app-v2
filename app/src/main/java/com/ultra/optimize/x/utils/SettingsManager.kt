@@ -46,5 +46,8 @@ class SettingsManager(context: Context) {
         
         fun isAdmin(context: Context): Boolean = getSetting(context, "is_admin", false)
         fun setAdmin(context: Context, isAdmin: Boolean) = saveSetting(context, "is_admin", isAdmin)
+
+        fun isDarkMode(context: Context): Boolean = getSetting(context, KEY_DARK_MODE, true)
+        fun setDarkMode(context: Context, value: Boolean) = saveSetting(context, KEY_DARK_MODE, value)
     }
 }

@@ -22,10 +22,22 @@ class GenericFeatureFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         
         val title = arguments?.getString("featureTitle") ?: "Feature"
+        val subtitle = arguments?.getString("featureDesc") ?: "Configure advanced system optimization parameters"
         val settingsManager = com.ultra.optimize.x.utils.SettingsManager(requireContext())
         val featureKey = title.lowercase().replace(" ", "_") + "_enabled"
 
-        binding.tvFeatureTitle.text = title
+        // Set Spannable Title
+        val upperTitle = title.uppercase()
+        val spannable = android.text.SpannableString(upperTitle)
+        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        
+        // Find first word or first few chars to highlight
+        val spaceIndex = upperTitle.indexOf(" ")
+        val end = if (spaceIndex != -1) spaceIndex else (upperTitle.length / 2).coerceAtLeast(1)
+        spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 0, end, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        
+        binding.tvFeatureTitle.text = spannable
+        binding.tvSubtitle.text = subtitle
         binding.btnBack.setOnClickListener { findNavController().popBackStack() }
         
         binding.switchFeature.isChecked = settingsManager.isFeatureEnabled(featureKey)
