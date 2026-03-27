@@ -491,7 +491,7 @@
                 android:id="@+id/card_thermal_control"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_report_problem" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@android:drawable/ic_menu_info_details" />
                     <TextView style="@style/FeatureTextStyle" android:text="@string/thermal_control" />
                     <TextView style="@style/FeatureSubtitleStyle" android:text="@string/running_smooth" />
                 </LinearLayout>
