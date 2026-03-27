@@ -6,12 +6,16 @@ workflows:
     environment:
       java: 17
     scripts:
+      - name: Make gradlew executable
+        script: |
+          chmod +x gradlew
       - name: Set up local.properties
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
       - name: Build Android debug APK
         script: |
-          gradle assembleDebug
+          ./gradlew lint
+          ./gradlew assembleDebug
     artifacts:
       - app/build/outputs/apk/**/*.apk
     publishing:

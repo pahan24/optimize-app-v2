@@ -41,16 +41,29 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        // Set Spannable Title
+        val title = "ULTRA\nOPTIMIZE X"
+        val spannable = android.text.SpannableString(title)
+        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 6, 14, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvAppTitle.text = spannable
+
         setupDeviceInfo()
         checkRoot()
         setupListeners()
         animateEntrance()
         
         handler.post(updateRunnable)
+
+        val isDarkMode = SettingsManager.isDarkMode(requireContext())
+        binding.ivThemeIcon.setImageResource(
+            if (isDarkMode) android.R.drawable.ic_menu_day else android.R.drawable.ic_menu_month
+        )
     }
 
     private fun animateEntrance() {
         val views = listOf(
+            binding.header,
             binding.cardDeviceInfo,
             binding.cardStats,
             binding.btnBoost,
@@ -117,6 +130,16 @@ class DashboardFragment : Fragment() {
     }
 
     private fun setupListeners() {
+        binding.btnSettingsHeader.setOnClickListener {
+            findNavController().navigate(R.id.action_dashboard_to_settings)
+        }
+
+        binding.btnThemeToggle.setOnClickListener {
+            val isDarkMode = SettingsManager.isDarkMode(requireContext())
+            SettingsManager.setDarkMode(requireContext(), !isDarkMode)
+            requireActivity().recreate()
+        }
+
         binding.btnBoost.setOnClickListener {
             performBoost()
         }

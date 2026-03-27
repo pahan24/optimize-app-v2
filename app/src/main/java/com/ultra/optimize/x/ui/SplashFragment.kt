@@ -29,11 +29,18 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Set Spannable Title
+        val title = "ULTRA\nOPTIMIZE X"
+        val spannable = android.text.SpannableString(title)
+        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 6, 14, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvAppNameSplash.text = spannable
+
         // Simple animation
-        binding.ivLogoSplash.alpha = 0f
-        binding.ivLogoSplash.scaleX = 0.5f
-        binding.ivLogoSplash.scaleY = 0.5f
-        binding.ivLogoSplash.animate()
+        binding.cvLogoSplash.alpha = 0f
+        binding.cvLogoSplash.scaleX = 0.5f
+        binding.cvLogoSplash.scaleY = 0.5f
+        binding.cvLogoSplash.animate()
             .alpha(1f)
             .scaleX(1f)
             .scaleY(1f)

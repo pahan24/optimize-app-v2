@@ -22,6 +22,13 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnBack.setOnClickListener { findNavController().popBackStack() }
 
+        // Set Spannable Title
+        val title = "SYSTEM\nSETTINGS"
+        val spannable = android.text.SpannableString(title)
+        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 0, 6, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvTitle.text = spannable
+
         val settingsManager = com.ultra.optimize.x.utils.SettingsManager(requireContext())
         
         binding.switchNotifications.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_NOTIFICATIONS, true)

@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/bg_dark">
+
+    <View
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/bg_glow_blue"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="-100dp"
+        android:layout_marginEnd="-100dp"
+        android:alpha="0.05" />
+
+    <View
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/bg_glow_red"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="-100dp"
+        android:layout_marginStart="-100dp"
+        android:alpha="0.05" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
     <TextView
         android:id="@+id/tv_admin_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
-        android:text="ADMIN DASHBOARD"
+        android:text="SYSTEM\nADMINISTRATION"
         android:textColor="@color/text_white"
         android:textSize="28sp"
+        android:lineSpacingMultiplier="0.9"
         android:letterSpacing="-0.02" />
 
     <TextView
@@ -22,22 +47,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:fontFamily="sans-serif-medium"
-        android:text="System Overview &amp; User Management"
+        android:text="System-wide administrative control panel"
         android:textColor="@color/text_secondary"
         android:textSize="14sp" />
 
-    <LinearLayout
+    <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:columnCount="2"
+        android:rowCount="2">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
             app:cardBackgroundColor="@color/card_bg"
             app:cardCornerRadius="16dp"
             app:strokeWidth="0dp">
@@ -46,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="USERS" android:textColor="@color/text_muted" android:textSize="10sp" android:fontFamily="sans-serif-black" android:letterSpacing="0.1" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TOTAL USERS" android:textColor="@color/text_muted" android:textSize="10sp" android:fontFamily="sans-serif-black" android:letterSpacing="0.1" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1,284" android:textColor="@color/neon_blue" android:textSize="20sp" android:fontFamily="sans-serif-black" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -54,7 +79,8 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
             app:cardBackgroundColor="@color/card_bg"
             app:cardCornerRadius="16dp"
             app:strokeWidth="0dp">
@@ -63,34 +89,79 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SESSIONS" android:textColor="@color/text_muted" android:textSize="10sp" android:fontFamily="sans-serif-black" android:letterSpacing="0.1" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ACTIVE SESSIONS" android:textColor="@color/text_muted" android:textSize="10sp" android:fontFamily="sans-serif-black" android:letterSpacing="0.1" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="842" android:textColor="@color/accent_green" android:textSize="20sp" android:fontFamily="sans-serif-black" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-    </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            app:cardBackgroundColor="@color/card_bg"
+            app:cardCornerRadius="16dp"
+            app:strokeWidth="0dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SYSTEM LOAD" android:textColor="@color/text_muted" android:textSize="10sp" android:fontFamily="sans-serif-black" android:letterSpacing="0.1" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="12%" android:textColor="@color/accent_orange" android:textSize="20sp" android:fontFamily="sans-serif-black" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"
+            app:cardBackgroundColor="@color/card_bg"
+            app:cardCornerRadius="16dp"
+            app:strokeWidth="0dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SECURITY" android:textColor="@color/text_muted" android:textSize="10sp" android:fontFamily="sans-serif-black" android:letterSpacing="0.1" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ACTIVE" android:textColor="@color/accent_green" android:textSize="20sp" android:fontFamily="sans-serif-black" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </GridLayout>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:cardBackgroundColor="@color/card_bg"
-        app:cardCornerRadius="16dp"
-        app:strokeColor="@color/neon_blue"
+        app:cardCornerRadius="24dp"
+        app:strokeColor="#203B82F6"
         app:strokeWidth="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Generate OTP"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-black"
+                android:text="OTP MANAGEMENT"
+                android:textColor="@color/text_white"
+                android:textSize="14sp"
+                android:letterSpacing="0.1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Generate secure access codes for new users."
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_otp_code"
@@ -98,15 +169,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="OTP Code"
-                app:hintTextColor="@color/accent_orange"
-                app:boxStrokeColor="@color/accent_orange">
+                android:hint="6-Digit OTP Code"
+                app:hintTextColor="@color/neon_blue"
+                app:boxStrokeColor="@color/neon_blue"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusTopStart="12dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_otp_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_primary" />
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:textColor="@color/text_white" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -115,7 +192,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="16dp"
-                android:text="SAVE OTP" />
+                android:text="GENERATE NEW OTP" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -124,16 +201,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Manage OTPs"
-        android:textColor="@color/text_primary"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:fontFamily="sans-serif-black"
+        android:text="SYSTEM LOGS"
+        android:textColor="@color/text_white"
+        android:textSize="14sp"
+        android:letterSpacing="0.1" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_otps"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:layout_weight="1" />
 
 </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

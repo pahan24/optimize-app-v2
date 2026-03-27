@@ -5,15 +5,47 @@
     android:layout_height="match_parent"
     android:background="@color/bg_dark">
 
-    <ImageView
-        android:id="@+id/iv_logo_splash"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@mipmap/ic_launcher"
+    <View
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="-150dp"
+        android:layout_marginEnd="-150dp"
+        android:background="@drawable/bg_glow_blue"
+        android:alpha="0.15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginBottom="-150dp"
+        android:layout_marginStart="-150dp"
+        android:background="@drawable/bg_glow_red"
+        android:alpha="0.15"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_logo_splash"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:cardBackgroundColor="@color/card_bg"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/neon_blue"
+        app:strokeWidth="1dp">
+
+        <ImageView
+            android:id="@+id/iv_logo_splash"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_launcher" />
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/tv_app_name_splash"
@@ -21,12 +53,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-black"
-        android:text="ULTRA OPTIMIZE X"
-        android:textColor="@color/neon_blue"
+        android:gravity="center"
+        android:lineSpacingMultiplier="0.9"
+        android:text="ULTRA\nOPTIMIZE X"
+        android:textColor="@color/text_white"
         android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_logo_splash" />
+        app:layout_constraintTop_toBottomOf="@id/cv_logo_splash" />
 
     <ProgressBar
         android:id="@+id/progress_splash"

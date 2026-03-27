@@ -59,6 +59,13 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Set Spannable Title
+        val title = "ULTRA\nOPTIMIZE X"
+        val spannable = android.text.SpannableString(title)
+        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 6, 14, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvAppTitle.text = spannable
+
         // Check if already logged in
         if (SettingsManager.isLoggedIn(requireContext())) {
             findNavController().navigate(R.id.action_login_to_dashboard)
@@ -74,10 +81,16 @@ class LoginFragment : Fragment() {
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
         binding.btnLogin.setOnClickListener {
+            val username = binding.etUsername.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
 
-            if (password.isEmpty()) {
-                binding.tilPassword.error = "Enter OTP Password"
+            if (username.isEmpty()) {
+                binding.tilUsername.error = "Enter Username"
+                return@setOnClickListener
+            }
+
+            if (password.length != 6) {
+                binding.tilPassword.error = "Enter 6-digit OTP"
                 return@setOnClickListener
             }
 
@@ -100,6 +113,11 @@ class LoginFragment : Fragment() {
         }
 
         binding.btnAdminLogin.setOnClickListener {
+            val clientId = getString(R.string.default_web_client_id)
+            if (clientId.contains("dummy")) {
+                Toast.makeText(context, "Google Sign-In is not configured. Please update the Web Client ID in strings.xml.", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             val signInIntent = googleSignInClient.signInIntent
             googleSignInLauncher.launch(signInIntent)
         }
@@ -130,8 +148,10 @@ class LoginFragment : Fragment() {
 
     private fun animateEntrance() {
         val views = listOf(
-            binding.tvWelcome,
+            binding.cvLogo,
+            binding.tvAppTitle,
             binding.tvSubtitle,
+            binding.tilUsername,
             binding.tilPassword,
             binding.btnLogin,
             binding.btnAdminLogin
