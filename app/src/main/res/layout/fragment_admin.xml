@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:fontFamily="sans-serif-medium"
-        android:text="System Overview & User Management"
+        android:text="System Overview &amp; User Management"
         android:textColor="@color/text_secondary"
         android:textSize="14sp" />
 
