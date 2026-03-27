@@ -34,4 +34,14 @@
     <string name="crosshair_desc">Add a custom crosshair overlay for better aiming in FPS games like Free Fire.</string>
     <string name="thermal_control">Thermal</string>
     <string name="default_web_client_id">433122361304-dummy.apps.googleusercontent.com</string>
+    <string name="system_health">System Health</string>
+    <string name="optimal_state">OPTIMAL STATE</string>
+    <string name="processor">Processor</string>
+    <string name="thermal_label">Thermal</string>
+    <string name="latency">Latency</string>
+    <string name="discharge">Discharge</string>
+    <string name="optimization_active">Optimization active</string>
+    <string name="system_optimized">System optimized</string>
+    <string name="running_smooth">Running smooth</string>
+    <string name="protection_on">Protection active</string>
 </resources>

@@ -34,7 +34,16 @@ class LoginFragment : Fragment() {
             val account = task.getResult(ApiException::class.java)!!
             firebaseAuthWithGoogle(account.idToken!!)
         } catch (e: ApiException) {
-            showError("Google sign in failed: ${e.message}")
+            val statusCode = e.statusCode
+            val errorMessage = when (statusCode) {
+                7 -> "Network error. Please check your internet connection."
+                10 -> "Developer error. Ensure SHA-1 is registered in Firebase console and client ID is correct."
+                12500 -> "Sign-in failed. Play Services might be outdated or misconfigured."
+                12501 -> "Sign-in cancelled by user."
+                else -> "Google sign in failed (Code $statusCode): ${e.message}"
+            }
+            showError(errorMessage)
+            android.util.Log.e("LoginFragment", "Google Sign-In Error: $statusCode", e)
         }
     }
 
@@ -65,16 +74,10 @@ class LoginFragment : Fragment() {
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
         binding.btnLogin.setOnClickListener {
-            val username = binding.etUsername.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
 
-            if (username.isEmpty()) {
-                binding.tilUsername.error = "Enter username"
-                return@setOnClickListener
-            }
-
             if (password.isEmpty()) {
-                binding.tilPassword.error = "Enter password"
+                binding.tilPassword.error = "Enter OTP Password"
                 return@setOnClickListener
             }
 
@@ -129,7 +132,6 @@ class LoginFragment : Fragment() {
         val views = listOf(
             binding.tvWelcome,
             binding.tvSubtitle,
-            binding.tilUsername,
             binding.tilPassword,
             binding.btnLogin,
             binding.btnAdminLogin

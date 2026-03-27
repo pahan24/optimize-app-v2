@@ -30,32 +30,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="48dp"
-            android:text="Enter your credentials to continue"
+            android:fontFamily="sans-serif-medium"
+            android:text="Sign in to continue"
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_username"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Username"
-            app:boxStrokeColor="@color/neon_blue"
-            app:hintTextColor="@color/neon_blue"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textColor="@color/text_white"
-                android:fontFamily="sans-serif-medium" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_password"
@@ -63,15 +41,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:hint="Password"
+            android:hint="OTP Password"
             app:boxStrokeColor="@color/neon_blue"
             app:hintTextColor="@color/neon_blue"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/neon_blue"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp">
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp"
+            app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
+            app:startIconTint="@color/neon_blue">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_password"
@@ -84,37 +64,22 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_login"
+            style="@style/NeonButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:backgroundTint="@color/neon_blue"
-            android:fontFamily="sans-serif-black"
             android:text="LOGIN"
-            android:textColor="@color/bg_dark"
-            android:textSize="14sp"
-            android:letterSpacing="0.1"
-            app:cornerRadius="12dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp"
-            android:text="OR"
-            android:textColor="@color/text_muted"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_admin_login"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:fontFamily="sans-serif-black"
-            android:text="ADMIN ACCESS"
-            android:textColor="@color/neon_blue"
-            android:textSize="14sp"
-            app:cornerRadius="20dp"
-            app:strokeColor="@color/neon_blue"
-            app:strokeWidth="2dp" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="ADMIN GOOGLE LOGIN"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp"
+            android:letterSpacing="0.1" />
 
         <ProgressBar
             android:id="@+id/progress_login"

@@ -11,26 +11,71 @@
         android:id="@+id/tv_admin_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ADMIN PANEL"
-        android:textColor="@color/accent_orange"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:fontFamily="sans-serif-black"
+        android:text="ADMIN DASHBOARD"
+        android:textColor="@color/text_white"
+        android:textSize="28sp"
+        android:letterSpacing="-0.02" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Manage OTPs and Sessions"
+        android:fontFamily="sans-serif-medium"
+        android:text="System Overview & User Management"
         android:textColor="@color/text_secondary"
         android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            app:cardBackgroundColor="@color/card_bg"
+            app:cardCornerRadius="16dp"
+            app:strokeWidth="0dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="USERS" android:textColor="@color/text_muted" android:textSize="10sp" android:fontFamily="sans-serif-black" android:letterSpacing="0.1" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1,284" android:textColor="@color/neon_blue" android:textSize="20sp" android:fontFamily="sans-serif-black" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@color/card_bg"
+            app:cardCornerRadius="16dp"
+            app:strokeWidth="0dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SESSIONS" android:textColor="@color/text_muted" android:textSize="10sp" android:fontFamily="sans-serif-black" android:letterSpacing="0.1" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="842" android:textColor="@color/accent_green" android:textSize="20sp" android:fontFamily="sans-serif-black" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         app:cardBackgroundColor="@color/card_bg"
-        app:cardCornerRadius="12dp"
-        app:strokeColor="@color/accent_orange"
+        app:cardCornerRadius="16dp"
+        app:strokeColor="@color/neon_blue"
         app:strokeWidth="1dp">
 
         <LinearLayout
@@ -66,12 +111,11 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_save_otp"
+                style="@style/NeonButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="16dp"
-                android:text="SAVE OTP"
-                app:backgroundTint="@color/accent_orange"
-                app:cornerRadius="8dp" />
+                android:text="SAVE OTP" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
