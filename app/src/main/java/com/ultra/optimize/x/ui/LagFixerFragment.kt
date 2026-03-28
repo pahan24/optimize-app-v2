@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.ultra.optimize.x.R
 import com.ultra.optimize.x.databinding.FragmentLagFixerBinding
 import com.ultra.optimize.x.utils.LagManager
 import com.ultra.optimize.x.utils.RootManager
@@ -36,7 +37,7 @@ class LagFixerFragment : Fragment() {
         // Set Spannable Title
         val title = "LAG\nFIXER"
         val spannable = android.text.SpannableString(title)
-        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), com.ultra.optimize.x.R.color.neon_blue)
+        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
         spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 0, 3, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.tvTitle.text = spannable
 
@@ -52,11 +53,11 @@ class LagFixerFragment : Fragment() {
             SettingsManager.saveSetting(requireContext(), "lag_fixer", isChecked)
             if (isChecked) {
                 binding.tvStatus.text = "Status: Optimized"
-                binding.tvStatus.setTextColor(resources.getColor(com.ultra.optimize.x.R.color.accent_green))
+                binding.tvStatus.setTextColor(resources.getColor(R.color.accent_green))
                 binding.progressLag.setProgress(100, true)
             } else {
                 binding.tvStatus.text = "Status: Normal"
-                binding.tvStatus.setTextColor(resources.getColor(com.ultra.optimize.x.R.color.neon_blue))
+                binding.tvStatus.setTextColor(resources.getColor(R.color.neon_blue))
                 binding.progressLag.setProgress(40, true)
             }
         }
@@ -82,7 +83,7 @@ class LagFixerFragment : Fragment() {
                     binding.progressLag.isIndeterminate = false
                     binding.progressLag.setProgress(100, true)
                     binding.tvStatus.text = "Status: Optimized"
-                    binding.tvStatus.setTextColor(resources.getColor(com.ultra.optimize.x.R.color.accent_green))
+                    binding.tvStatus.setTextColor(resources.getColor(R.color.accent_green))
                     Toast.makeText(requireContext(), "System lag reduced successfully!", Toast.LENGTH_SHORT).show()
                 }
             }

@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.ultra.optimize.x.R
 import com.ultra.optimize.x.databinding.FragmentCpuControlBinding
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager

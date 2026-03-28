@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.ultra.optimize.x.R
 import com.ultra.optimize.x.databinding.FragmentFreeFireBinding
 import com.ultra.optimize.x.utils.FreeFireManager
 import com.ultra.optimize.x.utils.RootManager
@@ -37,7 +38,7 @@ class FreeFireFragment : Fragment() {
         // Set Spannable Title
         val title = "FREE\nFIRE"
         val spannable = android.text.SpannableString(title)
-        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), com.ultra.optimize.x.R.color.neon_blue)
+        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
         spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 0, 4, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.tvTitle.text = spannable
 
@@ -83,7 +84,7 @@ class FreeFireFragment : Fragment() {
                     binding.progressSensitivity.isIndeterminate = false
                     binding.progressSensitivity.setProgress(100, true)
                     binding.tvStatus.text = "Status: Optimized"
-                    binding.tvStatus.setTextColor(resources.getColor(com.ultra.optimize.x.R.color.accent_green))
+                    binding.tvStatus.setTextColor(resources.getColor(R.color.accent_green))
                     Toast.makeText(requireContext(), "Free Fire optimized for maximum performance!", Toast.LENGTH_SHORT).show()
                 }
             }

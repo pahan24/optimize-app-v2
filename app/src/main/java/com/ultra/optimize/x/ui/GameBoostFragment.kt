@@ -9,6 +9,7 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.ultra.optimize.x.R
 import com.ultra.optimize.x.databinding.FragmentGameBoostBinding
 import com.ultra.optimize.x.utils.CpuManager
 import com.ultra.optimize.x.utils.RamManager

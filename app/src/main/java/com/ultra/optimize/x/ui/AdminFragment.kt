@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
+import com.ultra.optimize.x.R
 import com.ultra.optimize.x.databinding.FragmentAdminBinding
 import java.util.*
 
