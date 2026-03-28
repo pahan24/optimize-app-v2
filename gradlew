@@ -86,7 +86,11 @@ APP_BASE_NAME=${0##*/}
 # Discard cd standard output in case $CDPATH is set (https://github.com/gradle/gradle/issues/25036)
 APP_HOME=$( cd "${APP_HOME:-./}" > /dev/null && pwd -P ) || exit
 echo "APP_HOME: $APP_HOME"
-echo "CLASSPATH: $APP_HOME/gradle/wrapper/gradle-wrapper.jar"
+echo "Current directory: $(pwd)"
+echo "Listing gradle/wrapper:"
+ls -l "$APP_HOME/gradle/wrapper"
+CLASSPATH="$APP_HOME/gradle/wrapper/gradle-wrapper.jar"
+echo "CLASSPATH: $CLASSPATH"
 
 # Use the maximum available, or set MAX_FD != -1 to use that value.
 MAX_FD=maximum
@@ -116,6 +120,18 @@ esac
 
 CLASSPATH="$APP_HOME/gradle/wrapper/gradle-wrapper.jar"
 
+# Download the jar if it's missing or too small (likely corrupted)
+if [ ! -f "$CLASSPATH" ] || [ $(wc -c < "$CLASSPATH") -lt 1000 ]; then
+    echo "gradle-wrapper.jar is missing or corrupted. Downloading..."
+    mkdir -p "$APP_HOME/gradle/wrapper"
+    if command -v curl >/dev/null 2>&1; then
+        curl -Lo "$CLASSPATH" https://raw.githubusercontent.com/gradle/gradle/v8.5.0/gradle/wrapper/gradle-wrapper.jar
+    elif command -v wget >/dev/null 2>&1; then
+        wget -O "$CLASSPATH" https://raw.githubusercontent.com/gradle/gradle/v8.5.0/gradle/wrapper/gradle-wrapper.jar
+    else
+        echo "ERROR: curl or wget not found. Cannot download gradle-wrapper.jar."
+    fi
+fi
 
 # Determine the Java command to use to start the JVM.
 if [ -n "$JAVA_HOME" ] ; then
@@ -223,24 +239,6 @@ then
 fi
 
 # Use "xargs" to parse quoted args.
-#
-# With -n1 it outputs one arg per line, with the quotes and backslashes removed.
-#
-# In Bash we could simply go:
-#
-#   readarray ARGS < <( xargs -n1 <<<"$var" ) &&
-#   set -- "${ARGS[@]}" "$@"
-#
-# but POSIX shell has neither arrays nor command substitution, so instead we
-# post-process each arg (as a line of input to sed) to backslash-escape any
-# character that might be a shell metacharacter, then use eval to reverse
-# that process (while maintaining the separation between arguments), and wrap
-# the whole thing up as a single "set" statement.
-#
-# This will of course break if any of these variables contains a newline or
-# an unmatched quote.
-#
-
 eval "set -- $(
         printf '%s\n' "$DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS" |
         xargs -n1 |
@@ -248,4 +246,5 @@ eval "set -- $(
         tr '\n' ' '
     )" '"$@"'
 
+echo "Executing: $JAVACMD $@"
 exec "$JAVACMD" "$@"
