@@ -66,7 +66,7 @@ class UpdateManager(private val activity: Activity) {
                     val updateUrl = document.getString("update_url") ?: ""
                     val forceAutoUpdate = document.getBoolean("force_auto_update") ?: false
 
-                    val currentVersionCode = BuildConfig.VERSION_CODE
+                    val currentVersionCode = BuildConfig.VERSION_CODE.toLong()
                     Log.d(TAG, "Latest Version: $latestVersionCode, Current: $currentVersionCode")
                     Toast.makeText(activity, "Latest: $latestVersionCode, Current: $currentVersionCode", Toast.LENGTH_LONG).show()
 
