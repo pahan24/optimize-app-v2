@@ -69,4 +69,10 @@
         <item name="android:fontFamily">sans-serif-black</item>
         <item name="android:letterSpacing">0.05</item>
     </style>
+
+    <style name="Theme.UltraOptimizeX.Dialog" parent="Theme.Material3.DayNight.Dialog">
+        <item name="android:windowBackground">@color/card_bg</item>
+        <item name="colorSurface">@color/card_bg</item>
+        <item name="colorPrimary">@color/neon_blue</item>
+    </style>
 </resources>

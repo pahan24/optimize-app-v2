@@ -24,6 +24,7 @@ import {
   Moon,
   User as UserIcon,
   KeyRound,
+  ExternalLink,
   AlertCircle,
   Check,
   X
@@ -31,6 +32,8 @@ import {
 import { auth, logOut, onAuthStateChanged, User, db, signInWithGoogle } from './firebase';
 import { getDoc, updateDoc, doc, setDoc, collection, onSnapshot, query, orderBy, addDoc, deleteDoc } from 'firebase/firestore';
 import { Logo } from './components/Logo';
+
+const CURRENT_VERSION_CODE = 1;
 
 enum OperationType {
   CREATE = 'create',
@@ -100,6 +103,7 @@ export default function App() {
   const [temp, setTemp] = useState(38);
   const [isRooted, setIsRooted] = useState(true);
   const [selectedFeature, setSelectedFeature] = useState('');
+  const [updateInfo, setUpdateInfo] = useState<{ name: string; required: boolean; url: string } | null>(null);
   const isAdmin = user?.email === 'bpahan685@gmail.com';
   
   // Simulated Persistence
@@ -129,6 +133,38 @@ export default function App() {
   const toggleFeature = (key: string) => {
     setFeatureStates(prev => ({ ...prev, [key]: !prev[key] }));
   };
+
+  // Update Check
+  useEffect(() => {
+    const checkUpdate = async () => {
+      try {
+        const docRef = doc(db, 'app_config', 'version_info');
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          const latestVersionCode = Number(data.latest_version_code) || 0;
+          const latestVersionName = data.latest_version_name || '';
+          const updateRequired = data.update_required || false;
+          const updateUrl = data.update_url || '';
+
+          console.log('Update check:', { latestVersionCode, CURRENT_VERSION_CODE });
+
+          if (latestVersionCode > CURRENT_VERSION_CODE) {
+            setUpdateInfo({
+              name: latestVersionName,
+              required: updateRequired,
+              url: updateUrl
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Update check failed:', error);
+      }
+    };
+    
+    checkUpdate();
+  }, []);
 
   // Auth Listener
   useEffect(() => {
@@ -798,6 +834,65 @@ export default function App() {
           </motion.div>
         </div>
       )}
+
+      <AnimatePresence>
+        {updateInfo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className={`w-full max-w-sm rounded-[2.5rem] p-8 border shadow-2xl relative overflow-hidden ${theme === 'dark' ? 'bg-[#1E293B] border-white/10' : 'bg-white border-slate-100'}`}
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-[#38BDF8]" />
+              
+              <div className="flex flex-col items-center text-center">
+                <div className="w-16 h-16 bg-[#38BDF8]/10 rounded-2xl flex items-center justify-center mb-6">
+                  <Zap className="w-8 h-8 text-[#38BDF8]" />
+                </div>
+                
+                <h2 className={`text-2xl font-black mb-2 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                  {updateInfo.required ? 'Update Required' : 'Update Available'}
+                </h2>
+                
+                <p className={`text-sm mb-8 leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                  {updateInfo.required 
+                    ? `A new version (${updateInfo.name}) is required to continue using Ultra Optimize X. Please update now.`
+                    : `A new version (${updateInfo.name}) is available. Enhance your experience with the latest optimizations.`
+                  }
+                </p>
+                
+                <div className="w-full space-y-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => window.open(updateInfo.url, '_blank')}
+                    className="w-full py-4 bg-[#38BDF8] text-white rounded-2xl font-black text-sm tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-[#38BDF8]/20"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    UPDATE NOW
+                  </motion.button>
+                  
+                  {!updateInfo.required && (
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setUpdateInfo(null)}
+                      className={`w-full py-4 rounded-2xl font-black text-xs tracking-widest transition-colors ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-white/10' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+                    >
+                      LATER
+                    </motion.button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="mt-8 text-center max-w-md">
         <p className="text-slate-400 text-sm">

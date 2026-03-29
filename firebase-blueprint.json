@@ -29,6 +29,18 @@
         "lastActive": { "type": "string", "format": "date-time" }
       },
       "required": ["userId", "username", "status", "createdAt"]
+    },
+    "AppConfig": {
+      "title": "App Configuration",
+      "description": "Stores application-wide settings and version info.",
+      "type": "object",
+      "properties": {
+        "latest_version_code": { "type": "integer" },
+        "latest_version_name": { "type": "string" },
+        "update_required": { "type": "boolean" },
+        "update_url": { "type": "string" }
+      },
+      "required": ["latest_version_code", "latest_version_name", "update_required", "update_url"]
     }
   },
   "firestore": {
@@ -39,6 +51,10 @@
     "/sessions/{sessionId}": {
       "schema": "Session",
       "description": "Collection of user sessions for remote management."
+    },
+    "/app_config/{configId}": {
+      "schema": "AppConfig",
+      "description": "Collection for application global settings."
     }
   }
 }
