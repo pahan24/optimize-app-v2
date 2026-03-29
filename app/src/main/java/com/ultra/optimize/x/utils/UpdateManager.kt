@@ -1,17 +1,23 @@
 package com.ultra.optimize.x.utils
 
 import android.app.Activity
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.FileProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ultra.optimize.x.BuildConfig
 import com.ultra.optimize.x.R
+import java.io.File
 
 /**
  * UpdateManager handles checking for application updates via Firebase Firestore.
@@ -118,8 +124,10 @@ class UpdateManager(private val activity: Activity) {
         )
         
         builder.setPositiveButton("Update Now") { _, _ ->
-            openUpdateUrl(updateUrl)
-            if (updateRequired) activity.finish()
+            startDownload(updateUrl)
+            if (updateRequired) {
+                Toast.makeText(activity, "Update is required. App will close during installation.", Toast.LENGTH_LONG).show()
+            }
         }
 
         if (updateRequired) {
@@ -132,13 +140,53 @@ class UpdateManager(private val activity: Activity) {
         builder.show()
     }
 
-    private fun openUpdateUrl(url: String) {
+    private fun startDownload(url: String) {
+        if (url.isEmpty()) {
+            Toast.makeText(activity, "Invalid update URL", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        Toast.makeText(activity, "Downloading update...", Toast.LENGTH_LONG).show()
+
+        val fileName = "UltraOptimizeX_Update.apk"
+        val file = File(activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
+        if (file.exists()) file.delete()
+
+        val request = DownloadManager.Request(Uri.parse(url))
+            .setTitle("Downloading Update")
+            .setDescription("Ultra Optimize X is updating...")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+            .setDestinationUri(Uri.fromFile(file))
+            .setAllowedOverMetered(true)
+            .setAllowedOverRoaming(true)
+
+        val downloadManager = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val downloadId = downloadManager.enqueue(request)
+
+        // Register receiver to know when download is done
+        val onComplete = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+                if (id == downloadId) {
+                    installApk(file)
+                    activity.unregisterReceiver(this)
+                }
+            }
+        }
+        activity.registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+    }
+
+    private fun installApk(file: File) {
         try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            val uri = FileProvider.getUriForFile(activity, "${activity.packageName}.provider", file)
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(uri, "application/vnd.android.package-archive")
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             activity.startActivity(intent)
         } catch (e: Exception) {
-            Log.e(TAG, "Could not open update URL", e)
-            Toast.makeText(activity, "Could not open update URL", Toast.LENGTH_SHORT).show()
+            Log.e(TAG, "Installation failed", e)
+            Toast.makeText(activity, "Installation failed: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 }

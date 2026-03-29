@@ -104,6 +104,7 @@ export default function App() {
   const [isRooted, setIsRooted] = useState(true);
   const [selectedFeature, setSelectedFeature] = useState('');
   const [updateInfo, setUpdateInfo] = useState<{ name: string; required: boolean; url: string } | null>(null);
+  const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
   const isAdmin = user?.email === 'bpahan685@gmail.com';
   
   // Simulated Persistence
@@ -165,6 +166,39 @@ export default function App() {
     
     checkUpdate();
   }, []);
+
+  const manualCheckUpdate = async () => {
+    setIsCheckingUpdate(true);
+    try {
+      const docRef = doc(db, 'app_config', 'version_info');
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const latestVersionCode = Number(data.latest_version_code) || 0;
+        const latestVersionName = data.latest_version_name || '';
+        const updateRequired = data.update_required || false;
+        const updateUrl = data.update_url || '';
+
+        if (latestVersionCode > CURRENT_VERSION_CODE) {
+          setUpdateInfo({
+            name: latestVersionName,
+            required: updateRequired,
+            url: updateUrl
+          });
+        } else {
+          alert('App is up to date!');
+        }
+      } else {
+        alert('Update info not found in database.');
+      }
+    } catch (error) {
+      console.error('Update check failed:', error);
+      alert('Update check failed. Check console for details.');
+    } finally {
+      setIsCheckingUpdate(false);
+    }
+  };
 
   // Auth Listener
   useEffect(() => {
@@ -352,6 +386,8 @@ export default function App() {
           onLogout={handleLogout}
           isAdmin={isAdmin}
           onOpenAdmin={() => setCurrentPage('admin')}
+          onCheckUpdate={manualCheckUpdate}
+          isCheckingUpdate={isCheckingUpdate}
         />;
       case 'admin':
         return <AdminDashboard onBack={() => setCurrentPage('settings')} theme={theme} />;
@@ -904,7 +940,7 @@ export default function App() {
   );
 }
 
-function SettingsPage({ onBack, states, onToggle, theme, onToggleTheme, onLogout, isAdmin, onOpenAdmin }: { 
+function SettingsPage({ onBack, states, onToggle, theme, onToggleTheme, onLogout, isAdmin, onOpenAdmin, onCheckUpdate, isCheckingUpdate }: { 
   onBack: () => void, 
   states: any, 
   onToggle: (k: string) => void, 
@@ -912,7 +948,9 @@ function SettingsPage({ onBack, states, onToggle, theme, onToggleTheme, onLogout
   onToggleTheme: () => void, 
   onLogout: () => void,
   isAdmin: boolean,
-  onOpenAdmin: () => void
+  onOpenAdmin: () => void,
+  onCheckUpdate: () => void,
+  isCheckingUpdate: boolean
 }) {
   return (
     <motion.div 
@@ -975,15 +1013,26 @@ function SettingsPage({ onBack, states, onToggle, theme, onToggleTheme, onLogout
         ))}
       </div>
 
-      <motion.button
-        whileHover={{ scale: 1.02, backgroundColor: theme === 'dark' ? 'rgba(244, 63, 94, 0.2)' : 'rgba(244, 63, 94, 0.1)' }}
-        whileTap={{ scale: 0.98 }}
-        onClick={onLogout}
-        className={`w-full py-4 rounded-2xl font-black text-xs tracking-widest flex items-center justify-center gap-2 border mt-auto transition-colors ${theme === 'dark' ? 'bg-[#1E293B] border-white/5 text-[#F43F5E]' : 'bg-slate-50 border-slate-100 text-[#F43F5E] shadow-sm'}`}
-      >
-        <LogOut className="w-4 h-4" />
-        LOGOUT ACCOUNT
-      </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.02, backgroundColor: theme === 'dark' ? 'rgba(244, 63, 94, 0.2)' : 'rgba(244, 63, 94, 0.1)' }}
+          whileTap={{ scale: 0.98 }}
+          onClick={onLogout}
+          className={`w-full py-4 rounded-2xl font-black text-xs tracking-widest flex items-center justify-center gap-2 border mt-auto transition-colors ${theme === 'dark' ? 'bg-[#1E293B] border-white/5 text-[#F43F5E]' : 'bg-slate-50 border-slate-100 text-[#F43F5E] shadow-sm'}`}
+        >
+          <LogOut className="w-4 h-4" />
+          LOGOUT ACCOUNT
+        </motion.button>
+
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={onCheckUpdate}
+          disabled={isCheckingUpdate}
+          className={`w-full py-4 rounded-2xl font-black text-[10px] tracking-widest flex items-center justify-center gap-2 border mt-4 transition-colors ${theme === 'dark' ? 'bg-white/5 border-white/10 text-slate-400 hover:text-white' : 'bg-white border-slate-200 text-slate-500 hover:text-slate-900 shadow-sm'}`}
+        >
+          <Zap className={`w-3.5 h-3.5 ${isCheckingUpdate ? 'animate-pulse' : ''}`} />
+          {isCheckingUpdate ? 'CHECKING...' : 'CHECK FOR UPDATES'}
+        </motion.button>
     </motion.div>
   );
 }
@@ -1457,6 +1506,22 @@ function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }
     }
   };
 
+  const seedUpdateConfig = async () => {
+    try {
+      const configRef = doc(db, 'app_config', 'version_info');
+      await setDoc(configRef, {
+        latest_version_code: 2,
+        latest_version_name: '1.2.0',
+        update_required: false,
+        update_url: 'https://www.mediafire.com/file/example/UltraOptimizeX.apk/file'
+      });
+      setFeedback({ message: 'Update Config (v1.2.0) seeded!', type: 'success' });
+    } catch (error) {
+      setFeedback({ message: 'Update seeding failed', type: 'error' });
+      handleFirestoreError(error, OperationType.WRITE, 'app_config/version_info');
+    }
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
@@ -1470,12 +1535,22 @@ function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }
           <Smartphone className="w-6 h-6 text-[#38BDF8] rotate-180 cursor-pointer" onClick={onBack} />
           <h2 className={`text-xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Session Manager</h2>
         </div>
-        <button
-          onClick={seedTestOtp}
-          className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900'}`}
-        >
-          <KeyRound className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={seedUpdateConfig}
+            title="Seed Update Config"
+            className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900'}`}
+          >
+            <Zap className="w-5 h-5" />
+          </button>
+          <button
+            onClick={seedTestOtp}
+            title="Seed Test OTP"
+            className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900'}`}
+          >
+            <KeyRound className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       <div className={`w-full rounded-[2.5rem] p-6 border flex-1 overflow-hidden flex flex-col relative z-10 transition-colors ${theme === 'dark' ? 'bg-[#1E293B] border-white/5 shadow-2xl' : 'bg-white border-slate-100 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)]'}`}>
