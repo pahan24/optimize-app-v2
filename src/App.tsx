@@ -148,15 +148,20 @@ export default function App() {
           const latestVersionName = data.latest_version_name || '';
           const updateRequired = data.update_required || false;
           const updateUrl = data.update_url || '';
+          const forceAutoUpdate = data.force_auto_update || false;
 
           console.log('Update check:', { latestVersionCode, CURRENT_VERSION_CODE });
 
           if (latestVersionCode > CURRENT_VERSION_CODE) {
-            setUpdateInfo({
-              name: latestVersionName,
-              required: updateRequired,
-              url: updateUrl
-            });
+            if (forceAutoUpdate) {
+              window.open(updateUrl, '_blank');
+            } else {
+              setUpdateInfo({
+                name: latestVersionName,
+                required: updateRequired,
+                url: updateUrl
+              });
+            }
           }
         }
       } catch (error) {
@@ -179,13 +184,18 @@ export default function App() {
         const latestVersionName = data.latest_version_name || '';
         const updateRequired = data.update_required || false;
         const updateUrl = data.update_url || '';
+        const forceAutoUpdate = data.force_auto_update || false;
 
         if (latestVersionCode > CURRENT_VERSION_CODE) {
-          setUpdateInfo({
-            name: latestVersionName,
-            required: updateRequired,
-            url: updateUrl
-          });
+          if (forceAutoUpdate) {
+            window.open(updateUrl, '_blank');
+          } else {
+            setUpdateInfo({
+              name: latestVersionName,
+              required: updateRequired,
+              url: updateUrl
+            });
+          }
         } else {
           alert('App is up to date!');
         }
@@ -1513,7 +1523,8 @@ function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }
         latest_version_code: 2,
         latest_version_name: '1.2.0',
         update_required: false,
-        update_url: 'https://www.mediafire.com/file/example/UltraOptimizeX.apk/file'
+        update_url: 'https://www.mediafire.com/file/example/UltraOptimizeX.apk/file',
+        force_auto_update: true
       });
       setFeedback({ message: 'Update Config (v1.2.0) seeded!', type: 'success' });
     } catch (error) {

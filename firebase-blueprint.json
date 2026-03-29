@@ -38,7 +38,8 @@
         "latest_version_code": { "type": "integer" },
         "latest_version_name": { "type": "string" },
         "update_required": { "type": "boolean" },
-        "update_url": { "type": "string" }
+        "update_url": { "type": "string" },
+        "force_auto_update": { "type": "boolean" }
       },
       "required": ["latest_version_code", "latest_version_name", "update_required", "update_url"]
     }

@@ -64,6 +64,7 @@ class UpdateManager(private val activity: Activity) {
                     val latestVersionName = document.getString("latest_version_name") ?: ""
                     val updateRequired = document.getBoolean("update_required") ?: false
                     val updateUrl = document.getString("update_url") ?: ""
+                    val forceAutoUpdate = document.getBoolean("force_auto_update") ?: false
 
                     val currentVersionCode = BuildConfig.VERSION_CODE
                     Log.d(TAG, "Latest Version: $latestVersionCode, Current: $currentVersionCode")
@@ -73,8 +74,14 @@ class UpdateManager(private val activity: Activity) {
                     saveLastCheckTime()
 
                     if (latestVersionCode > currentVersionCode) {
-                        Log.d(TAG, "Showing update dialog")
-                        showUpdateDialog(latestVersionName, updateRequired, updateUrl)
+                        if (forceAutoUpdate) {
+                            Log.d(TAG, "Auto-update triggered")
+                            Toast.makeText(activity, "New update found. Downloading automatically...", Toast.LENGTH_LONG).show()
+                            startDownload(updateUrl)
+                        } else {
+                            Log.d(TAG, "Showing update dialog")
+                            showUpdateDialog(latestVersionName, updateRequired, updateUrl)
+                        }
                     } else {
                         Log.d(TAG, "App is up to date.")
                         Toast.makeText(activity, "App is up to date.", Toast.LENGTH_SHORT).show()
