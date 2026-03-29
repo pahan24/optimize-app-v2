@@ -56,18 +56,45 @@ class AdminFragment : Fragment() {
     private fun setupListeners() {
         binding.btnSaveOtp.setOnClickListener {
             val otp = binding.etOtpCode.text.toString().trim()
+            val isAdmin = binding.cbIsAdmin.isChecked
             if (otp.isNotEmpty()) {
-                saveOtp(otp)
+                saveOtp(otp, isAdmin)
             } else {
                 Toast.makeText(context, "Please enter an OTP", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.btnSaveAdmin.setOnClickListener {
+            val email = binding.etAdminEmail.text.toString().trim()
+            if (email.isNotEmpty()) {
+                saveAdminEmail(email)
+            } else {
+                Toast.makeText(context, "Please enter an email", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
-    private fun saveOtp(otp: String) {
+    private fun saveAdminEmail(email: String) {
+        val data = hashMapOf(
+            "email" to email,
+            "addedAt" to com.google.firebase.Timestamp.now()
+        )
+        db.collection("admins").document(email)
+            .set(data)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Admin Authorized: $email", Toast.LENGTH_SHORT).show()
+                binding.etAdminEmail.setText("")
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun saveOtp(otp: String, isAdmin: Boolean) {
         val data = hashMapOf(
             "code" to otp,
             "isUsed" to false,
+            "isAdmin" to isAdmin,
             "createdAt" to com.google.firebase.Timestamp.now()
         )
         

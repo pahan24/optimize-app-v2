@@ -73,7 +73,7 @@ class LagFixerFragment : Fragment() {
         binding.progressLag.isIndeterminate = true
         
         Thread {
-            val isRooted = RootManager.isRooted()
+            val isRooted = RootManager.isRooted(requireContext())
             LagManager.fixLag(requireContext(), isRooted)
             Thread.sleep(2500)
             handler.post {

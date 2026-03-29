@@ -89,23 +89,8 @@ class LoginFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            if (password.length != 6) {
-                binding.tilPassword.error = "Enter 6-digit OTP"
-                return@setOnClickListener
-            }
-
-            // Hardcoded fallback for first-time setup or connection issues
-            if (password == "123456") {
-                SettingsManager.setLoggedIn(requireContext(), true)
-                findNavController().navigate(R.id.action_login_to_dashboard)
-                return@setOnClickListener
-            }
-
-            // Master Admin OTP (Temporary fix for Google Sign-In issues)
-            if (password == "ADMIN_1234" || password == "bpahan685@admin") {
-                SettingsManager.setLoggedIn(requireContext(), true)
-                SettingsManager.setAdmin(requireContext(), true)
-                findNavController().navigate(R.id.action_login_to_dashboard)
+            if (password.length < 6) {
+                binding.tilPassword.error = "Enter valid OTP"
                 return@setOnClickListener
             }
 
@@ -132,14 +117,31 @@ class LoginFragment : Fragment() {
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    if (user?.email == "bpahan685@gmail.com") {
-                        SettingsManager.setLoggedIn(requireContext(), true)
-                        SettingsManager.setAdmin(requireContext(), true)
-                        findNavController().navigate(R.id.action_login_to_dashboard)
-                    } else {
-                        auth.signOut()
-                        showError("Access denied. Admin only.")
-                    }
+                    val email = user?.email ?: ""
+                    
+                    // Check if this email is in the admins collection
+                    db.collection("admins").document(email).get()
+                        .addOnSuccessListener { doc ->
+                            if (doc.exists() || email == "bpahan685@gmail.com") {
+                                SettingsManager.setLoggedIn(requireContext(), true)
+                                SettingsManager.setAdmin(requireContext(), true)
+                                findNavController().navigate(R.id.action_login_to_dashboard)
+                            } else {
+                                auth.signOut()
+                                showError("Access denied. Admin only.")
+                            }
+                        }
+                        .addOnFailureListener {
+                            // Fallback to hardcoded for safety if firestore fails
+                            if (email == "bpahan685@gmail.com") {
+                                SettingsManager.setLoggedIn(requireContext(), true)
+                                SettingsManager.setAdmin(requireContext(), true)
+                                findNavController().navigate(R.id.action_login_to_dashboard)
+                            } else {
+                                auth.signOut()
+                                showError("Authentication error.")
+                            }
+                        }
                 } else {
                     showError("Authentication failed.")
                 }
@@ -177,12 +179,15 @@ class LoginFragment : Fragment() {
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val isUsed = document.getBoolean("isUsed") ?: true
+                    val isAdmin = document.getBoolean("isAdmin") ?: false
+                    
                     if (!isUsed) {
                         // Mark as used immediately
                         db.collection("otps").document(password)
                             .update("isUsed", true)
                             .addOnSuccessListener {
                                 SettingsManager.setLoggedIn(requireContext(), true)
+                                SettingsManager.setAdmin(requireContext(), isAdmin)
                                 findNavController().navigate(R.id.action_login_to_dashboard)
                             }
                             .addOnFailureListener { e ->

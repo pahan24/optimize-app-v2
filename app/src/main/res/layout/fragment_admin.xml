@@ -25,11 +25,14 @@
         android:layout_marginStart="-100dp"
         android:alpha="0.05" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
     <TextView
         android:id="@+id/tv_admin_title"
@@ -186,6 +189,15 @@
                     android:textColor="@color/text_white" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cb_is_admin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Grant Admin Privileges"
+                android:textColor="@color/text_secondary"
+                app:buttonTint="@color/neon_blue" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_save_otp"
                 style="@style/NeonButtonStyle"
@@ -207,12 +219,53 @@
         android:textSize="14sp"
         android:letterSpacing="0.1" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_otps"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="12dp"
-        android:layout_weight="1" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_otps"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="12dp" />
 
-</LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="sans-serif-black"
+                android:text="ADMIN EMAIL MANAGEMENT"
+                android:textColor="@color/text_white"
+                android:textSize="14sp"
+                android:letterSpacing="0.1" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_admin_email"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Admin Email Address"
+                app:hintTextColor="@color/accent_green"
+                app:boxStrokeColor="@color/accent_green"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusTopStart="12dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_admin_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/text_white" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_save_admin"
+                style="@style/NeonButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:text="AUTHORIZE ADMIN EMAIL"
+                app:backgroundTint="@color/accent_green" />
+
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

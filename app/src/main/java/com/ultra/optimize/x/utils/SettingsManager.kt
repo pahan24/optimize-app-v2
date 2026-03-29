@@ -30,6 +30,8 @@ class SettingsManager(context: Context) {
         const val KEY_FPS_METER = "fps_meter_enabled"
         const val KEY_COOL_DOWN = "cool_down_enabled"
         const val KEY_DARK_MODE = "dark_mode_enabled"
+        const val KEY_IS_ADMIN = "is_admin"
+        const val KEY_IS_LOGGED_IN = "is_logged_in"
 
         fun getSetting(context: Context, key: String, defaultValue: Boolean = false): Boolean {
             val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
@@ -41,11 +43,11 @@ class SettingsManager(context: Context) {
             prefs.edit().putBoolean(key, value).apply()
         }
 
-        fun isLoggedIn(context: Context): Boolean = getSetting(context, "is_logged_in", false)
-        fun setLoggedIn(context: Context, loggedIn: Boolean) = saveSetting(context, "is_logged_in", loggedIn)
+        fun isLoggedIn(context: Context): Boolean = getSetting(context, KEY_IS_LOGGED_IN, false)
+        fun setLoggedIn(context: Context, loggedIn: Boolean) = saveSetting(context, KEY_IS_LOGGED_IN, loggedIn)
         
-        fun isAdmin(context: Context): Boolean = getSetting(context, "is_admin", false)
-        fun setAdmin(context: Context, isAdmin: Boolean) = saveSetting(context, "is_admin", isAdmin)
+        fun isAdmin(context: Context): Boolean = getSetting(context, KEY_IS_ADMIN, false)
+        fun setAdmin(context: Context, isAdmin: Boolean) = saveSetting(context, KEY_IS_ADMIN, isAdmin)
 
         fun isDarkMode(context: Context): Boolean = getSetting(context, KEY_DARK_MODE, true)
         fun setDarkMode(context: Context, value: Boolean) = saveSetting(context, KEY_DARK_MODE, value)

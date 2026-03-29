@@ -74,7 +74,7 @@ class FreeFireFragment : Fragment() {
         binding.progressSensitivity.isIndeterminate = true
         
         Thread {
-            val isRooted = RootManager.isRooted()
+            val isRooted = RootManager.isRooted(requireContext())
             FreeFireManager.optimizeForFreeFire(requireContext(), isRooted)
             Thread.sleep(3000)
             handler.post {

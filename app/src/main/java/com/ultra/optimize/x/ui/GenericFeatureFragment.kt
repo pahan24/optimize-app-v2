@@ -49,7 +49,7 @@ class GenericFeatureFragment : Fragment() {
             
             Thread {
                 // Execute root commands based on feature
-                if (com.ultra.optimize.x.utils.RootManager.isRooted()) {
+                if (com.ultra.optimize.x.utils.RootManager.isRooted(requireContext())) {
                     when (title) {
                         "Battery Saver" -> {
                             com.ultra.optimize.x.utils.RootManager.runCommand("settings put global low_power 1")

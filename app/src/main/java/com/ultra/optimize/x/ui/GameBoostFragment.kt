@@ -48,8 +48,9 @@ class GameBoostFragment : Fragment() {
             binding.btnActivate.text = "ACTIVATING..."
             
             Thread {
-                RamManager.boostRam(requireContext(), RootManager.isRooted())
-                if (RootManager.isRooted()) {
+                val isRooted = RootManager.isRooted(requireContext())
+                RamManager.boostRam(requireContext(), isRooted)
+                if (isRooted) {
                     CpuManager.setGovernor("performance")
                 }
                 Thread.sleep(1000)

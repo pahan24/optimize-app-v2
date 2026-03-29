@@ -1,5 +1,6 @@
 package com.ultra.optimize.x.utils
 
+import android.content.Context
 import android.util.Log
 import java.io.BufferedReader
 import java.io.DataOutputStream
@@ -9,7 +10,10 @@ object RootManager {
 
     private const val TAG = "RootManager"
 
-    fun isRooted(): Boolean {
+    fun isRooted(context: Context? = null): Boolean {
+        if (context != null && SettingsManager.getSetting(context, SettingsManager.KEY_ROOT_MODE, false)) {
+            return true
+        }
         return try {
             val process = Runtime.getRuntime().exec("which su")
             val reader = BufferedReader(InputStreamReader(process.inputStream))

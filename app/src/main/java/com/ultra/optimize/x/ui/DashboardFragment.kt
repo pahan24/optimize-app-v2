@@ -119,13 +119,18 @@ class DashboardFragment : Fragment() {
     }
 
     private fun checkRoot() {
-        isRooted = RootManager.isRooted()
+        isRooted = RootManager.isRooted(requireContext())
         if (isRooted) {
             binding.tvRootStatus.text = "AUTHORIZED"
             binding.tvRootStatus.setTextColor(resources.getColor(R.color.accent_green))
         } else {
             binding.tvRootStatus.text = "DENIED"
             binding.tvRootStatus.setTextColor(resources.getColor(R.color.accent_red))
+        }
+        
+        // Show Admin Badge if applicable
+        if (SettingsManager.isAdmin(requireContext())) {
+            binding.tvAppTitle.append("\n(ADMIN)")
         }
     }
 
