@@ -48,6 +48,13 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Admin authorization check
+    match /admins/{email} {
+      // Allow a user to check if their own email is in the admin list
+      allow get: if request.auth != null && request.auth.token.email == email;
+      allow read, write: if isAdmin();
+    }
+
     // Default deny
     match /{document=**} {
       allow read, write: if isAdmin();

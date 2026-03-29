@@ -18,13 +18,14 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ultra.optimize.x.R
 import com.ultra.optimize.x.databinding.FragmentLoginBinding
+import com.ultra.optimize.x.utils.Constants
 import com.ultra.optimize.x.utils.SettingsManager
 
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance(Constants.FIRESTORE_DATABASE_ID)
     private val auth = FirebaseAuth.getInstance()
     private lateinit var googleSignInClient: GoogleSignInClient
 
@@ -100,7 +101,7 @@ class LoginFragment : Fragment() {
         binding.btnAdminLogin.setOnClickListener {
             val clientId = getString(R.string.default_web_client_id)
             if (clientId.contains("dummy")) {
-                Toast.makeText(context, "Google Sign-In is not configured. Please update the Web Client ID in strings.xml.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Google Sign-In is not configured. Please update the Web Client ID in strings.xml from your Firebase Console.", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
             val signInIntent = googleSignInClient.signInIntent

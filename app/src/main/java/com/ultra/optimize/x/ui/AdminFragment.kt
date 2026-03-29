@@ -10,13 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ultra.optimize.x.R
 import com.ultra.optimize.x.databinding.FragmentAdminBinding
+import com.ultra.optimize.x.utils.Constants
 import java.util.*
 
 class AdminFragment : Fragment() {
 
     private var _binding: FragmentAdminBinding? = null
     private val binding get() = _binding!!
-    private val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance(Constants.FIRESTORE_DATABASE_ID)
     private lateinit var otpAdapter: OtpAdapter
 
     override fun onCreateView(

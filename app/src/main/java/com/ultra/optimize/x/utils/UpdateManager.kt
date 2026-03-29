@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ultra.optimize.x.BuildConfig
 import com.ultra.optimize.x.R
+import com.ultra.optimize.x.utils.Constants
 import java.io.File
 
 /**
@@ -25,7 +27,7 @@ import java.io.File
  */
 class UpdateManager(private val activity: Activity) {
 
-    private val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance(Constants.FIRESTORE_DATABASE_ID)
     private val TAG = "UpdateManager"
     private val PREFS_NAME = "update_prefs"
     private val KEY_LAST_CHECK_TIME = "last_check_time"
@@ -180,7 +182,12 @@ class UpdateManager(private val activity: Activity) {
                 }
             }
         }
-        activity.registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            activity.registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), Context.RECEIVER_EXPORTED)
+        } else {
+            activity.registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+        }
     }
 
     private fun installApk(file: File) {
