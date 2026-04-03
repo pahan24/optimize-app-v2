@@ -32,6 +32,13 @@ class SettingsManager(context: Context) {
         const val KEY_DARK_MODE = "dark_mode_enabled"
         const val KEY_IS_ADMIN = "is_admin"
         const val KEY_IS_LOGGED_IN = "is_logged_in"
+        const val KEY_SHIZUKU_MODE = "shizuku_mode_enabled"
+        const val KEY_HEADSHOT_BOOST = "headshot_boost_enabled"
+        const val KEY_TOUCH_SENSITIVITY = "touch_sensitivity_value"
+        const val KEY_ANTI_ALIASING = "anti_aliasing_enabled"
+        const val KEY_SHADOW_CONTROL = "shadow_control_enabled"
+        const val KEY_CROSSHAIR_PRO = "crosshair_pro_enabled"
+        const val KEY_GAME_SIDE_PANEL = "game_side_panel_enabled"
 
         fun getSetting(context: Context, key: String, defaultValue: Boolean = false): Boolean {
             val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
@@ -41,6 +48,26 @@ class SettingsManager(context: Context) {
         fun saveSetting(context: Context, key: String, value: Boolean) {
             val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
             prefs.edit().putBoolean(key, value).apply()
+        }
+
+        fun saveInt(context: Context, key: String, value: Int) {
+            val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
+            prefs.edit().putInt(key, value).apply()
+        }
+
+        fun getInt(context: Context, key: String, defaultValue: Int = 0): Int {
+            val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
+            return prefs.getInt(key, defaultValue)
+        }
+
+        fun saveString(context: Context, key: String, value: String) {
+            val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
+            prefs.edit().putString(key, value).apply()
+        }
+
+        fun getString(context: Context, key: String, defaultValue: String? = null): String? {
+            val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
+            return prefs.getString(key, defaultValue)
         }
 
         fun isLoggedIn(context: Context): Boolean = getSetting(context, KEY_IS_LOGGED_IN, false)

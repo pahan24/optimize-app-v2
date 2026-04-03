@@ -93,7 +93,46 @@
         <action
             android:id="@+id/action_dashboard_to_gameTools"
             app:destination="@id/gameToolsFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_vpn"
+            app:destination="@id/vpnFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_rootInstaller"
+            app:destination="@id/rootFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_network"
+            app:destination="@id/networkFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_fileManager"
+            app:destination="@id/fileManagerFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_regFiles"
+            app:destination="@id/fileManagerFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_gamingPro"
+            app:destination="@id/gamingProFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_performance"
+            app:destination="@id/genericFeatureFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_bypass"
+            app:destination="@id/bypassFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_genericFeatureFragment"
+            app:destination="@id/genericFeatureFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/bypassFragment"
+        android:name="com.ultra.optimize.x.ui.BypassFragment"
+        android:label="Anti-Ban Bypass"
+        tools:layout="@layout/fragment_bypass" />
+
+    <fragment
+        android:id="@+id/gamingProFragment"
+        android:name="com.ultra.optimize.x.ui.GamingProFragment"
+        android:label="Gaming Pro Tools"
+        tools:layout="@layout/fragment_gaming_pro" />
 
     <fragment
         android:id="@+id/genericFeatureFragment"
@@ -161,6 +200,30 @@
         android:name="com.ultra.optimize.x.ui.GameToolsFragment"
         android:label="Game Tools"
         tools:layout="@layout/fragment_game_tools" />
+
+    <fragment
+        android:id="@+id/vpnFragment"
+        android:name="com.ultra.optimize.x.ui.VpnFragment"
+        android:label="Ultra VPN"
+        tools:layout="@layout/fragment_vpn" />
+
+    <fragment
+        android:id="@+id/rootFragment"
+        android:name="com.ultra.optimize.x.ui.RootFragment"
+        android:label="Root &amp; System"
+        tools:layout="@layout/fragment_root_installer" />
+
+    <fragment
+        android:id="@+id/networkFragment"
+        android:name="com.ultra.optimize.x.ui.NetworkFragment"
+        android:label="Network Optimizer"
+        tools:layout="@layout/fragment_network" />
+
+    <fragment
+        android:id="@+id/fileManagerFragment"
+        android:name="com.ultra.optimize.x.ui.FileManagerFragment"
+        android:label="Cloud Files"
+        tools:layout="@layout/fragment_file_manager" />
 
     <fragment
         android:id="@+id/adminFragment"

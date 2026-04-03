@@ -128,8 +128,26 @@
                     android:id="@+id/switch_root_mode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Root Features"
-                    android:textColor="@color/text_primary"
+                    android:text="Simulated Root Mode"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Unlock root-only features without actual root access."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="10sp"
+                    android:layout_marginBottom="12dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_check_root"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CHECK SYSTEM ROOT"
+                    android:textColor="@color/neon_blue"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="0dp"
                     android:layout_marginBottom="12dp" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial

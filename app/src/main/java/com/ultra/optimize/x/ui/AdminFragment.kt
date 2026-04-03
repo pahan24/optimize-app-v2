@@ -73,6 +73,39 @@ class AdminFragment : Fragment() {
                 Toast.makeText(context, "Please enter an email", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.btnPushUpdate.setOnClickListener {
+            val versionCode = binding.etVersionCode.text.toString().trim().toLongOrNull() ?: 0L
+            val versionName = binding.etVersionName.text.toString().trim()
+            val updateUrl = binding.etUpdateUrl.text.toString().trim()
+            val forceUpdate = binding.switchForceUpdate.isChecked
+
+            if (versionCode > 0 && versionName.isNotEmpty() && updateUrl.isNotEmpty()) {
+                pushUpdateInfo(versionCode, versionName, updateUrl, forceUpdate)
+            } else {
+                Toast.makeText(context, "Please fill all update fields", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun pushUpdateInfo(code: Long, name: String, url: String, force: Boolean) {
+        val data = hashMapOf(
+            "latest_version_code" to code,
+            "latest_version_name" to name,
+            "update_url" to url,
+            "force_auto_update" to force,
+            "update_required" to force,
+            "updatedAt" to com.google.firebase.Timestamp.now()
+        )
+
+        db.collection("app_config").document("version_info")
+            .set(data)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Update Info Pushed Successfully", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun saveAdminEmail(email: String) {

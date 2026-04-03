@@ -89,7 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="1.2 GB"
+                android:text="0 MB"
                 android:textColor="@color/accent_red"
                 android:textSize="32sp"
                 android:textStyle="bold" />
@@ -99,20 +99,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:progress="0"
                 app:indicatorColor="@color/accent_red"
                 app:trackColor="@color/dark_bg" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_categories"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_clean"
+        app:layout_constraintTop_toBottomOf="@id/card_storage" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_clean"
         style="@style/NeonButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="CLEAN NOW"
+        android:layout_marginBottom="16dp"
+        android:text="SCAN SYSTEM"
         app:backgroundTint="@color/accent_red"
-        app:layout_constraintTop_toBottomOf="@id/card_storage" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -123,7 +123,7 @@ class LoginFragment : Fragment() {
                     // Check if this email is in the admins collection
                     db.collection("admins").document(email).get()
                         .addOnSuccessListener { doc ->
-                            if (doc.exists() || email == "bpahan685@gmail.com") {
+                            if (doc.exists() || email == "bpahan685@gmail.com" || email == "sasmikarashmika49@gmail.com") {
                                 SettingsManager.setLoggedIn(requireContext(), true)
                                 SettingsManager.setAdmin(requireContext(), true)
                                 findNavController().navigate(R.id.action_login_to_dashboard)
@@ -134,7 +134,7 @@ class LoginFragment : Fragment() {
                         }
                         .addOnFailureListener {
                             // Fallback to hardcoded for safety if firestore fails
-                            if (email == "bpahan685@gmail.com") {
+                            if (email == "bpahan685@gmail.com" || email == "sasmikarashmika49@gmail.com") {
                                 SettingsManager.setLoggedIn(requireContext(), true)
                                 SettingsManager.setAdmin(requireContext(), true)
                                 findNavController().navigate(R.id.action_login_to_dashboard)

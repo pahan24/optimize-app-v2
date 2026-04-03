@@ -20,6 +20,9 @@ import {
   LogIn,
   Target,
   Crosshair,
+  Battery,
+  Monitor,
+  Play,
   Sun,
   Moon,
   User as UserIcon,
@@ -34,6 +37,7 @@ import { getDoc, updateDoc, doc, setDoc, collection, onSnapshot, query, orderBy,
 import { Logo } from './components/Logo';
 
 const CURRENT_VERSION_CODE = 1;
+const CURRENT_VERSION_NAME = '1.0.0';
 
 enum OperationType {
   CREATE = 'create',
@@ -128,7 +132,49 @@ export default function App() {
     'ff_sensitivity': false,
     'fps_meter_enabled': false,
     'crosshair_enabled': false,
-    'cool_down': true
+    'cool_down': true,
+    'gx_boost': false,
+    'bypass_enabled': false,
+    'settings_config': false,
+    'red_button': false,
+    'correct_dpi': false,
+    'movement_tutorial': false,
+    'macrodroid_script': false,
+    'easy_drag': false,
+    'spread_fix': false,
+    'aimstabilize': false,
+    '120_fps_unlock': false,
+    'main_obb': false,
+    '3rd_regedit': false,
+    'optimize_device': false,
+    'sensi_lesson': false,
+    'touch_speed': false,
+    'customized_huds': false,
+    'fire_button': false,
+    'network_opt': false,
+    'app_manager': false,
+    'debloater': false,
+    'charge_boost': false,
+    'ram_expander': false,
+    'ping_stabilizer': false,
+    'touch_response': false,
+    'color_enhancer': false,
+    'resolution_changer': false,
+    'anti-lag_script': false,
+    'sensitivity_booster': false,
+    'game_recorder': false,
+    'screen_overlay': false,
+    'volume_booster': false,
+    'wifi_optimizer': false,
+    'gpu_turbo': false,
+    'touch_stabilizer': false,
+    'system_tuner': false,
+    'game_booster_x': false,
+    'pro_sensitivity': false,
+    'auto_headshot': false,
+    'recoil_control': false,
+    'shizuku_active': false,
+    'vpn_enabled': false
   });
 
   const toggleFeature = (key: string) => {
@@ -136,6 +182,13 @@ export default function App() {
   };
 
   // Update Check
+  const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
   useEffect(() => {
     const checkUpdate = async () => {
       try {
@@ -197,14 +250,14 @@ export default function App() {
             });
           }
         } else {
-          alert('App is up to date!');
+          showToast('App is up to date!', 'success');
         }
       } else {
-        alert('Update info not found in database.');
+        showToast('Update info not found in database.', 'error');
       }
     } catch (error) {
       console.error('Update check failed:', error);
-      alert('Update check failed. Check console for details.');
+      showToast('Update check failed.', 'error');
     } finally {
       setIsCheckingUpdate(false);
     }
@@ -400,7 +453,12 @@ export default function App() {
           isCheckingUpdate={isCheckingUpdate}
         />;
       case 'admin':
-        return <AdminDashboard onBack={() => setCurrentPage('settings')} theme={theme} />;
+        return <AdminDashboard 
+          onBack={() => setCurrentPage('settings')} 
+          theme={theme} 
+          onCheckUpdate={manualCheckUpdate}
+          isCheckingUpdate={isCheckingUpdate}
+        />;
       case 'game-boost':
         return <GameBoostPage 
           onBack={() => setCurrentPage('dashboard')} 
@@ -445,6 +503,33 @@ export default function App() {
           onToggleFps={() => toggleFeature('fps_meter_enabled')}
           crosshairEnabled={featureStates['crosshair_enabled']}
           onToggleCrosshair={() => toggleFeature('crosshair_enabled')}
+          theme={theme}
+        />;
+      case 'bypass':
+        return <BypassPage 
+          onBack={() => setCurrentPage('dashboard')} 
+          isEnabled={featureStates['bypass_enabled']}
+          onToggle={() => toggleFeature('bypass_enabled')}
+          theme={theme}
+        />;
+      case 'gaming-pro':
+        return <GamingProPage 
+          onBack={() => setCurrentPage('dashboard')} 
+          states={featureStates}
+          onToggle={toggleFeature}
+          theme={theme}
+        />;
+      case 'vpn':
+        return <VPNPage 
+          onBack={() => setCurrentPage('dashboard')} 
+          isEnabled={featureStates['vpn_enabled']}
+          onToggle={() => toggleFeature('vpn_enabled')}
+          theme={theme}
+        />;
+      case 'shizuku-setup':
+        return <ShizukuPage 
+          onBack={() => setCurrentPage('dashboard')} 
+          onComplete={() => { toggleFeature('shizuku_active'); setCurrentPage('dashboard'); }}
           theme={theme}
         />;
       case 'generic':
@@ -552,6 +637,15 @@ export default function App() {
                       {isRooted ? 'AUTHORIZED' : 'DENIED'}
                     </p>
                   </div>
+                  <div>
+                    <p className={`text-[8px] font-black uppercase tracking-widest mb-1 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Shizuku Status</p>
+                    <p 
+                      onClick={() => !featureStates['shizuku_active'] && setCurrentPage('shizuku-setup')}
+                      className={`text-[10px] font-bold cursor-pointer hover:opacity-80 transition-opacity ${featureStates['shizuku_active'] ? 'text-[#10B981]' : 'text-[#F59E0B]'}`}
+                    >
+                      {featureStates['shizuku_active'] ? 'ACTIVE' : 'SETUP REQUIRED'}
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -646,24 +740,64 @@ export default function App() {
                 animate="show"
                 className="grid grid-cols-2 gap-2 pb-4"
               >
-                <QuickAction icon={<Gamepad2 />} label="Game Mode" onClick={() => setCurrentPage('game-boost')} theme={theme} />
-                <QuickAction icon={<Cpu />} label="CPU Control" onClick={() => setCurrentPage('cpu-control')} theme={theme} />
-                <QuickAction icon={<Trash2 />} label="Cleaner" onClick={() => setCurrentPage('cleaner')} theme={theme} />
-                <QuickAction icon={<Activity />} label="Thermal" onClick={() => setCurrentPage('thermal')} theme={theme} />
-                <QuickAction icon={<Zap />} label="Battery" onClick={() => { setSelectedFeature('Battery Saver'); setCurrentPage('generic'); }} theme={theme} />
-                <QuickAction icon={<Database />} label="Apps" onClick={() => { setSelectedFeature('App Manager'); setCurrentPage('generic'); }} theme={theme} />
-                <QuickAction icon={<Activity />} label="Network" onClick={() => { setSelectedFeature('Network Optimizer'); setCurrentPage('generic'); }} theme={theme} />
-                <QuickAction icon={<Smartphone />} label="Display" onClick={() => { setSelectedFeature('Display Tweaks'); setCurrentPage('generic'); }} theme={theme} />
-                <QuickAction icon={<Settings />} label="Kernel" onClick={() => { setSelectedFeature('Kernel Tweaks'); setCurrentPage('generic'); }} theme={theme} />
-                <QuickAction icon={<Trash2 />} label="Debloat" onClick={() => { setSelectedFeature('System Debloater'); setCurrentPage('generic'); }} theme={theme} />
-                <QuickAction icon={<Activity />} label="DNS" onClick={() => { setSelectedFeature('DNS Changer'); setCurrentPage('generic'); }} theme={theme} />
-                <QuickAction icon={<Zap />} label="Charge" onClick={() => { setSelectedFeature('Charging Booster'); setCurrentPage('generic'); }} theme={theme} />
-                <QuickAction icon={<Activity />} label="Auto" onClick={() => { setSelectedFeature('Auto Clean'); setCurrentPage('generic'); }} theme={theme} />
-                <QuickAction icon={<Activity />} label="FPS" onClick={() => { setSelectedFeature('FPS Meter'); setCurrentPage('generic'); }} theme={theme} />
-                <QuickAction icon={<Zap />} label="Lag Fix" onClick={() => setCurrentPage('lag-fixer')} theme={theme} />
-                <QuickAction icon={<Gamepad2 />} label="Free Fire" onClick={() => setCurrentPage('free-fire')} theme={theme} />
-                <QuickAction icon={<Activity />} label="Game Tools" onClick={() => setCurrentPage('game-tools')} theme={theme} />
-                <QuickAction icon={<Settings />} label="Settings" onClick={() => setCurrentPage('settings')} theme={theme} />
+                <QuickAction icon={<Zap />} label="GX BOOST" onClick={() => { setSelectedFeature('GX BOOST'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<ShieldCheck />} label="BYPASS" onClick={() => setCurrentPage('bypass')} theme={theme} />
+                <QuickAction icon={<Settings />} label="SETTINGS CONFIG" onClick={() => { setSelectedFeature('SETTINGS CONFIG'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Activity />} label="RED BUTTON" onClick={() => { setSelectedFeature('RED BUTTON'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Smartphone />} label="CORRECT DPI" onClick={() => { setSelectedFeature('CORRECT DPI'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Gamepad2 />} label="MOVEMENT TUTORIAL" onClick={() => { setSelectedFeature('MOVEMENT TUTORIAL'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Cpu />} label="MACRODROID SCRIPT" onClick={() => { setSelectedFeature('MACRODROID SCRIPT'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Target />} label="EASY DRAG" onClick={() => { setSelectedFeature('EASY DRAG'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Crosshair />} label="SPREAD FIX" onClick={() => { setSelectedFeature('SPREAD FIX'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Activity />} label="AIMSTABILIZE" onClick={() => { setSelectedFeature('AIMSTABILIZE'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Zap />} label="120 FPS UNLOCK" onClick={() => { setSelectedFeature('120 FPS UNLOCK'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Database />} label="MAIN OBB" onClick={() => { setSelectedFeature('MAIN OBB'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Trash2 />} label="DATA REGEDIT" onClick={() => setCurrentPage('file-manager')} theme={theme} />
+                <QuickAction icon={<Activity />} label="PERFORMANCE OPTIMIZE" onClick={() => setCurrentPage('game-boost')} theme={theme} />
+                <QuickAction icon={<Settings />} label="3RD REGEDIT" onClick={() => { setSelectedFeature('3RD REGEDIT'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Zap />} label="OPTIMIZE DEVICE" onClick={() => { setSelectedFeature('OPTIMIZE DEVICE'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Gamepad2 />} label="SENSI LESSON" onClick={() => { setSelectedFeature('SENSI LESSON'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Activity />} label="TOUCH SPEED" onClick={() => { setSelectedFeature('TOUCH SPEED'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Smartphone />} label="CUSTOMIZED HUDS" onClick={() => { setSelectedFeature('CUSTOMIZED HUDS'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Target />} label="FIRE BUTTON" onClick={() => { setSelectedFeature('FIRE BUTTON'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Cpu />} label="CPU CONTROL" onClick={() => setCurrentPage('cpu-control')} theme={theme} />
+                <QuickAction icon={<Trash2 />} label="CLEANER" onClick={() => setCurrentPage('cleaner')} theme={theme} />
+                <QuickAction icon={<Thermometer />} label="THERMAL CONTROL" onClick={() => setCurrentPage('thermal')} theme={theme} />
+                <QuickAction icon={<Zap />} label="LAG FIXER" onClick={() => setCurrentPage('lag-fixer')} theme={theme} />
+                <QuickAction icon={<Target />} label="FREE FIRE OPT" onClick={() => setCurrentPage('free-fire')} theme={theme} />
+                <QuickAction icon={<Settings />} label="GAME TOOLS" onClick={() => setCurrentPage('game-tools')} theme={theme} />
+                <QuickAction icon={<Activity />} label="NETWORK OPT" onClick={() => { setSelectedFeature('NETWORK OPT'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Battery />} label="BATTERY SAVER" onClick={() => { setSelectedFeature('BATTERY SAVER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Smartphone />} label="APP MANAGER" onClick={() => { setSelectedFeature('APP MANAGER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Trash2 />} label="DEBLOATER" onClick={() => { setSelectedFeature('DEBLOATER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Activity />} label="DNS CHANGER" onClick={() => { setSelectedFeature('DNS CHANGER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Zap />} label="CHARGE BOOST" onClick={() => { setSelectedFeature('CHARGE BOOST'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Trash2 />} label="AUTO CLEAN" onClick={() => { setSelectedFeature('AUTO CLEAN'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Activity />} label="FPS METER" onClick={() => { setSelectedFeature('FPS METER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Monitor />} label="DISPLAY TWEAKS" onClick={() => { setSelectedFeature('DISPLAY TWEAKS'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Cpu />} label="KERNEL TWEAKS" onClick={() => { setSelectedFeature('KERNEL TWEAKS'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Zap />} label="RAM EXPANDER" onClick={() => { setSelectedFeature('RAM EXPANDER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Activity />} label="PING STABILIZER" onClick={() => { setSelectedFeature('PING STABILIZER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Smartphone />} label="TOUCH RESPONSE" onClick={() => { setSelectedFeature('TOUCH RESPONSE'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Zap />} label="COLOR ENHANCER" onClick={() => { setSelectedFeature('COLOR ENHANCER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Smartphone />} label="RESOLUTION CHANGER" onClick={() => { setSelectedFeature('RESOLUTION CHANGER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Cpu />} label="ANTI-LAG SCRIPT" onClick={() => { setSelectedFeature('ANTI-LAG SCRIPT'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Zap />} label="SENSITIVITY BOOSTER" onClick={() => { setSelectedFeature('SENSITIVITY BOOSTER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Activity />} label="GAME RECORDER" onClick={() => { setSelectedFeature('GAME RECORDER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Smartphone />} label="SCREEN OVERLAY" onClick={() => { setSelectedFeature('SCREEN OVERLAY'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Activity />} label="VOLUME BOOSTER" onClick={() => { setSelectedFeature('VOLUME BOOSTER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Zap />} label="WIFI OPTIMIZER" onClick={() => { setSelectedFeature('WIFI OPTIMIZER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Cpu />} label="GPU TURBO" onClick={() => { setSelectedFeature('GPU TURBO'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Smartphone />} label="TOUCH STABILIZER" onClick={() => { setSelectedFeature('TOUCH STABILIZER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Settings />} label="SYSTEM TUNER" onClick={() => { setSelectedFeature('SYSTEM TUNER'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Zap />} label="GAME BOOSTER X" onClick={() => { setSelectedFeature('GAME BOOSTER X'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Target />} label="PRO SENSITIVITY" onClick={() => { setSelectedFeature('PRO SENSITIVITY'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Crosshair />} label="AUTO HEADSHOT" onClick={() => { setSelectedFeature('AUTO HEADSHOT'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<Activity />} label="RECOIL CONTROL" onClick={() => { setSelectedFeature('RECOIL CONTROL'); setCurrentPage('generic'); }} theme={theme} />
+                <QuickAction icon={<ShieldCheck />} label="ROOT ACCESS" onClick={() => setCurrentPage('root')} theme={theme} />
+                <QuickAction icon={<Activity />} label="ULTRA VPN" onClick={() => setCurrentPage('vpn')} theme={theme} />
+                <QuickAction icon={<Settings />} label="SETTINGS" onClick={() => setCurrentPage('settings')} theme={theme} />
+                <QuickAction icon={<Zap />} label="GAMING PRO" onClick={() => setCurrentPage('gaming-pro')} theme={theme} />
               </motion.div>
             </div>
           </div>
@@ -905,12 +1039,29 @@ export default function App() {
                   {updateInfo.required ? 'Update Required' : 'Update Available'}
                 </h2>
                 
-                <p className={`text-sm mb-8 leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                <p className={`text-sm mb-4 leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
                   {updateInfo.required 
                     ? `A new version (${updateInfo.name}) is required to continue using Ultra Optimize X. Please update now.`
                     : `A new version (${updateInfo.name}) is available. Enhance your experience with the latest optimizations.`
                   }
                 </p>
+
+                <div className={`w-full p-4 rounded-2xl mb-8 text-left border ${theme === 'dark' ? 'bg-black/20 border-white/5' : 'bg-slate-50 border-slate-100'}`}>
+                  <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-2">What's New</p>
+                  <ul className="space-y-1">
+                    {[
+                      'Enhanced GPU Turbo performance',
+                      'Improved battery optimization logic',
+                      'New Pro Sensitivity profiles',
+                      'Bug fixes and stability improvements'
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <div className="w-1 h-1 bg-[#38BDF8] rounded-full mt-1.5 shrink-0" />
+                        <span className={`text-[10px] font-bold ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
                 
                 <div className="w-full space-y-3">
                   <motion.button
@@ -946,6 +1097,25 @@ export default function App() {
           The full Kotlin source code and Gradle build system are available in the project files.
         </p>
       </div>
+
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className={`fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-full font-black text-[10px] tracking-widest shadow-2xl flex items-center gap-2 border ${
+              toast.type === 'success' ? 'bg-[#10B981] text-white border-[#10B981]/20' :
+              toast.type === 'error' ? 'bg-[#F43F5E] text-white border-[#F43F5E]/20' :
+              'bg-[#38BDF8] text-white border-[#38BDF8]/20'
+            }`}
+          >
+            {toast.type === 'success' && <Check className="w-3.5 h-3.5" />}
+            {toast.type === 'error' && <AlertCircle className="w-3.5 h-3.5" />}
+            {toast.message.toUpperCase()}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -1036,6 +1206,16 @@ function SettingsPage({ onBack, states, onToggle, theme, onToggleTheme, onLogout
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
+          onClick={() => window.open('https://www.mediafire.com/file/example/UltraOptimizeX_v1.0.0.apk/file', '_blank')}
+          className={`w-full py-4 rounded-2xl font-black text-[10px] tracking-widest flex items-center justify-center gap-2 border mt-4 transition-colors ${theme === 'dark' ? 'bg-[#38BDF8]/10 border-[#38BDF8]/20 text-[#38BDF8] hover:bg-[#38BDF8]/20' : 'bg-[#38BDF8]/5 border-[#38BDF8]/10 text-[#38BDF8] hover:bg-[#38BDF8]/10 shadow-sm'}`}
+        >
+          <ExternalLink className="w-3.5 h-3.5" />
+          DOWNLOAD LATEST APK
+        </motion.button>
+
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={onCheckUpdate}
           disabled={isCheckingUpdate}
           className={`w-full py-4 rounded-2xl font-black text-[10px] tracking-widest flex items-center justify-center gap-2 border mt-4 transition-colors ${theme === 'dark' ? 'bg-white/5 border-white/10 text-slate-400 hover:text-white' : 'bg-white border-slate-200 text-slate-500 hover:text-slate-900 shadow-sm'}`}
@@ -1043,6 +1223,12 @@ function SettingsPage({ onBack, states, onToggle, theme, onToggleTheme, onLogout
           <Zap className={`w-3.5 h-3.5 ${isCheckingUpdate ? 'animate-pulse' : ''}`} />
           {isCheckingUpdate ? 'CHECKING...' : 'CHECK FOR UPDATES'}
         </motion.button>
+
+        <div className="mt-4 text-center">
+          <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">
+            Version {CURRENT_VERSION_NAME} ({CURRENT_VERSION_CODE})
+          </p>
+        </div>
     </motion.div>
   );
 }
@@ -1246,6 +1432,83 @@ function CleanerPage({ onBack, theme }: { onBack: () => void, theme: string }) {
   );
 }
 
+function ShizukuPage({ onBack, onComplete, theme }: { onBack: () => void, onComplete: () => void, theme: string }) {
+  const [step, setStep] = useState(1);
+  const steps = [
+    { title: "Developer Options", desc: "Go to Settings > About Phone and tap 'Build Number' 7 times to enable Developer Options." },
+    { title: "Wireless Debugging", desc: "In Developer Options, enable 'Wireless Debugging' and 'USB Debugging'." },
+    { title: "Pairing Device", desc: "Tap 'Wireless Debugging' > 'Pair device with pairing code' and enter the code in Shizuku." },
+    { title: "Start Shizuku", desc: "Return to Shizuku app and tap 'Start'. Ensure the service is running." }
+  ];
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="p-6 h-full flex flex-col relative"
+    >
+      <BackgroundEffects theme={theme} />
+      
+      <div className="flex items-center gap-4 mb-8 w-full relative z-10">
+        <Smartphone className="w-6 h-6 text-[#38BDF8] rotate-180 cursor-pointer" onClick={onBack} />
+        <h2 className={`text-xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Shizuku Setup</h2>
+      </div>
+
+      <div className={`flex-1 overflow-y-auto pr-1 custom-scrollbar relative z-10`}>
+        <div className={`border rounded-[2.5rem] p-8 mb-6 relative overflow-hidden transition-colors ${theme === 'dark' ? 'bg-[#1E293B] border-white/5 shadow-2xl' : 'bg-white border-slate-100 shadow-sm'}`}>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col">
+              <span className={`text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Tutorial Video</span>
+              <h3 className={`text-sm font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>How to setup Shizuku</h3>
+            </div>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => window.open('https://www.youtube.com/watch?v=R2v9S0r7m5M', '_blank')}
+              className="p-3 bg-[#FF0000] text-white rounded-full shadow-lg"
+            >
+              <Play className="w-5 h-5 fill-current" />
+            </motion.button>
+          </div>
+          <p className="text-[10px] text-slate-500 font-bold uppercase leading-relaxed">
+            Watch the official guide to learn how to activate Shizuku without a computer using Wireless Debugging.
+          </p>
+        </div>
+
+        <div className="space-y-4 mb-8">
+          {steps.map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className={`p-5 rounded-2xl border flex gap-4 transition-colors ${step === i + 1 ? (theme === 'dark' ? 'bg-[#38BDF8]/10 border-[#38BDF8]/30' : 'bg-[#38BDF8]/5 border-[#38BDF8]/20') : (theme === 'dark' ? 'bg-black/20 border-white/5' : 'bg-slate-50 border-slate-100')}`}
+              onClick={() => setStep(i + 1)}
+            >
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-xs shrink-0 ${step === i + 1 ? 'bg-[#38BDF8] text-white' : 'bg-slate-200 text-slate-500'}`}>
+                {i + 1}
+              </div>
+              <div>
+                <h4 className={`text-xs font-black uppercase tracking-widest mb-1 ${step === i + 1 ? (theme === 'dark' ? 'text-white' : 'text-slate-900') : 'text-slate-500'}`}>{s.title}</h4>
+                <p className={`text-[10px] font-bold leading-relaxed ${step === i + 1 ? (theme === 'dark' ? 'text-slate-400' : 'text-slate-600') : 'text-slate-400'}`}>{s.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      <motion.button
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={onComplete}
+        className={`w-full py-5 rounded-2xl font-black tracking-widest transition-all shadow-xl relative z-10 ${theme === 'dark' ? 'bg-white text-slate-900' : 'bg-slate-900 text-white'}`}
+      >
+        COMPLETE SETUP
+      </motion.button>
+    </motion.div>
+  );
+}
+
 function ThermalPage({ onBack, temp, isCoolDown, onToggle, theme }: { onBack: () => void, temp: number, isCoolDown: boolean, onToggle: () => void, theme: string }) {
   return (
     <motion.div 
@@ -1323,10 +1586,61 @@ function GenericFeaturePage({ onBack, title, isEnabled, onToggle, theme }: { onB
     }, 1500);
   };
 
+  const getDesc = (t: string) => {
+    switch(t) {
+      case "GX BOOST": return "Advanced graphics engine optimization for smoother gameplay";
+      case "SETTINGS CONFIG": return "Optimize system settings for professional gaming performance";
+      case "RED BUTTON": return "Emergency performance boost and memory flush";
+      case "CORRECT DPI": return "Adjust screen density for precise touch response";
+      case "MOVEMENT TUTORIAL": return "Learn advanced movement techniques and sensitivity settings";
+      case "MACRODROID SCRIPT": return "Automate complex gaming actions with optimized scripts";
+      case "EASY DRAG": return "Enhance touch sensitivity for effortless drag shots";
+      case "SPREAD FIX": return "Minimize bullet spread and improve weapon accuracy";
+      case "AIMSTABILIZE": return "Stabilize crosshair movement for better aim control";
+      case "120 FPS UNLOCK": return "Bypass frame rate limits for ultra-smooth 120 FPS gaming";
+      case "MAIN OBB": return "Optimize game data files for faster loading and stability";
+      case "3RD REGEDIT": return "Apply advanced registry tweaks for system-level optimization";
+      case "OPTIMIZE DEVICE": return "Deep clean and optimize device for peak gaming performance";
+      case "SENSI LESSON": return "Master professional sensitivity settings and techniques";
+      case "TOUCH SPEED": return "Maximize touch response speed and reduce input lag";
+      case "CUSTOMIZED HUDS": return "Import and optimize professional gaming HUD layouts";
+      case "FIRE BUTTON": return "Optimize fire button response and sensitivity";
+      case "NETWORK OPT": return "Optimize network latency and stabilize connection for online gaming";
+      case "BATTERY SAVER": return "Intelligent power management to extend gaming sessions";
+      case "APP MANAGER": return "Manage and optimize installed applications for better performance";
+      case "DEBLOATER": return "Remove unnecessary system apps and background processes";
+      case "DNS CHANGER": return "Switch to faster DNS servers for lower gaming ping";
+      case "CHARGE BOOST": return "Optimize charging speed and manage thermal during charge";
+      case "AUTO CLEAN": return "Automatically clear cache and temporary files periodically";
+      case "FPS METER": return "Real-time frame rate monitoring and performance overlay";
+      case "DISPLAY TWEAKS": return "Enhance visual clarity and color saturation for better visibility";
+      case "KERNEL TWEAKS": return "Advanced kernel-level optimizations for peak hardware performance";
+      case "RAM EXPANDER": return "Create virtual RAM using storage to prevent game crashes and lag";
+      case "PING STABILIZER": return "Stabilize network packets to ensure a consistent and low ping";
+      case "TOUCH RESPONSE": return "Fine-tune touch sampling rate for instantaneous input feedback";
+      case "COLOR ENHANCER": return "Apply vibrant color profiles to make game visuals pop";
+      case "RESOLUTION CHANGER": return "Adjust internal rendering resolution for better performance or clarity";
+      case "ANTI-LAG SCRIPT": return "Apply low-level system scripts to eliminate micro-stutters";
+      case "SENSITIVITY BOOSTER": return "Boost global touch sensitivity beyond system defaults";
+      case "GAME RECORDER": return "High-performance screen recording with minimal system impact";
+      case "SCREEN OVERLAY": return "Add custom crosshairs and performance overlays to your screen";
+      case "VOLUME BOOSTER": return "Enhance in-game audio and boost volume for better awareness";
+      case "WIFI OPTIMIZER": return "Optimize WiFi signal and reduce packet loss for online gaming";
+      case "GPU TURBO": return "Force GPU into high-performance mode for maximum frame rates";
+      case "TOUCH STABILIZER": return "Stabilize touch input to prevent accidental touches and jitter";
+      case "SYSTEM TUNER": return "Fine-tune system-level parameters for a balanced gaming experience";
+      case "GAME BOOSTER X": return "Ultimate performance boost by optimizing all system resources";
+      case "PRO SENSITIVITY": return "Apply sensitivity profiles used by professional eSports players";
+      case "AUTO HEADSHOT": return "Simulated aim assistance to improve headshot accuracy (Visual Only)";
+      case "RECOIL CONTROL": return "Simulated recoil compensation for better weapon handling (Visual Only)";
+      default: return "Configure advanced system optimization parameters";
+    }
+  };
+
   return (
     <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
       className="p-6 h-full flex flex-col items-center relative"
     >
       <BackgroundEffects theme={theme} />
@@ -1336,19 +1650,23 @@ function GenericFeaturePage({ onBack, title, isEnabled, onToggle, theme }: { onB
         <h2 className={`text-xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{title}</h2>
       </div>
       
-      <div className={`border rounded-[2.5rem] p-10 w-full flex flex-col items-center mb-8 relative transition-colors ${theme === 'dark' ? 'bg-[#1E293B] border-white/5 shadow-2xl' : 'bg-white border-slate-100 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)]'}`}>
-        <div className={`relative p-8 rounded-full mb-6 ${isEnabled ? 'bg-[#10B981]/10' : 'bg-[#38BDF8]/10'}`}>
-          <Settings className={`w-16 h-16 relative z-10 ${isEnabled ? 'text-[#10B981]' : 'text-[#38BDF8]'}`} />
+      <div className={`border rounded-[2.5rem] p-10 w-full flex flex-col items-center mb-8 relative overflow-hidden transition-colors ${theme === 'dark' ? 'bg-[#1E293B] border-white/5 shadow-2xl' : 'bg-white border-slate-100 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)]'}`}>
+        <div className="absolute inset-0 opacity-5">
+          <div className="w-full h-full bg-[radial-gradient(#38BDF8_1px,transparent_1px)] [background-size:16px_16px]" />
         </div>
-        
+
+        <div className={`relative p-8 rounded-full mb-6 ${isEnabled ? 'bg-[#10B981]/10' : 'bg-[#38BDF8]/10'}`}>
+          <Zap className={`w-16 h-16 relative z-10 ${isEnabled ? 'text-[#10B981]' : 'text-[#38BDF8]'}`} />
+        </div>
+
         <p className="text-center text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-8 leading-relaxed">
-          This unit calibrates system parameters for peak efficiency and stability.
+          {getDesc(title)}
         </p>
 
         <div className={`w-full flex justify-between items-center p-5 rounded-2xl border transition-colors ${theme === 'dark' ? 'bg-black/20 border-white/5' : 'bg-slate-50 border-slate-100'}`}>
           <div className="flex flex-col">
-            <span className={`text-xs font-black uppercase tracking-widest ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Master Switch</span>
-            <span className="text-[8px] text-slate-500 uppercase font-bold">Toggle Optimization</span>
+            <span className={`text-xs font-black uppercase tracking-widest ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{title} Optimization</span>
+            <span className="text-[8px] text-slate-500 uppercase font-bold">Active Optimization</span>
           </div>
           <div 
             onClick={onToggle}
@@ -1400,7 +1718,7 @@ function LagFixerPage({ onBack, isEnabled, onToggle, theme }: { onBack: () => vo
       
       <div className="flex items-center gap-4 mb-8 w-full relative z-10">
         <Smartphone className="w-6 h-6 text-[#38BDF8] rotate-180 cursor-pointer" onClick={onBack} />
-        <h2 className={`text-xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Network Node</h2>
+        <h2 className={`text-xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Lag Suppression</h2>
       </div>
       
       <div className={`border rounded-[2.5rem] p-10 w-full flex flex-col items-center mb-8 relative overflow-hidden transition-colors ${theme === 'dark' ? 'bg-[#1E293B] border-white/5 shadow-2xl' : 'bg-white border-slate-100 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)]'}`}>
@@ -1442,8 +1760,8 @@ function LagFixerPage({ onBack, isEnabled, onToggle, theme }: { onBack: () => vo
       >
         {isFixing ? (
           <div className="flex items-center justify-center gap-3">
-            <Activity className="w-5 h-5 animate-pulse" />
-            STABILIZING...
+            <Activity className="w-5 h-5 animate-spin" />
+            FIXING...
           </div>
         ) : 'INITIALIZE FIX'}
       </motion.button>
@@ -1451,7 +1769,220 @@ function LagFixerPage({ onBack, isEnabled, onToggle, theme }: { onBack: () => vo
   );
 }
 
-function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }) {
+function GamingProPage({ onBack, states, onToggle, theme }: { onBack: () => void, states: any, onToggle: (k: string) => void, theme: string }) {
+  const [sensitivity, setSensitivity] = useState(85);
+  
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="p-6 h-full flex flex-col relative"
+    >
+      <BackgroundEffects theme={theme} />
+      <div className="flex items-center gap-4 mb-8 w-full relative z-10">
+        <Smartphone className="w-6 h-6 text-[#38BDF8] rotate-180 cursor-pointer" onClick={onBack} />
+        <h2 className={`text-xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Gaming Pro</h2>
+      </div>
+
+      <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar relative z-10">
+        <div className={`rounded-[2rem] p-6 mb-6 border ${theme === 'dark' ? 'bg-[#1E293B] border-white/5' : 'bg-white border-slate-100 shadow-sm'}`}>
+          <h3 className={`text-[10px] font-black uppercase tracking-widest mb-4 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Aim Assist Tools</h3>
+          <div className="space-y-4">
+            <ToggleItem label="Aim Stabilizer" isEnabled={states['aim_stabilizer']} onToggle={() => onToggle('aim_stabilizer')} theme={theme} />
+            <ToggleItem label="Sticky Aim 2X" isEnabled={states['sticky_aim']} onToggle={() => onToggle('sticky_aim')} theme={theme} />
+            <ToggleItem label="BOT Aim Assist" isEnabled={states['bot_aim']} onToggle={() => onToggle('bot_aim')} theme={theme} />
+          </div>
+        </div>
+
+        <div className={`rounded-[2rem] p-6 mb-6 border ${theme === 'dark' ? 'bg-[#1E293B] border-white/5' : 'bg-white border-slate-100 shadow-sm'}`}>
+          <h3 className={`text-[10px] font-black uppercase tracking-widest mb-4 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Performance Tweaks</h3>
+          <div className="space-y-4">
+            <ToggleItem label="120 FPS Unlock" isEnabled={states['fps_120']} onToggle={() => onToggle('fps_120')} theme={theme} />
+            <ToggleItem label="Bullet Spread Fix" isEnabled={states['spread_fix']} onToggle={() => onToggle('spread_fix')} theme={theme} />
+            <ToggleItem label="Touch Speed Booster" isEnabled={states['touch_boost']} onToggle={() => onToggle('touch_boost')} theme={theme} />
+          </div>
+        </div>
+
+        <div className={`rounded-[2rem] p-6 mb-6 border ${theme === 'dark' ? 'bg-[#1E293B] border-white/5' : 'bg-white border-slate-100 shadow-sm'}`}>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className={`text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Global Sensitivity</h3>
+            <span className="text-xs font-black text-[#38BDF8]">{sensitivity}%</span>
+          </div>
+          <input 
+            type="range" 
+            min="0" 
+            max="100" 
+            value={sensitivity} 
+            onChange={(e) => setSensitivity(parseInt(e.target.value))}
+            className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[#38BDF8]"
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function BypassPage({ onBack, isEnabled, onToggle, theme }: { onBack: () => void, isEnabled: boolean, onToggle: () => void, theme: string }) {
+  const [isActivating, setIsActivating] = useState(false);
+  
+  const handleActivate = () => {
+    setIsActivating(true);
+    setTimeout(() => {
+      setIsActivating(false);
+      onToggle();
+    }, 2000);
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="p-6 h-full flex flex-col relative"
+    >
+      <BackgroundEffects theme={theme} />
+      <div className="flex items-center gap-4 mb-8 w-full relative z-10">
+        <Smartphone className="w-6 h-6 text-[#38BDF8] rotate-180 cursor-pointer" onClick={onBack} />
+        <h2 className={`text-xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Anti-Ban Bypass</h2>
+      </div>
+
+      <div className={`flex-1 flex flex-col items-center justify-center relative z-10 p-8 rounded-[3rem] border ${theme === 'dark' ? 'bg-[#1E293B] border-white/5' : 'bg-white border-slate-100 shadow-xl'}`}>
+        <div className={`w-32 h-32 rounded-full flex items-center justify-center mb-8 relative ${isEnabled ? 'bg-[#10B981]/10' : 'bg-[#EF4444]/10'}`}>
+          <motion.div
+            animate={isEnabled ? { scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] } : {}}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className={`absolute inset-0 rounded-full ${isEnabled ? 'bg-[#10B981]/20' : 'bg-[#EF4444]/20'}`}
+          />
+          <ShieldCheck className={`w-16 h-16 ${isEnabled ? 'text-[#10B981]' : 'text-[#EF4444]'}`} />
+        </div>
+
+        <h3 className={`text-2xl font-black mb-2 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+          {isEnabled ? 'BYPASS ACTIVE' : 'BYPASS INACTIVE'}
+        </h3>
+        <p className="text-center text-xs text-slate-500 font-medium max-w-[200px] mb-10">
+          Hides system modifications and root access from anti-cheat systems.
+        </p>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleActivate}
+          disabled={isActivating}
+          className={`w-full py-4 rounded-2xl font-black tracking-widest transition-all ${isActivating ? 'bg-slate-800 text-slate-600' : (isEnabled ? 'bg-[#EF4444] text-white' : 'bg-[#10B981] text-white')}`}
+        >
+          {isActivating ? 'PROCESSING...' : (isEnabled ? 'DEACTIVATE' : 'ACTIVATE BYPASS')}
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+}
+
+function VPNPage({ onBack, isEnabled, onToggle, theme }: { onBack: () => void, isEnabled: boolean, onToggle: () => void, theme: string }) {
+  const [selectedServer, setSelectedServer] = useState('Singapore');
+  const [isConnecting, setIsConnecting] = useState(false);
+  
+  const handleConnect = () => {
+    setIsConnecting(true);
+    setTimeout(() => {
+      setIsConnecting(false);
+      onToggle();
+    }, 2000);
+  };
+
+  const servers = [
+    { name: 'Singapore', ping: '25ms', flag: '🇸🇬' },
+    { name: 'United States', ping: '180ms', flag: '🇺🇸' },
+    { name: 'Germany', ping: '150ms', flag: '🇩🇪' },
+    { name: 'Japan', ping: '80ms', flag: '🇯🇵' },
+    { name: 'Brazil', ping: '220ms', flag: '🇧🇷' }
+  ];
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="p-6 h-full flex flex-col relative"
+    >
+      <BackgroundEffects theme={theme} />
+      <div className="flex items-center gap-4 mb-8 w-full relative z-10">
+        <Smartphone className="w-6 h-6 text-[#38BDF8] rotate-180 cursor-pointer" onClick={onBack} />
+        <h2 className={`text-xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Ultra VPN</h2>
+      </div>
+
+      <div className={`rounded-[2.5rem] p-8 mb-6 border flex flex-col items-center relative z-10 ${theme === 'dark' ? 'bg-[#1E293B] border-white/5' : 'bg-white border-slate-100 shadow-xl'}`}>
+        <div className={`w-24 h-24 rounded-full flex items-center justify-center mb-6 relative ${isEnabled ? 'bg-[#10B981]/10' : 'bg-[#38BDF8]/10'}`}>
+          <motion.div
+            animate={isEnabled ? { scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] } : {}}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className={`absolute inset-0 rounded-full ${isEnabled ? 'bg-[#10B981]/20' : 'bg-[#38BDF8]/20'}`}
+          />
+          <Activity className={`w-12 h-12 ${isEnabled ? 'text-[#10B981]' : 'text-[#38BDF8]'}`} />
+        </div>
+
+        <div className="text-center mb-8">
+          <h3 className={`text-2xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+            {isEnabled ? 'CONNECTED' : 'DISCONNECTED'}
+          </h3>
+          <p className="text-xs text-slate-500 font-medium uppercase tracking-widest mt-1">
+            {isEnabled ? `Secure via ${selectedServer}` : 'Select a server to connect'}
+          </p>
+        </div>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleConnect}
+          disabled={isConnecting}
+          className={`w-full py-4 rounded-2xl font-black tracking-widest transition-all ${isConnecting ? 'bg-slate-800 text-slate-600' : (isEnabled ? 'bg-[#EF4444] text-white' : 'bg-[#38BDF8] text-white')}`}
+        >
+          {isConnecting ? 'CONNECTING...' : (isEnabled ? 'DISCONNECT' : 'TAP TO CONNECT')}
+        </motion.button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar relative z-10">
+        <h3 className={`text-[10px] font-black uppercase tracking-widest mb-4 ml-2 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Available Servers</h3>
+        <div className="space-y-2">
+          {servers.map((server) => (
+            <div 
+              key={server.name}
+              onClick={() => setSelectedServer(server.name)}
+              className={`p-4 rounded-2xl border flex items-center justify-between cursor-pointer transition-all ${selectedServer === server.name ? (theme === 'dark' ? 'bg-[#38BDF8]/10 border-[#38BDF8]/50' : 'bg-[#38BDF8]/5 border-[#38BDF8]/30') : (theme === 'dark' ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-white border-slate-100 hover:bg-slate-50')}`}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-xl">{server.flag}</span>
+                <span className={`text-xs font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{server.name}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black text-[#10B981]">{server.ping}</span>
+                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${selectedServer === server.name ? 'border-[#38BDF8]' : 'border-slate-700'}`}>
+                  {selectedServer === server.name && <div className="w-2 h-2 bg-[#38BDF8] rounded-full" />}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function ToggleItem({ label, isEnabled, onToggle, theme }: { label: string, isEnabled: boolean, onToggle: () => void, theme: string }) {
+  return (
+    <div className="flex justify-between items-center">
+      <span className={`text-xs font-bold ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>{label}</span>
+      <div 
+        onClick={onToggle}
+        className={`w-10 h-5 rounded-full relative cursor-pointer transition-all duration-300 ${isEnabled ? 'bg-[#38BDF8]' : 'bg-slate-700'}`}
+      >
+        <motion.div 
+          animate={{ x: isEnabled ? 22 : 2 }}
+          className="absolute top-1 w-3 h-3 bg-white rounded-full shadow-md" 
+        />
+      </div>
+    </div>
+  );
+}
+
+function AdminDashboard({ onBack, theme, onCheckUpdate, isCheckingUpdate }: { onBack: () => void, theme: string, onCheckUpdate: () => void, isCheckingUpdate: boolean }) {
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
@@ -1523,8 +2054,8 @@ function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }
         latest_version_code: 2,
         latest_version_name: '1.2.0',
         update_required: false,
-        update_url: 'https://www.mediafire.com/file/example/UltraOptimizeX.apk/file',
-        force_auto_update: true
+        update_url: 'https://www.mediafire.com/file/example/UltraOptimizeX_v1.2.0.apk/file',
+        force_auto_update: false
       });
       setFeedback({ message: 'Update Config (v1.2.0) seeded!', type: 'success' });
     } catch (error) {
@@ -1547,6 +2078,14 @@ function AdminDashboard({ onBack, theme }: { onBack: () => void, theme: string }
           <h2 className={`text-xl font-black tracking-tighter uppercase ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Session Manager</h2>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={onCheckUpdate}
+            disabled={isCheckingUpdate}
+            title="Check for Updates"
+            className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900'}`}
+          >
+            <Activity className={`w-5 h-5 ${isCheckingUpdate ? 'animate-spin' : ''}`} />
+          </button>
           <button
             onClick={seedUpdateConfig}
             title="Seed Update Config"

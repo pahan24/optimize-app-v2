@@ -11,7 +11,13 @@
     <color name="accent_red">#F43F5E</color>
     <color name="accent_green">#10B981</color>
     <color name="accent_orange">#F59E0B</color>
+    <color name="accent_green_alpha">#2010B981</color>
+    <color name="accent_blue_alpha">#2038BDF8</color>
+    <color name="accent_red_alpha">#20F43F5E</color>
+    <color name="accent_orange_alpha">#20F59E0B</color>
     <color name="text_white">#FFFFFF</color>
     <color name="text_muted">#94A3B8</color>
     <color name="bg_dark">#020617</color>
+    <color name="neon_purple">#A855F7</color>
+    <color name="neon_pink">#EC4899</color>
 </resources>

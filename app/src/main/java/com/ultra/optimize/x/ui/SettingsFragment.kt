@@ -44,6 +44,20 @@ class SettingsFragment : Fragment() {
         }
         binding.switchRootMode.setOnCheckedChangeListener { _, isChecked ->
             settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_ROOT_MODE, isChecked)
+            if (isChecked) {
+                android.widget.Toast.makeText(context, "Simulated Root Mode Enabled", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.btnCheckRoot.setOnClickListener {
+            val isRooted = com.ultra.optimize.x.utils.RootManager.isRooted()
+            val message = if (isRooted) "System is ROOTED (Authorized)" else "System is NOT ROOTED (Denied)"
+            
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.Theme_UltraOptimizeX)
+                .setTitle("Root Status")
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .show()
         }
         binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
             settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_DARK_MODE, isChecked)

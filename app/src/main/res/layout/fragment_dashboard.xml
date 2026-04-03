@@ -350,7 +350,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
-                        android:text="@string/system_health"
+                        android:text="SYSTEM HEALTH"
                         android:textColor="@color/text_white"
                         android:textSize="16sp" />
 
@@ -364,9 +364,53 @@
                         android:textStyle="bold" />
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:gravity="center">
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/progress_health_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:indicatorColor="@color/neon_blue"
+                        app:indicatorSize="180dp"
+                        app:trackColor="#103B82F6"
+                        app:trackCornerRadius="8dp"
+                        app:trackThickness="12dp"
+                        android:progress="85" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_health_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-black"
+                            android:text="85%"
+                            android:textColor="@color/text_white"
+                            android:textSize="32sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="STABLE"
+                            android:textColor="@color/accent_green"
+                            android:textSize="10sp"
+                            android:letterSpacing="0.2"
+                            android:fontFamily="sans-serif-black" />
+                    </LinearLayout>
+                </RelativeLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:baselineAligned="false"
                     android:orientation="horizontal">
 
@@ -383,17 +427,17 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             app:indicatorColor="@color/neon_blue"
-                            app:indicatorSize="80dp"
-                            app:trackColor="@color/bg_dark"
+                            app:indicatorSize="60dp"
+                            app:trackColor="#103B82F6"
                             app:trackCornerRadius="4dp"
-                            app:trackThickness="6dp" />
+                            app:trackThickness="4dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="RAM"
                             android:textColor="@color/text_muted"
-                            android:textSize="12sp" />
+                            android:textSize="10sp" />
 
                         <TextView
                             android:id="@+id/tv_ram_value_dashboard"
@@ -401,7 +445,8 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-black"
                             android:text="0%"
-                            android:textColor="@color/text_white" />
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -416,18 +461,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            app:indicatorColor="#3B82F6"
-                            app:indicatorSize="80dp"
-                            app:trackColor="@color/bg_dark"
+                            app:indicatorColor="@color/accent_orange"
+                            app:indicatorSize="60dp"
+                            app:trackColor="#10F59E0B"
                             app:trackCornerRadius="4dp"
-                            app:trackThickness="6dp" />
+                            app:trackThickness="4dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/processor"
+                            android:text="CPU"
                             android:textColor="@color/text_muted"
-                            android:textSize="12sp" />
+                            android:textSize="10sp" />
 
                         <TextView
                             android:id="@+id/tv_cpu_value_dashboard"
@@ -435,7 +480,8 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-black"
                             android:text="0%"
-                            android:textColor="@color/text_white" />
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -450,18 +496,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            app:indicatorColor="@color/accent_orange"
-                            app:indicatorSize="80dp"
-                            app:trackColor="@color/bg_dark"
+                            app:indicatorColor="@color/accent_red"
+                            app:indicatorSize="60dp"
+                            app:trackColor="#10F43F5E"
                             app:trackCornerRadius="4dp"
-                            app:trackThickness="6dp" />
+                            app:trackThickness="4dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/thermal_label"
+                            android:text="TEMP"
                             android:textColor="@color/text_muted"
-                            android:textSize="12sp" />
+                            android:textSize="10sp" />
 
                         <TextView
                             android:id="@+id/tv_temp_value_dashboard"
@@ -469,7 +515,8 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-black"
                             android:text="0°C"
-                            android:textColor="@color/text_white" />
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -556,187 +603,255 @@
             android:columnCount="2"
             app:layout_constraintTop_toBottomOf="@id/btn_boost">
 
+            <!-- Row 1 -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_game_boost"
+                android:id="@+id/card_gx_boost"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/game_boost" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/ram_cleaner_sub" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" android:tint="@color/neon_blue" />
+                    <TextView style="@style/FeatureTextStyle" android:text="GX BOOST" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="OPTIMIZE" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_cpu_control"
+                android:id="@+id/card_bypass"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_cpu" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/cpu_control" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/cpu_cooler_sub" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_storage_cleaner"
-                style="@style/FeatureCardStyle">
-                <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_trash" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/storage_cleaner" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/storage_manager_sub" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_shield" android:tint="@color/accent_green" />
+                    <TextView style="@style/FeatureTextStyle" android:text="BYPASS" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="IN GAME" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Row 2 -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_thermal_control"
+                android:id="@+id/card_settings_config"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_thermometer" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/thermal_control" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/running_smooth" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_settings" />
+                    <TextView style="@style/FeatureTextStyle" android:text="SETTINGS" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="CONFIG" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_battery_saver"
+                android:id="@+id/card_red_button"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_battery" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/battery_saver" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/battery_saver_sub" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_app_manager"
-                style="@style/FeatureCardStyle">
-                <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_layers" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/app_manager" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/optimization_active" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_target" android:tint="#EF4444" />
+                    <TextView style="@style/FeatureTextStyle" android:text="RED BUTTON" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="AUTO HEADSHOT" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Row 3 -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_network_optimizer"
-                style="@style/FeatureCardStyle">
-                <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_wifi" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/network_optimizer" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/optimization_active" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_display_tweaks"
+                android:id="@+id/card_correct_dpi"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
                     <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_monitor" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/display_tweaks" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/running_smooth" />
+                    <TextView style="@style/FeatureTextStyle" android:text="CORRECT DPI" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="RESOLUTION" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_kernel_tweaks"
+                android:id="@+id/card_movement_tutorial"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_settings_2" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/kernel_tweaks" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/system_optimized" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_play_circle" />
+                    <TextView style="@style/FeatureTextStyle" android:text="MOVEMENT" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="TUTORIAL" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Row 4 -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_system_debloater"
+                android:id="@+id/card_macrodroid_script"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_shield_off" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/system_debloater" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/system_optimized" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_code" />
+                    <TextView style="@style/FeatureTextStyle" android:text="MACRODROID" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="SCRIPT" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_dns_changer"
+                android:id="@+id/card_easy_drag"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_globe" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/dns_changer" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/optimization_active" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_charging_booster"
-                style="@style/FeatureCardStyle">
-                <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/charging_booster" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/protection_on" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_mouse_pointer" />
+                    <TextView style="@style/FeatureTextStyle" android:text="EASY DRAG" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="SMOOTH AIM" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Row 5 -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_auto_clean"
+                android:id="@+id/card_spread_fix"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_clock" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/auto_clean" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/system_optimized" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" />
+                    <TextView style="@style/FeatureTextStyle" android:text="SPREAD FIX" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="BULLET" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_fps_meter"
-                style="@style/FeatureCardStyle">
-                <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_activity" />
-                    <TextView style="@style/FeatureTextStyle" android:text="FPS" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/running_smooth" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_lag_fixer"
-                style="@style/FeatureCardStyle">
-                <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_mouse_pointer" />
-                    <TextView style="@style/FeatureTextStyle" android:text="@string/lag_fixer" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/optimization_active" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_free_fire"
+                android:id="@+id/card_aim_stabilize"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
                     <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_target" />
-                    <TextView style="@style/FeatureTextStyle" android:text="Free Fire" android:textColor="#F97316" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/optimization_active" />
+                    <TextView style="@style/FeatureTextStyle" android:text="AIMSTABILIZE" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="REDS" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Row 6 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_fps_unlock"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_activity" />
+                    <TextView style="@style/FeatureTextStyle" android:text="120 FPS" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="UNLOCK" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_game_tools"
+                android:id="@+id/card_main_obb"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
-                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_gamepad_2" />
-                    <TextView style="@style/FeatureTextStyle" android:text="Game Tools" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/running_smooth" />
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_folder" />
+                    <TextView style="@style/FeatureTextStyle" android:text="MAIN OBB" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="REDS" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Row 7 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_reg_files"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_file" />
+                    <TextView style="@style/FeatureTextStyle" android:text="DATA" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="REGEDIT" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_performance_optimize"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_activity" />
+                    <TextView style="@style/FeatureTextStyle" android:text="PERFORMANCE" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="OPTIMIZE" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Row 8 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_3rd_regedit"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_file" />
+                    <TextView style="@style/FeatureTextStyle" android:text="3RD REGEDIT" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="SR" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_optimize_device"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_shield" />
+                    <TextView style="@style/FeatureTextStyle" android:text="OPTIMIZE" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="DEVICE" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Row 9 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_games_sensi_lesson"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_book_open" />
+                    <TextView style="@style/FeatureTextStyle" android:text="GAMES SENSI" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="LESSON" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_touch_speed"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" />
+                    <TextView style="@style/FeatureTextStyle" android:text="TOUCH SPEED" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="BOOSTER" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Row 10 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_customized_huds"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_layout" />
+                    <TextView style="@style/FeatureTextStyle" android:text="CUSTOMIZED" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="HUDS" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_fire_button_sensi"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" />
+                    <TextView style="@style/FeatureTextStyle" android:text="FIRE BUTTON" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="SENSI" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Row 11 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_root_installer"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_shield" />
+                    <TextView style="@style/FeatureTextStyle" android:text="ROOT" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="ACCESS" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_vpn"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_shield" />
+                    <TextView style="@style/FeatureTextStyle" android:text="ULTRA" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="VPN" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Row 12 -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_settings"
                 style="@style/FeatureCardStyle">
                 <LinearLayout style="@style/FeatureContentStyle">
                     <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_settings" />
-                    <TextView style="@style/FeatureTextStyle" android:text="Settings" />
-                    <TextView style="@style/FeatureSubtitleStyle" android:text="@string/protection_on" />
+                    <TextView style="@style/FeatureTextStyle" android:text="SETTINGS" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="SYSTEM" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_gaming_pro"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_gamepad_2" android:tint="@color/neon_blue" />
+                    <TextView style="@style/FeatureTextStyle" android:text="GAMING" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="PRO TOOLS" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

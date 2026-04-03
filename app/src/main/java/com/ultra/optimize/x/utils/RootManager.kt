@@ -14,6 +14,24 @@ object RootManager {
         if (context != null && SettingsManager.getSetting(context, SettingsManager.KEY_ROOT_MODE, false)) {
             return true
         }
+        
+        val paths = arrayOf(
+            "/system/app/Superuser.apk",
+            "/sbin/su",
+            "/system/bin/su",
+            "/system/xbin/su",
+            "/data/local/xbin/su",
+            "/data/local/bin/su",
+            "/system/sd/xbin/su",
+            "/system/bin/failsafe/su",
+            "/data/local/su",
+            "/su/bin/su"
+        )
+        
+        for (path in paths) {
+            if (java.io.File(path).exists()) return true
+        }
+
         return try {
             val process = Runtime.getRuntime().exec("which su")
             val reader = BufferedReader(InputStreamReader(process.inputStream))

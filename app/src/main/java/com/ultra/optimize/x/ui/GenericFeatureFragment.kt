@@ -23,7 +23,26 @@ class GenericFeatureFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         
         val title = arguments?.getString("featureTitle") ?: "Feature"
-        val subtitle = arguments?.getString("featureDesc") ?: "Configure advanced system optimization parameters"
+        val subtitle = when (title) {
+            "GX BOOST" -> "Advanced graphics engine optimization for smoother gameplay"
+            "SETTINGS CONFIG" -> "Optimize system settings for professional gaming performance"
+            "RED BUTTON" -> "Emergency performance boost and memory flush"
+            "CORRECT DPI" -> "Adjust screen density for precise touch response"
+            "MOVEMENT TUTORIAL" -> "Learn advanced movement techniques and sensitivity settings"
+            "MACRODROID SCRIPT" -> "Automate complex gaming actions with optimized scripts"
+            "EASY DRAG" -> "Enhance touch sensitivity for effortless drag shots"
+            "SPREAD FIX" -> "Minimize bullet spread and improve weapon accuracy"
+            "AIMSTABILIZE" -> "Stabilize crosshair movement for better aim control"
+            "120 FPS UNLOCK" -> "Bypass frame rate limits for ultra-smooth 120 FPS gaming"
+            "MAIN OBB" -> "Optimize game data files for faster loading and stability"
+            "3RD REGEDIT" -> "Apply advanced registry tweaks for system-level optimization"
+            "OPTIMIZE DEVICE" -> "Deep clean and optimize device for peak gaming performance"
+            "SENSI LESSON" -> "Master professional sensitivity settings and techniques"
+            "TOUCH SPEED" -> "Maximize touch response speed and reduce input lag"
+            "CUSTOMIZED HUDS" -> "Import and optimize professional gaming HUD layouts"
+            "FIRE BUTTON" -> "Optimize fire button response and sensitivity"
+            else -> arguments?.getString("featureDesc") ?: "Configure advanced system optimization parameters"
+        }
         val settingsManager = com.ultra.optimize.x.utils.SettingsManager(requireContext())
         val featureKey = title.lowercase().replace(" ", "_") + "_enabled"
 
@@ -51,14 +70,17 @@ class GenericFeatureFragment : Fragment() {
                 // Execute root commands based on feature
                 if (com.ultra.optimize.x.utils.RootManager.isRooted(requireContext())) {
                     when (title) {
-                        "Battery Saver" -> {
-                            com.ultra.optimize.x.utils.RootManager.runCommand("settings put global low_power 1")
+                        "GX BOOST" -> {
+                            com.ultra.optimize.x.utils.RootManager.runCommand("setprop debug.egl.hw 1")
+                            com.ultra.optimize.x.utils.RootManager.runCommand("setprop debug.gr.num_common_buffers 3")
                         }
-                        "Network Optimizer" -> {
-                            com.ultra.optimize.x.utils.RootManager.runCommand("sysctl -w net.ipv4.tcp_fastopen=3")
+                        "TOUCH SPEED" -> {
+                            com.ultra.optimize.x.utils.RootManager.runCommand("settings put secure long_press_timeout 250")
+                            com.ultra.optimize.x.utils.RootManager.runCommand("settings put secure multi_press_timeout 250")
                         }
-                        "Game Boost" -> {
-                            com.ultra.optimize.x.utils.RootManager.runCommand("am set-standby-bucket com.ultra.optimize.x active")
+                        "120 FPS UNLOCK" -> {
+                            com.ultra.optimize.x.utils.RootManager.runCommand("setprop persist.sys.composition.type gpu")
+                            com.ultra.optimize.x.utils.RootManager.runCommand("setprop persist.sys.ui.hw 1")
                         }
                     }
                 }
