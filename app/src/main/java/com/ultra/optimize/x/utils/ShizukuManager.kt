@@ -44,7 +44,7 @@ object ShizukuManager {
         }
 
         return try {
-            val process = rikka.shizuku.Shizuku.newProcess(arrayOf("sh", "-c", command), null, null)
+            val process = Shizuku.newProcess(arrayOf("sh", "-c", command), null, null)
             val output = process.inputStream.bufferedReader().use { it.readText() }
             val error = process.errorStream.bufferedReader().use { it.readText() }
             process.waitFor()

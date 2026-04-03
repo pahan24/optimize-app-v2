@@ -941,6 +941,122 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Row 13 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_battery_saver"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_battery" />
+                    <TextView style="@style/FeatureTextStyle" android:text="BATTERY" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="SAVER" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_app_manager"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_layout" />
+                    <TextView style="@style/FeatureTextStyle" android:text="APP" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="MANAGER" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Row 14 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_network_optimizer"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_wifi" />
+                    <TextView style="@style/FeatureTextStyle" android:text="NETWORK" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="OPTIMIZER" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_display_tweaks"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_monitor" />
+                    <TextView style="@style/FeatureTextStyle" android:text="DISPLAY" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="TWEAKS" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Row 15 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_kernel_tweaks"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_terminal" />
+                    <TextView style="@style/FeatureTextStyle" android:text="KERNEL" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="TWEAKS" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_system_debloater"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_trash" />
+                    <TextView style="@style/FeatureTextStyle" android:text="SYSTEM" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="DEBLOATER" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Row 16 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_dns_changer"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_globe" />
+                    <TextView style="@style/FeatureTextStyle" android:text="DNS" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="CHANGER" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_charging_booster"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" />
+                    <TextView style="@style/FeatureTextStyle" android:text="CHARGING" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="BOOSTER" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Row 17 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_auto_clean"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_activity" />
+                    <TextView style="@style/FeatureTextStyle" android:text="AUTO" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="CLEAN" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_fps_meter"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_clock" />
+                    <TextView style="@style/FeatureTextStyle" android:text="FPS" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="METER" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Row 18 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_game_tools"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_gamepad_2" />
+                    <TextView style="@style/FeatureTextStyle" android:text="GAME" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="TOOLS" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
         </GridLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

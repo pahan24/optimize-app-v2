@@ -333,6 +333,58 @@ class DashboardFragment : Fragment() {
             findNavController().navigate(R.id.action_dashboard_to_gamingPro)
         }
 
+        binding.cardBatterySaver.setOnClickListener {
+            navigateWithTitle("BATTERY SAVER", R.id.action_dashboard_to_batterySaver)
+        }
+
+        binding.cardAppManager.setOnClickListener {
+            navigateWithTitle("APP MANAGER", R.id.action_dashboard_to_appManager)
+        }
+
+        binding.cardNetworkOptimizer.setOnClickListener {
+            navigateWithTitle("NETWORK OPTIMIZER", R.id.action_dashboard_to_networkOpt)
+        }
+
+        binding.cardDisplayTweaks.setOnClickListener {
+            navigateWithTitle("DISPLAY TWEAKS", R.id.action_dashboard_to_displayTweaks)
+        }
+
+        binding.cardKernelTweaks.setOnClickListener {
+            navigateWithTitle("KERNEL TWEAKS", R.id.action_dashboard_to_kernelTweaks)
+        }
+
+        binding.cardSystemDebloater.setOnClickListener {
+            navigateWithTitle("SYSTEM DEBLOATER", R.id.action_dashboard_to_debloater)
+        }
+
+        binding.cardDnsChanger.setOnClickListener {
+            navigateWithTitle("DNS CHANGER", R.id.action_dashboard_to_dnsChanger)
+        }
+
+        binding.cardChargingBooster.setOnClickListener {
+            navigateWithTitle("CHARGING BOOSTER", R.id.action_dashboard_to_chargeBoost)
+        }
+
+        binding.cardAutoClean.setOnClickListener {
+            navigateWithTitle("AUTO CLEAN", R.id.action_dashboard_to_autoClean)
+        }
+
+        binding.cardFpsMeter.setOnClickListener {
+            navigateWithTitle("FPS METER", R.id.action_dashboard_to_fpsMeter)
+        }
+
+        binding.cardGameTools.setOnClickListener {
+            findNavController().navigate(R.id.action_dashboard_to_gameTools)
+        }
+
+        binding.cardLagFixer.setOnClickListener {
+            findNavController().navigate(R.id.action_dashboard_to_lagFixer)
+        }
+
+        binding.cardFreeFire.setOnClickListener {
+            findNavController().navigate(R.id.action_dashboard_to_freeFire)
+        }
+
         binding.tvAppTitle.setOnClickListener {
             findNavController().navigate(R.id.action_dashboard_to_settings)
         }
