@@ -45,10 +45,14 @@ class SettingsManager(context: Context) {
             return prefs.getBoolean(key, defaultValue)
         }
 
+        fun getBoolean(context: Context, key: String, defaultValue: Boolean = false): Boolean = getSetting(context, key, defaultValue)
+
         fun saveSetting(context: Context, key: String, value: Boolean) {
             val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
             prefs.edit().putBoolean(key, value).apply()
         }
+
+        fun saveBoolean(context: Context, key: String, value: Boolean) = saveSetting(context, key, value)
 
         fun saveInt(context: Context, key: String, value: Int) {
             val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
@@ -58,6 +62,16 @@ class SettingsManager(context: Context) {
         fun getInt(context: Context, key: String, defaultValue: Int = 0): Int {
             val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
             return prefs.getInt(key, defaultValue)
+        }
+
+        fun saveFloat(context: Context, key: String, value: Float) {
+            val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
+            prefs.edit().putFloat(key, value).apply()
+        }
+
+        fun getFloat(context: Context, key: String, defaultValue: Float = 0f): Float {
+            val prefs = context.getSharedPreferences("ultra_optimize_prefs", Context.MODE_PRIVATE)
+            return prefs.getFloat(key, defaultValue)
         }
 
         fun saveString(context: Context, key: String, value: String) {

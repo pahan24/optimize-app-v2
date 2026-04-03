@@ -320,6 +320,31 @@
                                 android:textColor="@color/accent_green"
                                 android:textSize="10sp" />
                         </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-black"
+                                android:text="SHIZUKU"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="8sp"
+                                android:letterSpacing="0.2" />
+
+                            <TextView
+                                android:id="@+id/tv_shizuku_status_dash"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-black"
+                                android:text="AUTHORIZED"
+                                android:textColor="@color/accent_green"
+                                android:textSize="10sp" />
+                        </LinearLayout>
                     </GridLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -602,6 +627,67 @@
             android:layout_marginTop="16dp"
             android:columnCount="2"
             app:layout_constraintTop_toBottomOf="@id/btn_boost">
+
+            <!-- Core Features -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_game_boost"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_zap" android:tint="@color/neon_blue" />
+                    <TextView style="@style/FeatureTextStyle" android:text="GAME BOOST" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="PERFORMANCE" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_cpu_control"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_cpu" android:tint="@color/accent_orange" />
+                    <TextView style="@style/FeatureTextStyle" android:text="CPU CONTROL" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="GOVERNORS" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_storage_cleaner"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_trash" android:tint="@color/accent_red" />
+                    <TextView style="@style/FeatureTextStyle" android:text="CLEANER" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="STORAGE" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_thermal_control"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_thermometer" android:tint="@color/accent_red" />
+                    <TextView style="@style/FeatureTextStyle" android:text="THERMAL" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="CONTROL" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_lag_fixer"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_activity" android:tint="@color/neon_blue" />
+                    <TextView style="@style/FeatureTextStyle" android:text="LAG FIXER" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="SMOOTHNESS" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_free_fire"
+                style="@style/FeatureCardStyle">
+                <LinearLayout style="@style/FeatureContentStyle">
+                    <ImageView style="@style/FeatureIconStyle" android:src="@drawable/ic_target" android:tint="@color/accent_red" />
+                    <TextView style="@style/FeatureTextStyle" android:text="FREE FIRE" />
+                    <TextView style="@style/FeatureSubtitleStyle" android:text="OPTIMIZE" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Row 1 -->
             <com.google.android.material.card.MaterialCardView

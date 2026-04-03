@@ -46,7 +46,7 @@ class GameToolsFragment : Fragment() {
         binding.switchAntiAliasing.isChecked = SettingsManager.getSetting(requireContext(), "anti_aliasing_enabled", false)
         binding.switchShadowControl.isChecked = SettingsManager.getSetting(requireContext(), "shadow_control_enabled", false)
         binding.switchHeadshot.isChecked = SettingsManager.getSetting(requireContext(), SettingsManager.KEY_HEADSHOT_BOOST, false)
-        binding.sliderSensitivity.value = SettingsManager.getSetting(requireContext(), SettingsManager.KEY_TOUCH_SENSITIVITY, 50f)
+        binding.sliderSensitivity.value = SettingsManager.getFloat(requireContext(), SettingsManager.KEY_TOUCH_SENSITIVITY, 50f)
 
         // Listeners
         binding.switchFps.setOnCheckedChangeListener { _, isChecked ->
@@ -96,7 +96,7 @@ class GameToolsFragment : Fragment() {
         }
 
         binding.sliderSensitivity.addOnChangeListener { _, value, _ ->
-            SettingsManager.saveSetting(requireContext(), SettingsManager.KEY_TOUCH_SENSITIVITY, value)
+            SettingsManager.saveFloat(requireContext(), SettingsManager.KEY_TOUCH_SENSITIVITY, value)
         }
 
         binding.btnDirectBoot.setOnClickListener {
