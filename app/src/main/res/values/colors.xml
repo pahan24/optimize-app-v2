@@ -20,4 +20,5 @@
     <color name="bg_dark">#020617</color>
     <color name="neon_purple">#A855F7</color>
     <color name="neon_pink">#EC4899</color>
+    <color name="border_color">#1E293B</color>
 </resources>

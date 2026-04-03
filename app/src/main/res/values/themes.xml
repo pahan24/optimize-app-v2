@@ -75,4 +75,12 @@
         <item name="colorSurface">@color/card_bg</item>
         <item name="colorPrimary">@color/neon_blue</item>
     </style>
+
+    <style name="DividerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/border_color</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+    </style>
 </resources>
