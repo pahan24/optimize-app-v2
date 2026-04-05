@@ -60,52 +60,56 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val context = context ?: return
         // Set Spannable Title
         val title = "ULTRA\nOPTIMIZE X"
         val spannable = android.text.SpannableString(title)
-        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        val blueColor = androidx.core.content.ContextCompat.getColor(context, R.color.neon_blue)
         spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 6, 14, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        binding.tvAppTitle.text = spannable
+        
+        if (_binding != null) {
+            binding.tvAppTitle.text = spannable
 
-        // Check if already logged in
-        if (SettingsManager.isLoggedIn(requireContext())) {
-            findNavController().navigate(R.id.action_login_to_dashboard)
-            return
-        }
-
-        animateEntrance()
-
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
-
-        binding.btnLogin.setOnClickListener {
-            val username = binding.etUsername.text.toString().trim()
-            val password = binding.etPassword.text.toString().trim()
-
-            if (username.isEmpty()) {
-                binding.tilUsername.error = "Enter Username"
-                return@setOnClickListener
+            // Check if already logged in
+            if (SettingsManager.isLoggedIn(context)) {
+                findNavController().navigate(R.id.action_login_to_dashboard)
+                return
             }
 
-            if (password.length < 6) {
-                binding.tilPassword.error = "Enter valid OTP"
-                return@setOnClickListener
+            animateEntrance()
+
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+            googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+
+            binding.btnLogin.setOnClickListener {
+                val username = binding.etUsername.text.toString().trim()
+                val password = binding.etPassword.text.toString().trim()
+
+                if (username.isEmpty()) {
+                    binding.tilUsername.error = "Enter Username"
+                    return@setOnClickListener
+                }
+
+                if (password.length < 6) {
+                    binding.tilPassword.error = "Enter valid OTP"
+                    return@setOnClickListener
+                }
+
+                performLogin(password)
             }
 
-            performLogin(password)
-        }
-
-        binding.btnAdminLogin.setOnClickListener {
-            val clientId = getString(R.string.default_web_client_id)
-            if (clientId.contains("dummy")) {
-                Toast.makeText(context, "Google Sign-In is not configured. Please update the Web Client ID in strings.xml from your Firebase Console.", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
+            binding.btnAdminLogin.setOnClickListener {
+                val clientId = getString(R.string.default_web_client_id)
+                if (clientId.contains("dummy")) {
+                    Toast.makeText(context, "Google Sign-In is not configured. Please update the Web Client ID in strings.xml from your Firebase Console.", Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
+                val signInIntent = googleSignInClient.signInIntent
+                googleSignInLauncher.launch(signInIntent)
             }
-            val signInIntent = googleSignInClient.signInIntent
-            googleSignInLauncher.launch(signInIntent)
         }
     }
 

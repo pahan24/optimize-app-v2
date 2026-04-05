@@ -7,21 +7,28 @@ object CpuManager {
     fun getCpuUsage(): Int {
         return try {
             val reader = RandomAccessFile("/proc/stat", "r")
-            var load = reader.readLine()
+            var load = reader.readLine() ?: return 0
             var toks = load.split(" +".toRegex())
+            if (toks.size < 5) return 0
             val idle1 = toks[4].toLong()
             val cpu1 = toks[1].toLong() + toks[2].toLong() + toks[3].toLong() + toks[6].toLong() + toks[7].toLong() + toks[8].toLong()
             
             Thread.sleep(360)
             
             reader.seek(0)
-            load = reader.readLine()
+            load = reader.readLine() ?: return 0
             reader.close()
             toks = load.split(" +".toRegex())
+            if (toks.size < 5) return 0
             val idle2 = toks[4].toLong()
             val cpu2 = toks[1].toLong() + toks[2].toLong() + toks[3].toLong() + toks[6].toLong() + toks[7].toLong() + toks[8].toLong()
             
-            ((cpu2 - cpu1).toDouble() / ((cpu2 + idle2) - (cpu1 + idle1)).toDouble() * 100).toInt()
+            val diffCpu = cpu2 - cpu1
+            val diffIdle = idle2 - idle1
+            val total = diffCpu + diffIdle
+            if (total == 0L) return 0
+            
+            (diffCpu.toDouble() / total.toDouble() * 100).toInt()
         } catch (e: Exception) {
             0
         }

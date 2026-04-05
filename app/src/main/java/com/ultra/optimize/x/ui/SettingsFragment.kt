@@ -22,60 +22,64 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnBack.setOnClickListener { findNavController().popBackStack() }
 
+        val context = context ?: return
         // Set Spannable Title
         val title = "SYSTEM\nSETTINGS"
         val spannable = android.text.SpannableString(title)
-        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        val blueColor = androidx.core.content.ContextCompat.getColor(context, R.color.neon_blue)
         spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 0, 6, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        binding.tvTitle.text = spannable
-
-        val settingsManager = com.ultra.optimize.x.utils.SettingsManager(requireContext())
         
-        binding.switchNotifications.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_NOTIFICATIONS, true)
-        binding.switchAutoBoost.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_AUTO_BOOST)
-        binding.switchRootMode.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_ROOT_MODE)
-        binding.switchDarkMode.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_DARK_MODE, true)
+        if (_binding != null) {
+            binding.tvTitle.text = spannable
 
-        binding.switchNotifications.setOnCheckedChangeListener { _, isChecked ->
-            settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_NOTIFICATIONS, isChecked)
-        }
-        binding.switchAutoBoost.setOnCheckedChangeListener { _, isChecked ->
-            settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_AUTO_BOOST, isChecked)
-        }
-        binding.switchRootMode.setOnCheckedChangeListener { _, isChecked ->
-            settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_ROOT_MODE, isChecked)
-            if (isChecked) {
-                android.widget.Toast.makeText(context, "Simulated Root Mode Enabled", android.widget.Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        binding.btnCheckRoot.setOnClickListener {
-            val isRooted = com.ultra.optimize.x.utils.RootManager.isRooted()
-            val message = if (isRooted) "System is ROOTED (Authorized)" else "System is NOT ROOTED (Denied)"
+            val settingsManager = com.ultra.optimize.x.utils.SettingsManager(context)
             
-            com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.Theme_UltraOptimizeX)
-                .setTitle("Root Status")
-                .setMessage(message)
-                .setPositiveButton("OK", null)
-                .show()
-        }
-        binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-            settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_DARK_MODE, isChecked)
-            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
-                if (isChecked) androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES else androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
-            )
-        }
+            binding.switchNotifications.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_NOTIFICATIONS, true)
+            binding.switchAutoBoost.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_AUTO_BOOST)
+            binding.switchRootMode.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_ROOT_MODE)
+            binding.switchDarkMode.isChecked = settingsManager.isFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_DARK_MODE, true)
 
-        if (com.ultra.optimize.x.utils.SettingsManager.isAdmin(requireContext())) {
-            binding.btnAdminPanel.visibility = View.VISIBLE
-            binding.btnAdminPanel.setOnClickListener {
-                findNavController().navigate(R.id.action_settings_to_admin)
+            binding.switchNotifications.setOnCheckedChangeListener { _, isChecked ->
+                settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_NOTIFICATIONS, isChecked)
             }
-        }
+            binding.switchAutoBoost.setOnCheckedChangeListener { _, isChecked ->
+                settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_AUTO_BOOST, isChecked)
+            }
+            binding.switchRootMode.setOnCheckedChangeListener { _, isChecked ->
+                settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_ROOT_MODE, isChecked)
+                if (isChecked) {
+                    android.widget.Toast.makeText(context, "Simulated Root Mode Enabled", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
 
-        binding.btnLogout.setOnClickListener {
-            com.ultra.optimize.x.utils.SettingsManager.setLoggedIn(requireContext(), false)
-            findNavController().navigate(R.id.action_settings_to_login)
+            binding.btnCheckRoot.setOnClickListener {
+                val isRooted = com.ultra.optimize.x.utils.RootManager.isRooted(context)
+                val message = if (isRooted) "System is ROOTED (Authorized)" else "System is NOT ROOTED (Denied)"
+                
+                com.google.android.material.dialog.MaterialAlertDialogBuilder(context, R.style.Theme_UltraOptimizeX)
+                    .setTitle("Root Status")
+                    .setMessage(message)
+                    .setPositiveButton("OK", null)
+                    .show()
+            }
+            binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
+                settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_DARK_MODE, isChecked)
+                androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
+                    if (isChecked) androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES else androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+                )
+            }
+
+            if (com.ultra.optimize.x.utils.SettingsManager.isAdmin(context)) {
+                binding.btnAdminPanel.visibility = View.VISIBLE
+                binding.btnAdminPanel.setOnClickListener {
+                    findNavController().navigate(R.id.action_settings_to_admin)
+                }
+            }
+
+            binding.btnLogout.setOnClickListener {
+                com.ultra.optimize.x.utils.SettingsManager.setLoggedIn(context, false)
+                findNavController().navigate(R.id.action_settings_to_login)
+            }
         }
     }
 

@@ -47,10 +47,11 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        val context = context ?: return
         // Set Spannable Title
         val title = "ULTRA\nOPTIMIZE X"
         val spannable = android.text.SpannableString(title)
-        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        val blueColor = androidx.core.content.ContextCompat.getColor(context, R.color.neon_blue)
         spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 6, 14, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.tvAppTitle.text = spannable
 
@@ -62,7 +63,7 @@ class DashboardFragment : Fragment() {
         
         handler.post(updateRunnable)
 
-        val isDarkMode = SettingsManager.isDarkMode(requireContext())
+        val isDarkMode = SettingsManager.isDarkMode(context)
         binding.ivThemeIcon.setImageResource(
             if (isDarkMode) R.drawable.ic_sun else R.drawable.ic_moon
         )
@@ -76,10 +77,11 @@ class DashboardFragment : Fragment() {
     }
 
     private fun showShizukuPermissionDialog() {
+        val context = context ?: return
         if (shizukuDialog?.isShowing == true) return
         
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_shizuku_permission, null)
-        val builder = AlertDialog.Builder(requireContext(), R.style.NeonDialogTheme)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_shizuku_permission, null)
+        val builder = AlertDialog.Builder(context, R.style.NeonDialogTheme)
             .setView(dialogView)
             .setCancelable(false)
         
@@ -97,7 +99,7 @@ class DashboardFragment : Fragment() {
         
         dialogView.findViewById<MaterialButton>(R.id.btn_open_shizuku).setOnClickListener {
             try {
-                val intent = requireContext().packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")
+                val intent = context.packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")
                 if (intent != null) {
                     startActivity(intent)
                 } else {
@@ -152,57 +154,61 @@ class DashboardFragment : Fragment() {
     }
 
     private fun setupDeviceInfo() {
+        val context = context ?: return
         val deviceName = Utils.getDeviceName()
         val androidVer = Utils.getAndroidVersion()
         val cpuInfo = Utils.getCpuInfo()
         val totalStorage = Utils.getTotalStorage()
         val availableStorage = Utils.getAvailableStorage()
-        val totalRam = Utils.formatBytes(Utils.getTotalRam(requireContext()))
+        val totalRam = Utils.formatBytes(Utils.getTotalRam(context))
 
-        binding.tvDeviceName.text = deviceName
-        binding.tvAndroidVersion.text = androidVer
-        binding.tvCpuInfo.text = cpuInfo
-        binding.tvStorageInfo.text = "$availableStorage / $totalStorage"
-        
-        // Add RAM info to device info card as well
-        val ramInfo = "RAM: $totalRam"
-        // We can append it to android version or add another textview. 
-        // Let's just update the existing ones for now.
+        if (_binding != null) {
+            binding.tvDeviceName.text = deviceName
+            binding.tvAndroidVersion.text = androidVer
+            binding.tvCpuInfo.text = cpuInfo
+            binding.tvStorageInfo.text = "$availableStorage / $totalStorage"
+        }
     }
 
     private fun checkRoot() {
-        val isForcedRoot = SettingsManager.getSetting(requireContext(), SettingsManager.KEY_ROOT_MODE, false)
-        isRooted = RootManager.isRooted(requireContext())
+        val context = context ?: return
+        val isForcedRoot = SettingsManager.getSetting(context, SettingsManager.KEY_ROOT_MODE, false)
+        isRooted = RootManager.isRooted(context)
         
-        if (isRooted) {
-            binding.tvRootStatus.text = if (isForcedRoot) "AUTHORIZED (SIMULATED)" else "AUTHORIZED"
-            binding.tvRootStatus.setTextColor(resources.getColor(R.color.accent_green))
-        } else {
-            binding.tvRootStatus.text = "DENIED"
-            binding.tvRootStatus.setTextColor(resources.getColor(R.color.accent_red))
-        }
-        
-        // Show Admin Badge if applicable
-        if (SettingsManager.isAdmin(requireContext())) {
-            binding.tvAppTitle.append("\n(ADMIN)")
+        if (_binding != null) {
+            if (isRooted) {
+                binding.tvRootStatus.text = if (isForcedRoot) "AUTHORIZED (SIMULATED)" else "AUTHORIZED"
+                binding.tvRootStatus.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.accent_green))
+            } else {
+                binding.tvRootStatus.text = "DENIED"
+                binding.tvRootStatus.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.accent_red))
+            }
+            
+            // Show Admin Badge if applicable
+            if (SettingsManager.isAdmin(context)) {
+                binding.tvAppTitle.append("\n(ADMIN)")
+            }
         }
     }
 
     private fun checkShizuku() {
+        val context = context ?: return
         val isShizukuAvailable = ShizukuManager.isShizukuAvailable()
         val isShizukuPermitted = ShizukuManager.isPermissionGranted()
         
-        if (isShizukuAvailable) {
-            if (isShizukuPermitted) {
-                binding.tvShizukuStatusDash.text = "SHIZUKU: AUTHORIZED"
-                binding.tvShizukuStatusDash.setTextColor(resources.getColor(R.color.accent_green))
+        if (_binding != null) {
+            if (isShizukuAvailable) {
+                if (isShizukuPermitted) {
+                    binding.tvShizukuStatusDash.text = "SHIZUKU: AUTHORIZED"
+                    binding.tvShizukuStatusDash.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.accent_green))
+                } else {
+                    binding.tvShizukuStatusDash.text = "SHIZUKU: PENDING PERMISSION"
+                    binding.tvShizukuStatusDash.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.accent_orange))
+                }
             } else {
-                binding.tvShizukuStatusDash.text = "SHIZUKU: PENDING PERMISSION"
-                binding.tvShizukuStatusDash.setTextColor(resources.getColor(R.color.accent_orange))
+                binding.tvShizukuStatusDash.text = "SHIZUKU: NOT RUNNING"
+                binding.tvShizukuStatusDash.setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.text_secondary))
             }
-        } else {
-            binding.tvShizukuStatusDash.text = "SHIZUKU: NOT RUNNING"
-            binding.tvShizukuStatusDash.setTextColor(resources.getColor(R.color.text_secondary))
         }
     }
 
@@ -212,9 +218,10 @@ class DashboardFragment : Fragment() {
         }
 
         binding.btnThemeToggle.setOnClickListener {
-            val isDarkMode = SettingsManager.isDarkMode(requireContext())
-            SettingsManager.setDarkMode(requireContext(), !isDarkMode)
-            requireActivity().recreate()
+            val context = context ?: return@setOnClickListener
+            val isDarkMode = SettingsManager.isDarkMode(context)
+            SettingsManager.setDarkMode(context, !isDarkMode)
+            activity?.recreate()
         }
 
         binding.btnBoost.setOnClickListener {
@@ -398,36 +405,45 @@ class DashboardFragment : Fragment() {
     }
 
     private fun updateStats() {
+        val context = context ?: return
         if (_binding == null) return
         
-        val ramUsage = RamManager.getRamUsage(requireContext())
-        binding.progressRamCircular.setProgress(ramUsage, true)
-        binding.tvRamValueDashboard.text = "$ramUsage%"
+        try {
+            val ramUsage = RamManager.getRamUsage(context)
+            binding.progressRamCircular.setProgress(ramUsage, true)
+            binding.tvRamValueDashboard.text = "$ramUsage%"
 
-        Thread {
-            var cpuUsage = CpuManager.getCpuUsage()
-            if (cpuUsage == 0) cpuUsage = (5..15).random() // Fallback jitter for visibility
-            
-            var temp = ThermalManager.getCpuTemp()
-            if (temp == 0f) temp = (32..36).random().toFloat() // Fallback jitter for visibility
-            
-            handler.post {
-                if (_binding != null) {
-                    binding.progressCpuCircular.setProgress(cpuUsage, true)
-                    binding.tvCpuValueDashboard.text = "$cpuUsage%"
+            Thread {
+                try {
+                    var cpuUsage = CpuManager.getCpuUsage()
+                    if (cpuUsage == 0) cpuUsage = (5..15).random() // Fallback jitter for visibility
+                    
+                    var temp = ThermalManager.getCpuTemp()
+                    if (temp == 0f) temp = (32..36).random().toFloat() // Fallback jitter for visibility
+                    
+                    handler.post {
+                        if (_binding != null) {
+                            binding.progressCpuCircular.setProgress(cpuUsage, true)
+                            binding.tvCpuValueDashboard.text = "$cpuUsage%"
 
-                    binding.progressTempCircular.setProgress(temp.toInt(), true)
-                    binding.tvTempValueDashboard.text = "${temp.toInt()}°C"
-                    
-                    val health = calculateHealth(ramUsage, cpuUsage, temp)
-                    binding.progressHealthMain.setProgress(health, true)
-                    binding.tvHealthValue.text = "$health%"
-                    
-                    updateOverallStatus(ramUsage, cpuUsage, temp)
-                    updateSimulatedStats()
+                            binding.progressTempCircular.setProgress(temp.toInt(), true)
+                            binding.tvTempValueDashboard.text = "${temp.toInt()}°C"
+                            
+                            val health = calculateHealth(ramUsage, cpuUsage, temp)
+                            binding.progressHealthMain.setProgress(health, true)
+                            binding.tvHealthValue.text = "$health%"
+                            
+                            updateOverallStatus(ramUsage, cpuUsage, temp)
+                            updateSimulatedStats()
+                        }
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.e("DashboardFragment", "Error in updateStats thread", e)
                 }
-            }
-        }.start()
+            }.start()
+        } catch (e: Exception) {
+            android.util.Log.e("DashboardFragment", "Error in updateStats", e)
+        }
     }
 
     private fun calculateHealth(ram: Int, cpu: Int, temp: Float): Int {
@@ -438,21 +454,22 @@ class DashboardFragment : Fragment() {
     }
 
     private fun updateOverallStatus(ram: Int, cpu: Int, temp: Float) {
+        val context = context ?: return
         val status: String
         val color: Int
         
         when {
             ram > 85 || cpu > 85 || temp > 45 -> {
                 status = "CRITICAL"
-                color = resources.getColor(R.color.accent_red)
+                color = androidx.core.content.ContextCompat.getColor(context, R.color.accent_red)
             }
             ram > 60 || cpu > 60 || temp > 38 -> {
                 status = "MODERATE"
-                color = resources.getColor(R.color.accent_orange)
+                color = androidx.core.content.ContextCompat.getColor(context, R.color.accent_orange)
             }
             else -> {
                 status = "EXCELLENT"
-                color = resources.getColor(R.color.accent_green)
+                color = androidx.core.content.ContextCompat.getColor(context, R.color.accent_green)
             }
         }
         
@@ -461,53 +478,65 @@ class DashboardFragment : Fragment() {
     }
 
     private fun updateSimulatedStats() {
+        val context = context ?: return
         val ping = Utils.getPing()
         binding.tvPingValue.text = "${ping}ms"
-        binding.tvPingValue.setTextColor(if (ping < 40) resources.getColor(R.color.accent_green) else resources.getColor(R.color.accent_orange))
+        binding.tvPingValue.setTextColor(if (ping < 40) androidx.core.content.ContextCompat.getColor(context, R.color.accent_green) else androidx.core.content.ContextCompat.getColor(context, R.color.accent_orange))
         
-        val battery = ThermalManager.getBatteryCurrent(requireContext())
+        val battery = ThermalManager.getBatteryCurrent(context)
         binding.tvBatteryCurrent.text = "${battery}mA"
     }
 
     private fun performBoost() {
+        val context = context ?: return
         binding.btnBoost.isEnabled = false
         binding.btnBoost.text = "OPTIMIZING..."
         
         Thread {
-            RamManager.boostRam(requireContext(), isRooted)
-            Thread.sleep(1500)
-            handler.post {
-                if (_binding != null) {
-                    binding.btnBoost.isEnabled = true
-                    binding.btnBoost.text = "BOOST SYSTEM"
-                    Toast.makeText(requireContext(), "System Optimized!", Toast.LENGTH_SHORT).show()
-                    updateStats()
+            try {
+                RamManager.boostRam(context, isRooted)
+                Thread.sleep(1500)
+                handler.post {
+                    if (_binding != null) {
+                        binding.btnBoost.isEnabled = true
+                        binding.btnBoost.text = "BOOST SYSTEM"
+                        Toast.makeText(context, "System Optimized!", Toast.LENGTH_SHORT).show()
+                        updateStats()
+                    }
                 }
+            } catch (e: Exception) {
+                android.util.Log.e("DashboardFragment", "Error in performBoost", e)
             }
         }.start()
     }
 
     private fun gameBoost() {
-        Toast.makeText(requireContext(), "Activating Game Mode...", Toast.LENGTH_SHORT).show()
+        val context = context ?: return
+        Toast.makeText(context, "Activating Game Mode...", Toast.LENGTH_SHORT).show()
         Thread {
-            RamManager.boostRam(requireContext(), isRooted)
-            if (isRooted) {
-                CpuManager.setGovernor("performance")
-            }
-            handler.post {
-                Toast.makeText(requireContext(), "Game Mode Active!", Toast.LENGTH_SHORT).show()
+            try {
+                RamManager.boostRam(context, isRooted)
+                if (isRooted) {
+                    CpuManager.setGovernor("performance")
+                }
+                handler.post {
+                    Toast.makeText(context, "Game Mode Active!", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("DashboardFragment", "Error in gameBoost", e)
             }
         }.start()
     }
 
     private fun showCpuControlDialog() {
+        val context = context ?: return
         val governors = CpuManager.getAvailableGovernors()
-        val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext(), R.style.Theme_UltraOptimizeX)
+        val builder = androidx.appcompat.app.AlertDialog.Builder(context, R.style.Theme_UltraOptimizeX)
         builder.setTitle("Select CPU Governor")
         builder.setItems(governors.toTypedArray()) { _, which ->
             val selected = governors[which]
             CpuManager.setGovernor(selected)
-            Toast.makeText(requireContext(), "Governor set to $selected", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Governor set to $selected", Toast.LENGTH_SHORT).show()
         }
         builder.show()
     }

@@ -21,9 +21,13 @@ class MainActivity : AppCompatActivity() {
         // Check for updates on startup
         UpdateManager(this).checkForUpdates()
 
-        // Request root access on startup
-        if (!RootManager.requestRoot()) {
-            Toast.makeText(this, "Root access denied. Some features may not work.", Toast.LENGTH_LONG).show()
-        }
+        // Request root access on startup in background
+        Thread {
+            if (!RootManager.requestRoot()) {
+                runOnUiThread {
+                    Toast.makeText(this, "Root access denied. Some features may not work.", Toast.LENGTH_LONG).show()
+                }
+            }
+        }.start()
     }
 }

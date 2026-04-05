@@ -191,13 +191,31 @@ class UpdateManager(private val activity: Activity) {
     }
 
     private fun installApk(file: File) {
+        if (!file.exists() || file.length() == 0L) {
+            Log.e(TAG, "APK file is invalid or empty")
+            Toast.makeText(activity, "Download failed or file is corrupted", Toast.LENGTH_LONG).show()
+            return
+        }
+
         try {
             val uri = FileProvider.getUriForFile(activity, "${activity.packageName}.provider", file)
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setDataAndType(uri, "application/vnd.android.package-archive")
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            activity.startActivity(intent)
+            
+            // Check if there is an activity that can handle this intent
+            if (intent.resolveActivity(activity.packageManager) != null) {
+                activity.startActivity(intent)
+            } else {
+                // For some Android versions, resolveActivity might return null for ACTION_VIEW on APKs
+                // even if there is a package installer. So we try to start it anyway as a fallback.
+                try {
+                    activity.startActivity(intent)
+                } catch (e: Exception) {
+                    Toast.makeText(activity, "No application found to install APK", Toast.LENGTH_LONG).show()
+                }
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Installation failed", e)
             Toast.makeText(activity, "Installation failed: ${e.message}", Toast.LENGTH_LONG).show()

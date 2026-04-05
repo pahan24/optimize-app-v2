@@ -66,6 +66,7 @@ class SplashFragment : Fragment() {
     }
 
     private fun checkForUpdates() {
+        val context = context ?: return
         val db = FirebaseFirestore.getInstance(Constants.FIRESTORE_DATABASE_ID)
         db.collection("app_config").document("version_info")
             .get()
@@ -75,7 +76,7 @@ class SplashFragment : Fragment() {
                 if (document != null && document.exists()) {
                     val latestCode = document.getLong("latest_version_code") ?: 0L
                     val currentCode = try {
-                        requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionCode.toLong()
+                        context.packageManager.getPackageInfo(context.packageName, 0).versionCode.toLong()
                     } catch (e: Exception) { 1L }
                     
                     val updateUrl = document.getString("update_url") ?: ""

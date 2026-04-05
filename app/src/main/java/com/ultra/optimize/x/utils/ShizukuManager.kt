@@ -19,11 +19,15 @@ object ShizukuManager {
     }
 
     fun isPermissionGranted(): Boolean {
-        return if (Shizuku.isPreV11()) {
-            // Pre-v11 Shizuku doesn't have runtime permission
-            true
-        } else {
-            Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
+        return try {
+            if (Shizuku.isPreV11()) {
+                // Pre-v11 Shizuku doesn't have runtime permission
+                true
+            } else {
+                Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
+            }
+        } catch (e: Exception) {
+            false
         }
     }
 

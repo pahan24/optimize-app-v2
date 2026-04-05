@@ -32,16 +32,20 @@ class AdminFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        val context = context ?: return
         // Set Spannable Title
         val title = "SYSTEM\nADMINISTRATION"
         val spannable = android.text.SpannableString(title)
-        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        val blueColor = androidx.core.content.ContextCompat.getColor(context, R.color.neon_blue)
         spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 0, 6, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        binding.tvAdminTitle.text = spannable
+        
+        if (_binding != null) {
+            binding.tvAdminTitle.text = spannable
 
-        setupRecyclerView()
-        setupListeners()
-        loadOtps()
+            setupRecyclerView()
+            setupListeners()
+            loadOtps()
+        }
     }
 
     private fun setupRecyclerView() {

@@ -43,61 +43,70 @@ class GenericFeatureFragment : Fragment() {
             "FIRE BUTTON" -> "Optimize fire button response and sensitivity"
             else -> arguments?.getString("featureDesc") ?: "Configure advanced system optimization parameters"
         }
-        val settingsManager = com.ultra.optimize.x.utils.SettingsManager(requireContext())
+        val context = context ?: return
+        val settingsManager = com.ultra.optimize.x.utils.SettingsManager(context)
         val featureKey = title.lowercase().replace(" ", "_") + "_enabled"
 
         // Set Spannable Title
         val upperTitle = title.uppercase()
         val spannable = android.text.SpannableString(upperTitle)
-        val blueColor = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.neon_blue)
+        val blueColor = androidx.core.content.ContextCompat.getColor(context, R.color.neon_blue)
         
         // Find first word or first few chars to highlight
         val spaceIndex = upperTitle.indexOf(" ")
         val end = if (spaceIndex != -1) spaceIndex else (upperTitle.length / 2).coerceAtLeast(1)
         spannable.setSpan(android.text.style.ForegroundColorSpan(blueColor), 0, end, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         
-        binding.tvFeatureTitle.text = spannable
-        binding.tvSubtitle.text = subtitle
-        binding.btnBack.setOnClickListener { findNavController().popBackStack() }
-        
-        binding.switchFeature.isChecked = settingsManager.isFeatureEnabled(featureKey)
-
-        binding.btnApply.setOnClickListener {
-            binding.btnApply.isEnabled = false
-            binding.btnApply.text = "APPLYING..."
+        if (_binding != null) {
+            binding.tvFeatureTitle.text = spannable
+            binding.tvSubtitle.text = subtitle
+            binding.btnBack.setOnClickListener { findNavController().popBackStack() }
             
-            Thread {
-                // Execute root commands based on feature
-                if (com.ultra.optimize.x.utils.RootManager.isRooted(requireContext())) {
-                    when (title) {
-                        "GX BOOST" -> {
-                            com.ultra.optimize.x.utils.RootManager.runCommand("setprop debug.egl.hw 1")
-                            com.ultra.optimize.x.utils.RootManager.runCommand("setprop debug.gr.num_common_buffers 3")
-                        }
-                        "TOUCH SPEED" -> {
-                            com.ultra.optimize.x.utils.RootManager.runCommand("settings put secure long_press_timeout 250")
-                            com.ultra.optimize.x.utils.RootManager.runCommand("settings put secure multi_press_timeout 250")
-                        }
-                        "120 FPS UNLOCK" -> {
-                            com.ultra.optimize.x.utils.RootManager.runCommand("setprop persist.sys.composition.type gpu")
-                            com.ultra.optimize.x.utils.RootManager.runCommand("setprop persist.sys.ui.hw 1")
-                        }
-                    }
-                }
-                
-                Thread.sleep(1500)
-                activity?.runOnUiThread {
-                    binding.btnApply.isEnabled = true
-                    binding.btnApply.text = "APPLIED"
-                    Toast.makeText(requireContext(), "$title Tweaks Applied!", Toast.LENGTH_SHORT).show()
-                }
-            }.start()
-        }
+            binding.switchFeature.isChecked = settingsManager.isFeatureEnabled(featureKey)
 
-        binding.switchFeature.setOnCheckedChangeListener { _, isChecked ->
-            settingsManager.setFeatureEnabled(featureKey, isChecked)
-            val status = if (isChecked) "Enabled" else "Disabled"
-            Toast.makeText(requireContext(), "$title $status", Toast.LENGTH_SHORT).show()
+            binding.btnApply.setOnClickListener {
+                binding.btnApply.isEnabled = false
+                binding.btnApply.text = "APPLYING..."
+                
+                Thread {
+                    try {
+                        // Execute root commands based on feature
+                        if (com.ultra.optimize.x.utils.RootManager.isRooted(context)) {
+                            when (title) {
+                                "GX BOOST" -> {
+                                    com.ultra.optimize.x.utils.RootManager.runCommand("setprop debug.egl.hw 1")
+                                    com.ultra.optimize.x.utils.RootManager.runCommand("setprop debug.gr.num_common_buffers 3")
+                                }
+                                "TOUCH SPEED" -> {
+                                    com.ultra.optimize.x.utils.RootManager.runCommand("settings put secure long_press_timeout 250")
+                                    com.ultra.optimize.x.utils.RootManager.runCommand("settings put secure multi_press_timeout 250")
+                                }
+                                "120 FPS UNLOCK" -> {
+                                    com.ultra.optimize.x.utils.RootManager.runCommand("setprop persist.sys.composition.type gpu")
+                                    com.ultra.optimize.x.utils.RootManager.runCommand("setprop persist.sys.ui.hw 1")
+                                }
+                            }
+                        }
+                        
+                        Thread.sleep(1500)
+                        activity?.runOnUiThread {
+                            if (_binding != null) {
+                                binding.btnApply.isEnabled = true
+                                binding.btnApply.text = "APPLIED"
+                                Toast.makeText(context, "$title Tweaks Applied!", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        android.util.Log.e("GenericFeatureFragment", "Error applying tweaks", e)
+                    }
+                }.start()
+            }
+
+            binding.switchFeature.setOnCheckedChangeListener { _, isChecked ->
+                settingsManager.setFeatureEnabled(featureKey, isChecked)
+                val status = if (isChecked) "Enabled" else "Disabled"
+                Toast.makeText(context, "$title $status", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
