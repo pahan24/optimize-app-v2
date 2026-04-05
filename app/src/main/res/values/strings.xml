@@ -33,8 +33,11 @@
     <string name="crosshair_title">Crosshair Pro</string>
     <string name="crosshair_desc">Add a custom crosshair overlay for better aiming in FPS games like Free Fire.</string>
     <string name="thermal_control">Thermal Control</string>
-    <!-- Google Sign-In Web Client ID (Found in Firebase Console > Project Settings > General > Web App) -->
-    <!-- Or in the Google Cloud Console > APIs & Services > Credentials > OAuth 2.0 Client IDs -->
+    <!-- Google Sign-In Web Client ID -->
+    <!-- 1. Go to Firebase Console > Project Settings > General -->
+    <!-- 2. Add a 'Web App' if you haven't already -->
+    <!-- 3. The ID will be in the 'google-services.json' under 'oauth_client' with 'client_type': 3 -->
+    <!-- 4. Replace the dummy value below with your actual Web Client ID -->
     <string name="default_web_client_id">433122361304-dummy.apps.googleusercontent.com</string>
     <string name="system_health">System Health</string>
     <string name="optimal_state">OPTIMAL STATE</string>

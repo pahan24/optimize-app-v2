@@ -88,6 +88,15 @@ class LoginFragment : Fragment() {
                 val username = binding.etUsername.text.toString().trim()
                 val password = binding.etPassword.text.toString().trim()
 
+                // Master Admin Bypass (Temporary access until Google Sign-In is configured)
+                if (username.uppercase() == "ADMIN" && password == "000000") {
+                    SettingsManager.setLoggedIn(context, true)
+                    SettingsManager.setAdmin(context, true)
+                    Toast.makeText(context, "Master Admin Access Granted", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_login_to_dashboard)
+                    return@setOnClickListener
+                }
+
                 if (username.isEmpty()) {
                     binding.tilUsername.error = "Enter Username"
                     return@setOnClickListener
@@ -104,7 +113,18 @@ class LoginFragment : Fragment() {
             binding.btnAdminLogin.setOnClickListener {
                 val clientId = getString(R.string.default_web_client_id)
                 if (clientId.contains("dummy")) {
-                    Toast.makeText(context, "Google Sign-In is not configured. Please update the Web Client ID in strings.xml from your Firebase Console.", Toast.LENGTH_LONG).show()
+                    val msg = "Google Sign-In is not configured.\n\n" +
+                            "1. Go to Firebase Console\n" +
+                            "2. Project Settings > General\n" +
+                            "3. Add a 'Web App' to get the 'Web Client ID'\n" +
+                            "4. Update strings.xml with the ID\n\n" +
+                            "OR use Username: ADMIN and Password: 000000"
+                    
+                    com.google.android.material.dialog.MaterialAlertDialogBuilder(context, R.style.Theme_UltraOptimizeX)
+                        .setTitle("Configuration Required")
+                        .setMessage(msg)
+                        .setPositiveButton("OK", null)
+                        .show()
                     return@setOnClickListener
                 }
                 val signInIntent = googleSignInClient.signInIntent
