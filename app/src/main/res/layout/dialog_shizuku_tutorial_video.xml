@@ -34,11 +34,10 @@
             app:strokeWidth="1dp"
             app:strokeColor="@color/neon_blue_alpha">
 
-            <VideoView
-                android:id="@+id/vv_tutorial"
+            <WebView
+                android:id="@+id/wv_tutorial"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center" />
+                android:layout_height="match_parent" />
 
             <ProgressBar
                 android:id="@+id/pb_video_loading"

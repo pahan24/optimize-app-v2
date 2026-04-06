@@ -42,6 +42,10 @@ object RootManager {
     }
 
     fun runCommand(command: String): String {
+        if (ShizukuManager.isShizukuAvailable() && ShizukuManager.isPermissionGranted()) {
+            return ShizukuManager.executeCommand(command)
+        }
+
         var output = ""
         try {
             val process = Runtime.getRuntime().exec("su")

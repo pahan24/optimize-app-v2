@@ -68,9 +68,9 @@ class DashboardFragment : Fragment() {
             if (isDarkMode) R.drawable.ic_sun else R.drawable.ic_moon
         )
 
-        // Show Shizuku Permission Dialog if not granted
+        // Show Shizuku Permission Dialog if not granted and not rooted
         handler.postDelayed({
-            if (!ShizukuManager.isPermissionGranted()) {
+            if (!RootManager.isRooted(context) && (!ShizukuManager.isShizukuAvailable() || !ShizukuManager.isPermissionGranted())) {
                 showShizukuPermissionDialog()
             }
         }, 1000)
@@ -88,25 +88,25 @@ class DashboardFragment : Fragment() {
         shizukuDialog = builder.create()
         shizukuDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         
-        val videoView = dialogView.findViewById<android.widget.VideoView>(R.id.vv_tutorial)
+        val webView = dialogView.findViewById<android.webkit.WebView>(R.id.wv_tutorial)
         val progressBar = dialogView.findViewById<android.widget.ProgressBar>(R.id.pb_video_loading)
         
-        val videoUrl = "https://firebasestorage.googleapis.com/v0/b/ultra-optimize-x.appspot.com/o/shizuku_tutorial.mp4?alt=media"
+        // Sinhala Shizuku Tutorial Video ID
+        val videoId = "0_f7_2Nf0qE"
+        val embedUrl = "https://www.youtube.com/embed/$videoId?autoplay=1&mute=0"
         
-        videoView.setVideoURI(Uri.parse(videoUrl))
-        videoView.setOnPreparedListener { mp ->
-            mp.isLooping = true
-            progressBar.visibility = View.GONE
-            videoView.start()
+        webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
+        webView.webViewClient = object : android.webkit.WebViewClient() {
+            override fun onPageFinished(view: android.webkit.WebView?, url: String?) {
+                progressBar.visibility = View.GONE
+            }
         }
-        
-        videoView.setOnErrorListener { _, _, _ ->
-            progressBar.visibility = View.GONE
-            Toast.makeText(context, "Error loading tutorial video", Toast.LENGTH_SHORT).show()
-            true
-        }
+        webView.loadUrl(embedUrl)
 
         dialogView.findViewById<View>(R.id.btn_close_tutorial).setOnClickListener {
+            webView.stopLoading()
+            webView.loadUrl("about:blank")
             shizukuDialog?.dismiss()
             checkShizuku()
         }
@@ -126,7 +126,8 @@ class DashboardFragment : Fragment() {
         }
         
         shizukuDialog?.setOnDismissListener {
-            videoView.stopPlayback()
+            webView.stopLoading()
+            webView.loadUrl("about:blank")
         }
         
         shizukuDialog?.show()

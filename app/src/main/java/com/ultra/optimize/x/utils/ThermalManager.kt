@@ -20,15 +20,14 @@ object ThermalManager {
         )
         
         for (path in thermalPaths) {
-            val file = File(path)
-            if (file.exists()) {
-                try {
-                    val tempStr = file.readText().trim()
+            try {
+                val tempStr = RootManager.runCommand("cat $path").trim()
+                if (tempStr.isNotEmpty()) {
                     val temp = tempStr.toFloat()
                     return if (temp > 1000) temp / 1000 else temp
-                } catch (e: Exception) {
-                    continue
                 }
+            } catch (e: Exception) {
+                continue
             }
         }
         return 0f

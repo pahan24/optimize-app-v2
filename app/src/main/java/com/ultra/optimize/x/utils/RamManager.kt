@@ -19,7 +19,7 @@ object RamManager {
     }
 
     fun boostRam(context: Context, isRoot: Boolean) {
-        if (isRoot) {
+        if (isRoot || (ShizukuManager.isShizukuAvailable() && ShizukuManager.isPermissionGranted())) {
             RootManager.runCommand("sync; echo 3 > /proc/sys/vm/drop_caches")
             // Kill background processes
             RootManager.runCommand("am kill-all")

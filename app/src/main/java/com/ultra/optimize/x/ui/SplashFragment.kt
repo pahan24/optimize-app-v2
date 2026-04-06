@@ -157,26 +157,25 @@ class SplashFragment : Fragment() {
 
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        val videoView = dialogView.findViewById<android.widget.VideoView>(R.id.vv_tutorial)
+        val webView = dialogView.findViewById<android.webkit.WebView>(R.id.wv_tutorial)
         val progressBar = dialogView.findViewById<android.widget.ProgressBar>(R.id.pb_video_loading)
         
-        // Shizuku Tutorial Video URL (Placeholder or actual URL if available)
-        val videoUrl = "https://firebasestorage.googleapis.com/v0/b/ultra-optimize-x.appspot.com/o/shizuku_tutorial.mp4?alt=media"
+        // Sinhala Shizuku Tutorial Video ID
+        val videoId = "0_f7_2Nf0qE"
+        val embedUrl = "https://www.youtube.com/embed/$videoId?autoplay=1&mute=0"
         
-        videoView.setVideoURI(Uri.parse(videoUrl))
-        videoView.setOnPreparedListener { mp ->
-            mp.isLooping = true
-            progressBar.visibility = View.GONE
-            videoView.start()
+        webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
+        webView.webViewClient = object : android.webkit.WebViewClient() {
+            override fun onPageFinished(view: android.webkit.WebView?, url: String?) {
+                progressBar.visibility = View.GONE
+            }
         }
-        
-        videoView.setOnErrorListener { _, _, _ ->
-            progressBar.visibility = View.GONE
-            android.widget.Toast.makeText(context, "Error loading tutorial video", android.widget.Toast.LENGTH_SHORT).show()
-            true
-        }
+        webView.loadUrl(embedUrl)
 
         dialogView.findViewById<View>(R.id.btn_close_tutorial).setOnClickListener {
+            webView.stopLoading()
+            webView.loadUrl("about:blank")
             dialog.dismiss()
             checkForUpdates()
         }
@@ -196,7 +195,8 @@ class SplashFragment : Fragment() {
         }
 
         dialog.setOnDismissListener {
-            videoView.stopPlayback()
+            webView.stopLoading()
+            webView.loadUrl("about:blank")
         }
 
         dialog.show()

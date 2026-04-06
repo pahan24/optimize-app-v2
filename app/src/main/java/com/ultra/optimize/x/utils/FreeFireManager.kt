@@ -19,25 +19,33 @@ object FreeFireManager {
     }
 
     private fun applyRootOptimizations() {
-        // Set CPU Governor to Performance
-        RootManager.execute("echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor")
-        RootManager.execute("echo performance > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor")
-        RootManager.execute("echo performance > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor")
-        RootManager.execute("echo performance > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor")
+        val commands = arrayOf(
+            "echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor",
+            "echo performance > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor",
+            "echo performance > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor",
+            "echo performance > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor",
+            "sysctl -w net.ipv4.tcp_low_latency=1",
+            "sysctl -w net.ipv4.tcp_timestamps=0",
+            "setprop debug.performance.tuning 1",
+            "setprop video.accelerate.hw 1"
+        )
         
-        // Network Tweaks for lower ping
-        RootManager.execute("sysctl -w net.ipv4.tcp_low_latency=1")
-        RootManager.execute("sysctl -w net.ipv4.tcp_timestamps=0")
+        for (cmd in commands) {
+            if (ShizukuManager.isShizukuAvailable() && ShizukuManager.isPermissionGranted()) {
+                ShizukuManager.executeCommand(cmd)
+            } else {
+                RootManager.execute(cmd)
+            }
+        }
         
-        // Touch Sensitivity (simulated via shell if possible)
-        RootManager.execute("setprop debug.performance.tuning 1")
-        RootManager.execute("setprop video.accelerate.hw 1")
-        
-        Log.d(TAG, "Rooted Free Fire optimizations applied")
+        Log.d(TAG, "Free Fire optimizations applied via Root/Shizuku")
     }
 
     private fun applyNonRootOptimizations(context: Context) {
-        // Non-rooted: Focus on background process management
-        Log.d(TAG, "Non-rooted Free Fire optimizations applied (RAM only)")
+        if (ShizukuManager.isShizukuAvailable() && ShizukuManager.isPermissionGranted()) {
+            applyRootOptimizations()
+        } else {
+            Log.d(TAG, "Non-rooted Free Fire optimizations applied (RAM only)")
+        }
     }
 }

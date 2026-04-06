@@ -17,21 +17,31 @@ object LagManager {
     }
 
     private fun applyRootLagFix() {
-        // Rooted: Set animation scales to 0.5x or 0x for instant UI
-        RootManager.execute("settings put global window_animation_scale 0.5")
-        RootManager.execute("settings put global transition_animation_scale 0.5")
-        RootManager.execute("settings put global animator_duration_scale 0.5")
+        val commands = arrayOf(
+            "settings put global window_animation_scale 0.5",
+            "settings put global transition_animation_scale 0.5",
+            "settings put global animator_duration_scale 0.5",
+            "setprop debug.hwui.renderer opengl",
+            "setprop persist.sys.ui.hw true"
+        )
         
-        // Force GPU rendering (if possible via shell)
-        RootManager.execute("setprop debug.hwui.renderer opengl")
-        RootManager.execute("setprop persist.sys.ui.hw true")
+        for (cmd in commands) {
+            if (ShizukuManager.isShizukuAvailable() && ShizukuManager.isPermissionGranted()) {
+                ShizukuManager.executeCommand(cmd)
+            } else {
+                RootManager.execute(cmd)
+            }
+        }
         
-        Log.d(TAG, "Rooted lag fix applied")
+        Log.d(TAG, "Lag fix applied via Root/Shizuku")
     }
 
     private fun applyNonRootLagFix(context: Context) {
-        // Non-rooted: We can't change secure settings easily, but we can clear some cache and kill background apps
-        RamManager.boostRam(context, false)
-        Log.d(TAG, "Non-rooted lag fix applied (RAM boost only)")
+        if (ShizukuManager.isShizukuAvailable() && ShizukuManager.isPermissionGranted()) {
+            applyRootLagFix()
+        } else {
+            RamManager.boostRam(context, false)
+            Log.d(TAG, "Non-rooted lag fix applied (RAM boost only)")
+        }
     }
 }
