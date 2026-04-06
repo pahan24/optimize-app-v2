@@ -71,6 +71,17 @@ class SplashFragment : Fragment() {
 
     private fun checkForUpdates() {
         val context = context ?: return
+        
+        // MANDATORY ACCESS CHECK: Shizuku or Root must be available
+        val isRooted = RootManager.isRooted(context)
+        val isShizukuAvailable = ShizukuManager.isShizukuAvailable()
+        val isShizukuPermitted = ShizukuManager.isPermissionGranted()
+
+        if (!isRooted && (!isShizukuAvailable || !isShizukuPermitted)) {
+            showAccessRequiredDialog()
+            return
+        }
+
         val db = FirebaseFirestore.getInstance(Constants.FIRESTORE_DATABASE_ID)
         db.collection("app_config").document("version_info")
             .get()
@@ -98,6 +109,38 @@ class SplashFragment : Fragment() {
             .addOnFailureListener {
                 proceed()
             }
+    }
+
+    private fun showAccessRequiredDialog() {
+        val context = context ?: return
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_access_required, null)
+        val dialog = AlertDialog.Builder(context, R.style.NeonDialogTheme)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<View>(R.id.btn_retry_access).setOnClickListener {
+            dialog.dismiss()
+            checkForUpdates()
+        }
+
+        dialogView.findViewById<View>(R.id.btn_open_shizuku_splash).setOnClickListener {
+            try {
+                val intent = context.packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")
+                if (intent != null) {
+                    startActivity(intent)
+                } else {
+                    val playStoreIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=moe.shizuku.privileged.api"))
+                    startActivity(playStoreIntent)
+                }
+            } catch (e: Exception) {
+                android.widget.Toast.makeText(context, "Shizuku not found", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog.show()
     }
 
     private fun showUpdateDialog(url: String, force: Boolean) {

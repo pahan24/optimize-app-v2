@@ -154,12 +154,25 @@ class CleanerFragment : Fragment() {
     }
 
     private fun updateJunkSize() {
+        if (_binding == null) return
         val totalSize = categories.filter { it.isSelected }.sumOf { it.size }
         binding.tvJunkSize.text = formatSize(totalSize)
         
         // Update progress bar (simulated)
-        val progress = if (totalSize > 0) (totalSize / (5000L * 1024 * 1024) * 100).toInt() else 0
-        binding.progressStorage.setProgress(progress, true)
+        val progress = if (totalSize > 0) (totalSize.toFloat() / (5000L * 1024 * 1024) * 100).toInt().coerceIn(0, 100) else 0
+        animateProgress(binding.progressStorage, progress)
+    }
+
+    private fun animateProgress(progress: com.google.android.material.progressindicator.CircularProgressIndicator, value: Int) {
+        val animator = android.animation.ValueAnimator.ofInt(progress.progress, value)
+        animator.duration = 800
+        animator.interpolator = android.view.animation.DecelerateInterpolator()
+        animator.addUpdateListener {
+            if (_binding != null) {
+                progress.progress = it.animatedValue as Int
+            }
+        }
+        animator.start()
     }
 
     private fun formatSize(size: Long): String {

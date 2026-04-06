@@ -45,7 +45,20 @@ class AdminFragment : Fragment() {
             setupRecyclerView()
             setupListeners()
             loadOtps()
+            loadFeatureConfig()
         }
+    }
+
+    private fun loadFeatureConfig() {
+        db.collection("app_config").document("features")
+            .get()
+            .addOnSuccessListener { doc ->
+                if (doc.exists()) {
+                    binding.switchEnableRoot.isChecked = doc.getBoolean("enable_root") ?: true
+                    binding.switchEnableShizuku.isChecked = doc.getBoolean("enable_shizuku") ?: true
+                    binding.switchEnableBypass.isChecked = doc.getBoolean("enable_bypass") ?: true
+                }
+            }
     }
 
     private fun setupRecyclerView() {
@@ -90,6 +103,55 @@ class AdminFragment : Fragment() {
                 Toast.makeText(context, "Please fill all update fields", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.btnSaveFeatures.setOnClickListener {
+            saveFeatureConfig()
+        }
+
+        binding.btnSendBroadcast.setOnClickListener {
+            val msg = binding.etBroadcastMsg.text.toString().trim()
+            if (msg.isNotEmpty()) {
+                sendBroadcast(msg)
+            } else {
+                Toast.makeText(context, "Please enter a message", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun saveFeatureConfig() {
+        val data = hashMapOf(
+            "enable_root" to binding.switchEnableRoot.isChecked,
+            "enable_shizuku" to binding.switchEnableShizuku.isChecked,
+            "enable_bypass" to binding.switchEnableBypass.isChecked,
+            "updatedAt" to com.google.firebase.Timestamp.now()
+        )
+
+        db.collection("app_config").document("features")
+            .set(data)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Feature Config Saved", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun sendBroadcast(msg: String) {
+        val data = hashMapOf(
+            "message" to msg,
+            "timestamp" to com.google.firebase.Timestamp.now(),
+            "active" to true
+        )
+
+        db.collection("app_config").document("broadcast")
+            .set(data)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Broadcast Sent Successfully", Toast.LENGTH_SHORT).show()
+                binding.etBroadcastMsg.setText("")
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun pushUpdateInfo(code: Long, name: String, url: String, force: Boolean) {

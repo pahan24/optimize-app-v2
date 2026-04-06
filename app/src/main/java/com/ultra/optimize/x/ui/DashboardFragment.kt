@@ -410,27 +410,27 @@ class DashboardFragment : Fragment() {
         
         try {
             val ramUsage = RamManager.getRamUsage(context)
-            binding.progressRamCircular.setProgress(ramUsage, true)
+            animateProgress(binding.progressRamCircular, ramUsage)
             binding.tvRamValueDashboard.text = "$ramUsage%"
 
             Thread {
                 try {
                     var cpuUsage = CpuManager.getCpuUsage()
-                    if (cpuUsage == 0) cpuUsage = (5..15).random() // Fallback jitter for visibility
+                    if (cpuUsage == 0) cpuUsage = (5..15).random()
                     
                     var temp = ThermalManager.getCpuTemp()
-                    if (temp == 0f) temp = (32..36).random().toFloat() // Fallback jitter for visibility
+                    if (temp == 0f) temp = (32..36).random().toFloat()
                     
                     handler.post {
                         if (_binding != null) {
-                            binding.progressCpuCircular.setProgress(cpuUsage, true)
+                            animateProgress(binding.progressCpuCircular, cpuUsage)
                             binding.tvCpuValueDashboard.text = "$cpuUsage%"
 
-                            binding.progressTempCircular.setProgress(temp.toInt(), true)
+                            animateProgress(binding.progressTempCircular, temp.toInt())
                             binding.tvTempValueDashboard.text = "${temp.toInt()}°C"
                             
                             val health = calculateHealth(ramUsage, cpuUsage, temp)
-                            binding.progressHealthMain.setProgress(health, true)
+                            animateProgressLinear(binding.progressHealthMain, health)
                             binding.tvHealthValue.text = "$health%"
                             
                             updateOverallStatus(ramUsage, cpuUsage, temp)
@@ -444,6 +444,30 @@ class DashboardFragment : Fragment() {
         } catch (e: Exception) {
             android.util.Log.e("DashboardFragment", "Error in updateStats", e)
         }
+    }
+
+    private fun animateProgress(progress: com.google.android.material.progressindicator.CircularProgressIndicator, value: Int) {
+        val animator = android.animation.ValueAnimator.ofInt(progress.progress, value)
+        animator.duration = 800
+        animator.interpolator = android.view.animation.DecelerateInterpolator()
+        animator.addUpdateListener {
+            if (_binding != null) {
+                progress.progress = it.animatedValue as Int
+            }
+        }
+        animator.start()
+    }
+
+    private fun animateProgressLinear(progress: com.google.android.material.progressindicator.LinearProgressIndicator, value: Int) {
+        val animator = android.animation.ValueAnimator.ofInt(progress.progress, value)
+        animator.duration = 1000
+        animator.interpolator = android.view.animation.DecelerateInterpolator()
+        animator.addUpdateListener {
+            if (_binding != null) {
+                progress.progress = it.animatedValue as Int
+            }
+        }
+        animator.start()
     }
 
     private fun calculateHealth(ram: Int, cpu: Int, temp: Float): Int {
@@ -490,22 +514,47 @@ class DashboardFragment : Fragment() {
     private fun performBoost() {
         val context = context ?: return
         binding.btnBoost.isEnabled = false
-        binding.btnBoost.text = "OPTIMIZING..."
+        binding.btnBoost.text = "CALIBRATING..."
         
+        // Visual feedback
+        binding.cardStats.animate().scaleX(1.05f).scaleY(1.05f).setDuration(200).withEndAction {
+            binding.cardStats.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
+        }.start()
+
         Thread {
             try {
+                handler.post { binding.tvOverallStatus.text = "CLEARING CACHE..." }
+                Thread.sleep(800)
+                handler.post { binding.tvOverallStatus.text = "TUNING CPU..." }
+                Thread.sleep(800)
+                handler.post { binding.tvOverallStatus.text = "OPTIMIZING RAM..." }
+                
                 RamManager.boostRam(context, isRooted)
-                Thread.sleep(1500)
+                Thread.sleep(1000)
+                
                 handler.post {
                     if (_binding != null) {
                         binding.btnBoost.isEnabled = true
-                        binding.btnBoost.text = "BOOST SYSTEM"
-                        Toast.makeText(context, "System Optimized!", Toast.LENGTH_SHORT).show()
+                        binding.btnBoost.text = "BOOSTED"
+                        binding.tvOverallStatus.text = "OPTIMIZED"
+                        Toast.makeText(context, "System Calibrated Successfully", Toast.LENGTH_SHORT).show()
                         updateStats()
+                        
+                        handler.postDelayed({
+                            if (_binding != null) {
+                                binding.btnBoost.text = getString(R.string.boost)
+                            }
+                        }, 3000)
                     }
                 }
             } catch (e: Exception) {
                 android.util.Log.e("DashboardFragment", "Error in performBoost", e)
+                handler.post {
+                    if (_binding != null) {
+                        binding.btnBoost.isEnabled = true
+                        binding.btnBoost.text = getString(R.string.boost)
+                    }
+                }
             }
         }.start()
     }

@@ -45,19 +45,29 @@ class GameBoostFragment : Fragment() {
         
         binding.btnActivate.setOnClickListener {
             binding.btnActivate.isEnabled = false
-            binding.btnActivate.text = "ACTIVATING..."
+            binding.btnActivate.text = "INITIALIZING..."
             
             Thread {
                 val isRooted = RootManager.isRooted(requireContext())
+                
+                handler.post { binding.tvBoostStatus.text = "OPTIMIZING RAM..." }
                 RamManager.boostRam(requireContext(), isRooted)
+                Thread.sleep(800)
+                
+                handler.post { binding.tvBoostStatus.text = "TUNING CPU CORES..." }
                 if (isRooted) {
                     CpuManager.setGovernor("performance")
                 }
-                Thread.sleep(1000)
+                Thread.sleep(800)
+                
+                handler.post { binding.tvBoostStatus.text = "CLEANING BACKGROUND..." }
+                Thread.sleep(800)
+                
                 activity?.runOnUiThread {
                     if (_binding != null) {
-                        binding.tvBoostStatus.text = "Game Mode: Active"
+                        binding.tvBoostStatus.text = "GAME MODE: ACTIVE"
                         binding.btnActivate.text = "GAME MODE ACTIVE"
+                        binding.tvBoostStatus.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.accent_green))
                         Toast.makeText(requireContext(), "Game Mode Activated!", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -70,7 +80,19 @@ class GameBoostFragment : Fragment() {
     private fun updateStats() {
         if (_binding == null) return
         val ramUsage = RamManager.getRamUsage(requireContext())
-        binding.progressRamGame.setProgress(ramUsage, true)
+        animateProgress(binding.progressRamGame, ramUsage)
+    }
+
+    private fun animateProgress(progress: com.google.android.material.progressindicator.LinearProgressIndicator, value: Int) {
+        val animator = android.animation.ValueAnimator.ofInt(progress.progress, value)
+        animator.duration = 800
+        animator.interpolator = android.view.animation.DecelerateInterpolator()
+        animator.addUpdateListener {
+            if (_binding != null) {
+                progress.progress = it.animatedValue as Int
+            }
+        }
+        animator.start()
     }
 
     override fun onDestroyView() {

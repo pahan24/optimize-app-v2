@@ -77,6 +77,8 @@ class LoginFragment : Fragment() {
             }
 
             animateEntrance()
+            fetchBroadcast()
+            checkSystemStatus()
 
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -230,11 +232,37 @@ class LoginFragment : Fragment() {
             }
     }
 
-    private fun showError(message: String) {
-        binding.btnLogin.visibility = View.VISIBLE
-        binding.btnAdminLogin.visibility = View.VISIBLE
-        binding.progressLogin.visibility = View.GONE
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    private fun fetchBroadcast() {
+        db.collection("app_config").document("broadcast")
+            .addSnapshotListener { snapshot, _ ->
+                if (_binding != null && snapshot != null && snapshot.exists()) {
+                    val active = snapshot.getBoolean("active") ?: false
+                    val message = snapshot.getString("message") ?: ""
+                    if (active && message.isNotEmpty()) {
+                        binding.cvBroadcast.visibility = View.VISIBLE
+                        binding.tvBroadcast.text = message
+                    } else {
+                        binding.cvBroadcast.visibility = View.GONE
+                    }
+                }
+            }
+    }
+
+    private fun checkSystemStatus() {
+        db.collection("app_config").document("status")
+            .addSnapshotListener { snapshot, _ ->
+                if (_binding != null && snapshot != null && snapshot.exists()) {
+                    val maintenance = snapshot.getBoolean("maintenance") ?: false
+                    if (maintenance) {
+                        showError("System is currently under maintenance. Please try again later.")
+                        binding.btnLogin.isEnabled = false
+                        binding.btnAdminLogin.isEnabled = false
+                    } else {
+                        binding.btnLogin.isEnabled = true
+                        binding.btnAdminLogin.isEnabled = true
+                    }
+                }
+            }
     }
 
     override fun onDestroyView() {

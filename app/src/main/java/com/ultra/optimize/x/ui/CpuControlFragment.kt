@@ -77,11 +77,23 @@ class CpuControlFragment : Fragment() {
             val cpuUsage = CpuManager.getCpuUsage()
             handler.post {
                 if (_binding != null) {
-                    binding.progressCpuLinear.setProgress(cpuUsage, true)
+                    animateProgress(binding.progressCpuLinear, cpuUsage)
                     binding.tvCpuUsageLabel.text = "CPU Load: $cpuUsage%"
                 }
             }
         }.start()
+    }
+
+    private fun animateProgress(progress: com.google.android.material.progressindicator.LinearProgressIndicator, value: Int) {
+        val animator = android.animation.ValueAnimator.ofInt(progress.progress, value)
+        animator.duration = 800
+        animator.interpolator = android.view.animation.DecelerateInterpolator()
+        animator.addUpdateListener {
+            if (_binding != null) {
+                progress.progress = it.animatedValue as Int
+            }
+        }
+        animator.start()
     }
 
     override fun onDestroyView() {

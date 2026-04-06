@@ -52,26 +52,38 @@ class ThermalControlFragment : Fragment() {
         if (_binding == null) return
         val temp = ThermalManager.getCpuTemp()
         binding.tvTempLarge.text = "${temp.toInt()}°C"
-        binding.progressTempThermal.setProgress(temp.toInt(), true)
+        animateProgress(binding.progressTempThermal, temp.toInt())
 
         val status: String
         val color: Int
         when {
             temp > 45 -> {
                 status = "Status: Critical"
-                color = resources.getColor(R.color.accent_red)
+                color = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.accent_red)
             }
             temp > 38 -> {
                 status = "Status: Moderate"
-                color = resources.getColor(R.color.accent_orange)
+                color = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.accent_orange)
             }
             else -> {
                 status = "Status: Normal"
-                color = resources.getColor(R.color.accent_green)
+                color = androidx.core.content.ContextCompat.getColor(requireContext(), R.color.accent_green)
             }
         }
         binding.tvThermalStatus.text = status
         binding.tvThermalStatus.setTextColor(color)
+    }
+
+    private fun animateProgress(progress: com.google.android.material.progressindicator.CircularProgressIndicator, value: Int) {
+        val animator = android.animation.ValueAnimator.ofInt(progress.progress, value)
+        animator.duration = 800
+        animator.interpolator = android.view.animation.DecelerateInterpolator()
+        animator.addUpdateListener {
+            if (_binding != null) {
+                progress.progress = it.animatedValue as Int
+            }
+        }
+        animator.start()
     }
 
     override fun onDestroyView() {

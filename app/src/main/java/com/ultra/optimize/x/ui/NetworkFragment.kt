@@ -73,8 +73,10 @@ class NetworkFragment : Fragment() {
                     currentSpeed += (targetSpeed / steps) * (1 + Random.nextDouble(-0.2, 0.2))
                     if (currentSpeed < 0) currentSpeed = 0.0
                     
-                    binding.tvSpeedValue.text = String.format("%.1f", currentSpeed)
-                    binding.progressSpeed.progress = (currentSpeed / 150.0 * 100).toInt()
+                    if (_binding != null) {
+                        binding.tvSpeedValue.text = String.format("%.1f", currentSpeed)
+                        animateProgress(binding.progressSpeed, (currentSpeed / 150.0 * 100).toInt())
+                    }
                     
                     currentStep++
                     handler.postDelayed(this, interval)
@@ -83,6 +85,18 @@ class NetworkFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun animateProgress(progress: com.google.android.material.progressindicator.CircularProgressIndicator, value: Int) {
+        val animator = android.animation.ValueAnimator.ofInt(progress.progress, value)
+        animator.duration = 100
+        animator.interpolator = android.view.animation.LinearInterpolator()
+        animator.addUpdateListener {
+            if (_binding != null) {
+                progress.progress = it.animatedValue as Int
+            }
+        }
+        animator.start()
     }
 
     private fun finishTest(finalSpeed: Double) {
