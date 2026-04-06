@@ -297,7 +297,7 @@ class DashboardFragment : Fragment() {
         }
 
         binding.cardPerformanceOptimize.setOnClickListener {
-            findNavController().navigate(R.id.action_dashboard_to_performance)
+            navigateWithTitle("PERFORMANCE", R.id.action_dashboard_to_performance)
         }
 
         binding.card3rdRegedit.setOnClickListener {

@@ -83,6 +83,29 @@ class SplashFragment : Fragment() {
         }
 
         val db = FirebaseFirestore.getInstance(Constants.FIRESTORE_DATABASE_ID)
+        
+        // Check System Status (Maintenance)
+        db.collection("app_config").document("status")
+            .get()
+            .addOnSuccessListener { document ->
+                if (_binding == null) return@addOnSuccessListener
+                if (document != null && document.exists()) {
+                    val maintenance = document.getBoolean("maintenance") ?: false
+                    if (maintenance) {
+                        showMaintenanceDialog()
+                        return@addOnSuccessListener
+                    }
+                }
+                
+                // Continue with update check if not in maintenance
+                fetchVersionInfo(db, context)
+            }
+            .addOnFailureListener {
+                fetchVersionInfo(db, context)
+            }
+    }
+
+    private fun fetchVersionInfo(db: FirebaseFirestore, context: android.content.Context) {
         db.collection("app_config").document("version_info")
             .get()
             .addOnSuccessListener { document ->
@@ -109,6 +132,17 @@ class SplashFragment : Fragment() {
             .addOnFailureListener {
                 proceed()
             }
+    }
+
+    private fun showMaintenanceDialog() {
+        val context = context ?: return
+        AlertDialog.Builder(context, R.style.NeonDialogTheme)
+            .setTitle("System Maintenance")
+            .setMessage("Ultra Optimize X is currently under maintenance. Please try again later.")
+            .setCancelable(false)
+            .setPositiveButton("EXIT") { _, _ -> activity?.finish() }
+            .setNeutralButton("RETRY") { _, _ -> checkForUpdates() }
+            .show()
     }
 
     private fun showAccessRequiredDialog() {

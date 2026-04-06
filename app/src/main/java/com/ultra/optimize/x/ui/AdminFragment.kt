@@ -59,6 +59,14 @@ class AdminFragment : Fragment() {
                     binding.switchEnableBypass.isChecked = doc.getBoolean("enable_bypass") ?: true
                 }
             }
+        
+        db.collection("app_config").document("status")
+            .get()
+            .addOnSuccessListener { doc ->
+                if (doc.exists()) {
+                    binding.switchMaintenanceMode.isChecked = doc.getBoolean("maintenance") ?: false
+                }
+            }
     }
 
     private fun setupRecyclerView() {
@@ -116,10 +124,14 @@ class AdminFragment : Fragment() {
                 Toast.makeText(context, "Please enter a message", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.btnClearOtps.setOnClickListener {
+            clearAllOtps()
+        }
     }
 
     private fun saveFeatureConfig() {
-        val data = hashMapOf(
+        val features = hashMapOf(
             "enable_root" to binding.switchEnableRoot.isChecked,
             "enable_shizuku" to binding.switchEnableShizuku.isChecked,
             "enable_bypass" to binding.switchEnableBypass.isChecked,
@@ -127,12 +139,23 @@ class AdminFragment : Fragment() {
         )
 
         db.collection("app_config").document("features")
-            .set(data)
+            .set(features)
             .addOnSuccessListener {
                 Toast.makeText(context, "Feature Config Saved", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+
+        val status = hashMapOf(
+            "maintenance" to binding.switchMaintenanceMode.isChecked,
+            "updatedAt" to com.google.firebase.Timestamp.now()
+        )
+
+        db.collection("app_config").document("status")
+            .set(status)
+            .addOnSuccessListener {
+                // Already showing toast from features
             }
     }
 
@@ -239,6 +262,19 @@ class AdminFragment : Fragment() {
             }
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Error deleting OTP", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun clearAllOtps() {
+        db.collection("otps").get()
+            .addOnSuccessListener { snapshot ->
+                val batch = db.batch()
+                snapshot.documents.forEach { doc ->
+                    batch.delete(doc.reference)
+                }
+                batch.commit().addOnSuccessListener {
+                    Toast.makeText(context, "All OTPs Cleared", Toast.LENGTH_SHORT).show()
+                }
             }
     }
 

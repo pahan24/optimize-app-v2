@@ -21,4 +21,7 @@
     <color name="neon_purple">#A855F7</color>
     <color name="neon_pink">#EC4899</color>
     <color name="border_color">#1E293B</color>
+    <color name="bg_card">#0F172A</color>
+    <color name="neon_blue_alpha">#2038BDF8</color>
+    <color name="bg_primary">#020617</color>
 </resources>

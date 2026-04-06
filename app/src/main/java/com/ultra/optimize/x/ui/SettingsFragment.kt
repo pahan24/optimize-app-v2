@@ -62,6 +62,11 @@ class SettingsFragment : Fragment() {
                     .setPositiveButton("OK", null)
                     .show()
             }
+
+            binding.btnCheckUpdate.setOnClickListener {
+                checkForUpdatesManual()
+            }
+
             binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
                 settingsManager.setFeatureEnabled(com.ultra.optimize.x.utils.SettingsManager.KEY_DARK_MODE, isChecked)
                 androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
@@ -81,6 +86,37 @@ class SettingsFragment : Fragment() {
                 findNavController().navigate(R.id.action_settings_to_login)
             }
         }
+    }
+
+    private fun checkForUpdatesManual() {
+        val context = context ?: return
+        val db = com.google.firebase.firestore.FirebaseFirestore.getInstance(com.ultra.optimize.x.utils.Constants.FIRESTORE_DATABASE_ID)
+        db.collection("app_config").document("version_info")
+            .get()
+            .addOnSuccessListener { document ->
+                if (_binding == null) return@addOnSuccessListener
+                if (document != null && document.exists()) {
+                    val latestCode = document.getLong("latest_version_code") ?: 0L
+                    val currentCode = try {
+                        context.packageManager.getPackageInfo(context.packageName, 0).versionCode.toLong()
+                    } catch (e: Exception) { 1L }
+                    
+                    if (latestCode > currentCode) {
+                        val url = document.getString("update_url") ?: ""
+                        com.google.android.material.dialog.MaterialAlertDialogBuilder(context, R.style.Theme_UltraOptimizeX)
+                            .setTitle("Update Available")
+                            .setMessage("A new version is available. Would you like to update now?")
+                            .setPositiveButton("UPDATE") { _, _ ->
+                                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))
+                                startActivity(intent)
+                            }
+                            .setNegativeButton("LATER", null)
+                            .show()
+                    } else {
+                        android.widget.Toast.makeText(context, "You are on the latest version!", android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
     }
 
     override fun onDestroyView() {

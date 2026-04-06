@@ -41,6 +41,17 @@ class GenericFeatureFragment : Fragment() {
             "TOUCH SPEED" -> "Maximize touch response speed and reduce input lag"
             "CUSTOMIZED HUDS" -> "Import and optimize professional gaming HUD layouts"
             "FIRE BUTTON" -> "Optimize fire button response and sensitivity"
+            "BATTERY SAVER" -> "Extend battery life by optimizing background processes and system power consumption"
+            "APP MANAGER" -> "Manage installed applications and optimize their performance"
+            "NETWORK OPTIMIZER" -> "Optimize network settings for lower ping and stable connection"
+            "DISPLAY TWEAKS" -> "Enhance display quality and responsiveness for better visuals"
+            "KERNEL TWEAKS" -> "Apply advanced kernel-level optimizations for system stability"
+            "SYSTEM DEBLOATER" -> "Remove unnecessary system apps and services to free up resources"
+            "DNS CHANGER" -> "Change DNS servers for faster browsing and improved privacy"
+            "CHARGING BOOSTER" -> "Optimize charging speed and battery health"
+            "AUTO CLEAN" -> "Automatically clean system junk and cache at regular intervals"
+            "FPS METER" -> "Monitor real-time frames per second during gameplay"
+            "PERFORMANCE" -> "Maximize system performance for the ultimate gaming experience"
             else -> arguments?.getString("featureDesc") ?: "Configure advanced system optimization parameters"
         }
         val context = context ?: return

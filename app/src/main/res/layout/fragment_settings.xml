@@ -169,6 +169,17 @@
                     android:layout_marginBottom="12dp" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_check_update"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CHECK FOR UPDATES"
+                    android:textColor="@color/accent_orange"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="0dp"
+                    android:layout_marginBottom="12dp" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_admin_panel"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="match_parent"
