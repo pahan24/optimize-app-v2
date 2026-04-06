@@ -83,7 +83,7 @@ class GameBoostFragment : Fragment() {
         animateProgress(binding.progressRamGame, ramUsage)
     }
 
-    private fun animateProgress(progress: com.google.android.material.progressindicator.LinearProgressIndicator, value: Int) {
+    private fun animateProgress(progress: com.google.android.material.progressindicator.CircularProgressIndicator, value: Int) {
         val animator = android.animation.ValueAnimator.ofInt(progress.progress, value)
         animator.duration = 800
         animator.interpolator = android.view.animation.DecelerateInterpolator()

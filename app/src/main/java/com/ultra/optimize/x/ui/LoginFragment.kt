@@ -265,6 +265,13 @@ class LoginFragment : Fragment() {
             }
     }
 
+    private fun showError(message: String) {
+        if (_binding == null) return
+        binding.progressLogin.visibility = View.GONE
+        binding.btnLogin.visibility = View.VISIBLE
+        android.widget.Toast.makeText(requireContext(), message, android.widget.Toast.LENGTH_LONG).show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

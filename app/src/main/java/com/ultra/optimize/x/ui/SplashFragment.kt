@@ -11,6 +11,8 @@ import androidx.navigation.fragment.findNavController
 import com.ultra.optimize.x.R
 import com.ultra.optimize.x.databinding.FragmentSplashBinding
 import com.ultra.optimize.x.utils.SettingsManager
+import com.ultra.optimize.x.utils.RootManager
+import com.ultra.optimize.x.utils.ShizukuManager
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ultra.optimize.x.utils.Constants
