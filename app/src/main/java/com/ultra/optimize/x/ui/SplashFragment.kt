@@ -149,7 +149,7 @@ class SplashFragment : Fragment() {
 
     private fun showAccessRequiredDialog() {
         val context = context ?: return
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_access_required, null)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_shizuku_tutorial_video, null)
         val dialog = AlertDialog.Builder(context, R.style.NeonDialogTheme)
             .setView(dialogView)
             .setCancelable(false)
@@ -157,12 +157,31 @@ class SplashFragment : Fragment() {
 
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        dialogView.findViewById<View>(R.id.btn_retry_access).setOnClickListener {
+        val videoView = dialogView.findViewById<android.widget.VideoView>(R.id.vv_tutorial)
+        val progressBar = dialogView.findViewById<android.widget.ProgressBar>(R.id.pb_video_loading)
+        
+        // Shizuku Tutorial Video URL (Placeholder or actual URL if available)
+        val videoUrl = "https://firebasestorage.googleapis.com/v0/b/ultra-optimize-x.appspot.com/o/shizuku_tutorial.mp4?alt=media"
+        
+        videoView.setVideoURI(Uri.parse(videoUrl))
+        videoView.setOnPreparedListener { mp ->
+            mp.isLooping = true
+            progressBar.visibility = View.GONE
+            videoView.start()
+        }
+        
+        videoView.setOnErrorListener { _, _, _ ->
+            progressBar.visibility = View.GONE
+            android.widget.Toast.makeText(context, "Error loading tutorial video", android.widget.Toast.LENGTH_SHORT).show()
+            true
+        }
+
+        dialogView.findViewById<View>(R.id.btn_close_tutorial).setOnClickListener {
             dialog.dismiss()
             checkForUpdates()
         }
 
-        dialogView.findViewById<View>(R.id.btn_open_shizuku_splash).setOnClickListener {
+        dialogView.findViewById<View>(R.id.btn_open_shizuku_tutorial).setOnClickListener {
             try {
                 val intent = context.packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")
                 if (intent != null) {
@@ -174,6 +193,10 @@ class SplashFragment : Fragment() {
             } catch (e: Exception) {
                 android.widget.Toast.makeText(context, "Shizuku not found", android.widget.Toast.LENGTH_SHORT).show()
             }
+        }
+
+        dialog.setOnDismissListener {
+            videoView.stopPlayback()
         }
 
         dialog.show()

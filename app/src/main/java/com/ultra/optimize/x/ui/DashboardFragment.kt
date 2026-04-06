@@ -80,7 +80,7 @@ class DashboardFragment : Fragment() {
         val context = context ?: return
         if (shizukuDialog?.isShowing == true) return
         
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_shizuku_permission, null)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_shizuku_tutorial_video, null)
         val builder = AlertDialog.Builder(context, R.style.NeonDialogTheme)
             .setView(dialogView)
             .setCancelable(false)
@@ -88,16 +88,30 @@ class DashboardFragment : Fragment() {
         shizukuDialog = builder.create()
         shizukuDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         
-        dialogView.findViewById<MaterialButton>(R.id.btn_watch_tutorial).setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/0_f7_2Nf0qE"))
-            startActivity(intent)
+        val videoView = dialogView.findViewById<android.widget.VideoView>(R.id.vv_tutorial)
+        val progressBar = dialogView.findViewById<android.widget.ProgressBar>(R.id.pb_video_loading)
+        
+        val videoUrl = "https://firebasestorage.googleapis.com/v0/b/ultra-optimize-x.appspot.com/o/shizuku_tutorial.mp4?alt=media"
+        
+        videoView.setVideoURI(Uri.parse(videoUrl))
+        videoView.setOnPreparedListener { mp ->
+            mp.isLooping = true
+            progressBar.visibility = View.GONE
+            videoView.start()
         }
         
-        dialogView.findViewById<MaterialButton>(R.id.btn_exit_dialog).setOnClickListener {
+        videoView.setOnErrorListener { _, _, _ ->
+            progressBar.visibility = View.GONE
+            Toast.makeText(context, "Error loading tutorial video", Toast.LENGTH_SHORT).show()
+            true
+        }
+
+        dialogView.findViewById<View>(R.id.btn_close_tutorial).setOnClickListener {
             shizukuDialog?.dismiss()
+            checkShizuku()
         }
         
-        dialogView.findViewById<MaterialButton>(R.id.btn_open_shizuku).setOnClickListener {
+        dialogView.findViewById<View>(R.id.btn_open_shizuku_tutorial).setOnClickListener {
             try {
                 val intent = context.packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")
                 if (intent != null) {
@@ -109,7 +123,10 @@ class DashboardFragment : Fragment() {
             } catch (e: Exception) {
                 Toast.makeText(context, "Shizuku not found", Toast.LENGTH_SHORT).show()
             }
-            shizukuDialog?.dismiss()
+        }
+        
+        shizukuDialog?.setOnDismissListener {
+            videoView.stopPlayback()
         }
         
         shizukuDialog?.show()

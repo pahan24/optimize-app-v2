@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardBackgroundColor="@color/bg_card"
+    app:cardCornerRadius="24dp"
+    app:strokeColor="@color/neon_blue"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center"
+            android:text="SHIZUKU SETUP GUIDE"
+            android:textColor="@color/neon_blue"
+            android:textSize="20sp"
+            android:letterSpacing="0.05" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginTop="20dp"
+            app:cardBackgroundColor="@color/black"
+            app:cardCornerRadius="20dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/neon_blue_alpha">
+
+            <VideoView
+                android:id="@+id/vv_tutorial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center" />
+
+            <ProgressBar
+                android:id="@+id/pb_video_loading"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/neon_blue" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="Watch the tutorial above to learn how to activate Shizuku on your device. This is required for system-level optimizations."
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:lineHeight="18sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_open_shizuku_tutorial"
+            style="@style/NeonButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:text="OPEN SHIZUKU APP"
+            app:icon="@drawable/ic_activity"
+            app:iconGravity="textStart"
+            app:iconTint="@color/bg_primary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_close_tutorial"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="I'VE COMPLETED SETUP"
+            android:textColor="@color/accent_green"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-black" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
