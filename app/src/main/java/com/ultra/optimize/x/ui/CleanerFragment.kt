@@ -73,14 +73,27 @@ class CleanerFragment : Fragment() {
         binding.btnClean.text = "SCANNING..."
         
         Thread {
-            val pm = requireContext().packageManager
+            val context = context ?: return@Thread
+            val pm = context.packageManager
             val apps = pm.getInstalledApplications(PackageManager.GET_META_DATA)
             val appJunk = mutableListOf<JunkCategory>()
+            val hasAccess = RootManager.isRooted(context) || (ShizukuManager.isShizukuAvailable() && ShizukuManager.isPermissionGranted())
             
             // Filter non-system apps or common apps
             apps.filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }.take(15).forEach { app ->
                 val label = pm.getApplicationLabel(app).toString()
-                val size = (10..150).random().toLong() * 1024 * 1024 // Simulated cache size
+                var size = (10..150).random().toLong() * 1024 * 1024 // Default simulated
+                
+                if (hasAccess) {
+                    try {
+                        val output = RootManager.runCommand("du -sk /data/data/${app.packageName}/cache").trim()
+                        if (output.isNotEmpty()) {
+                            val kb = output.split(Regex("\\s+"))[0].toLong()
+                            size = kb * 1024
+                        }
+                    } catch (e: Exception) {}
+                }
+                
                 appJunk.add(JunkCategory(label, size, R.drawable.ic_layers, true, app.packageName, true))
             }
 
@@ -88,8 +101,26 @@ class CleanerFragment : Fragment() {
             activity?.runOnUiThread {
                 if (_binding != null) {
                     categories.clear()
-                    categories.add(JunkCategory("System Cache", (500..1200).random().toLong() * 1024 * 1024, R.drawable.ic_trash))
-                    categories.add(JunkCategory("Temp Files", (100..400).random().toLong() * 1024 * 1024, R.drawable.ic_clock))
+                    
+                    var systemCacheSize = (500..1200).random().toLong() * 1024 * 1024
+                    var tempFilesSize = (100..400).random().toLong() * 1024 * 1024
+                    
+                    if (hasAccess) {
+                        try {
+                            val sysCacheOut = RootManager.runCommand("du -sk /cache").trim()
+                            if (sysCacheOut.isNotEmpty()) {
+                                systemCacheSize = sysCacheOut.split(Regex("\\s+"))[0].toLong() * 1024
+                            }
+                            
+                            val tempOut = RootManager.runCommand("du -sk /data/local/tmp").trim()
+                            if (tempOut.isNotEmpty()) {
+                                tempFilesSize = tempOut.split(Regex("\\s+"))[0].toLong() * 1024
+                            }
+                        } catch (e: Exception) {}
+                    }
+
+                    categories.add(JunkCategory("System Cache", systemCacheSize, R.drawable.ic_trash))
+                    categories.add(JunkCategory("Temp Files", tempFilesSize, R.drawable.ic_clock))
                     categories.addAll(appJunk)
                     categories.add(JunkCategory("Empty Folders", (10..50).random().toLong() * 1024, R.drawable.ic_trash))
                     
@@ -116,15 +147,15 @@ class CleanerFragment : Fragment() {
         binding.btnClean.text = "CLEANING..."
         
         Thread {
-            val useShizuku = ShizukuManager.isShizukuAvailable() && ShizukuManager.isPermissionGranted()
+            val hasAccess = RootManager.isRooted(requireContext()) || (ShizukuManager.isShizukuAvailable() && ShizukuManager.isPermissionGranted())
             
             selectedCategories.forEach { category ->
                 if (category.isApp && category.packageName != null) {
-                    if (useShizuku) {
-                        // Actual cache clearing via Shizuku
-                        ShizukuManager.executeCommand("pm clear ${category.packageName}")
+                    if (hasAccess) {
+                        // Actual cache clearing via Root/Shizuku
+                        RootManager.runCommand("pm clear ${category.packageName}")
                     } else {
-                        // Simulated cleaning if no Shizuku
+                        // Simulated cleaning if no access
                         Thread.sleep(200)
                     }
                 } else {

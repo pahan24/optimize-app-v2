@@ -53,9 +53,9 @@ class CpuControlFragment : Fragment() {
     }
 
     private fun setupGovernors() {
-        if (!RootManager.isRooted()) {
+        if (!RootManager.isRooted() && (!ShizukuManager.isShizukuAvailable() || !ShizukuManager.isPermissionGranted())) {
             binding.rvGovernors.visibility = View.GONE
-            binding.tvLabelGovernors.text = "Root Access Required for Governor Control"
+            binding.tvLabelGovernors.text = "Root or Shizuku Access Required for Governor Control"
             return
         }
 

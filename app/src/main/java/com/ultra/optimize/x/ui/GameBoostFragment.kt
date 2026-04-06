@@ -55,7 +55,7 @@ class GameBoostFragment : Fragment() {
                 Thread.sleep(800)
                 
                 handler.post { binding.tvBoostStatus.text = "TUNING CPU CORES..." }
-                if (isRooted) {
+                if (isRooted || (ShizukuManager.isShizukuAvailable() && ShizukuManager.isPermissionGranted())) {
                     CpuManager.setGovernor("performance")
                 }
                 Thread.sleep(800)

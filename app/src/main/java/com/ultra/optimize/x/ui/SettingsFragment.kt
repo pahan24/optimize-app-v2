@@ -63,6 +63,23 @@ class SettingsFragment : Fragment() {
                     .show()
             }
 
+            binding.btnCheckShizuku.setOnClickListener {
+                val isAvailable = com.ultra.optimize.x.utils.ShizukuManager.isShizukuAvailable()
+                val isPermitted = com.ultra.optimize.x.utils.ShizukuManager.isPermissionGranted()
+                
+                val status = when {
+                    !isAvailable -> "Shizuku is NOT RUNNING"
+                    !isPermitted -> "Shizuku is RUNNING but PENDING PERMISSION"
+                    else -> "Shizuku is AUTHORIZED"
+                }
+                
+                com.google.android.material.dialog.MaterialAlertDialogBuilder(context, R.style.Theme_UltraOptimizeX)
+                    .setTitle("Shizuku Status")
+                    .setMessage(status)
+                    .setPositiveButton("OK", null)
+                    .show()
+            }
+
             binding.btnCheckUpdate.setOnClickListener {
                 checkForUpdatesManual()
             }

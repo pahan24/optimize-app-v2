@@ -67,7 +67,13 @@ class DashboardFragment : Fragment() {
         binding.ivThemeIcon.setImageResource(
             if (isDarkMode) R.drawable.ic_sun else R.drawable.ic_moon
         )
+    }
 
+    override fun onResume() {
+        super.onResume()
+        val context = context ?: return
+        checkShizuku()
+        
         // Show Shizuku Permission Dialog if not granted and not rooted
         handler.postDelayed({
             if (!RootManager.isRooted(context) && (!ShizukuManager.isShizukuAvailable() || !ShizukuManager.isPermissionGranted())) {
@@ -583,7 +589,7 @@ class DashboardFragment : Fragment() {
         Thread {
             try {
                 RamManager.boostRam(context, isRooted)
-                if (isRooted) {
+                if (isRooted || (ShizukuManager.isShizukuAvailable() && ShizukuManager.isPermissionGranted())) {
                     CpuManager.setGovernor("performance")
                 }
                 handler.post {
