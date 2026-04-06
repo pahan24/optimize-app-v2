@@ -17,6 +17,7 @@ import com.ultra.optimize.x.databinding.ItemJunkCategoryBinding
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import com.ultra.optimize.x.utils.ShizukuManager
+import com.ultra.optimize.x.utils.RootManager
 import com.ultra.optimize.x.utils.Utils
 
 data class JunkCategory(

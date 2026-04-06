@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ultra.optimize.x.adapter.GovernorAdapter
 import com.ultra.optimize.x.utils.CpuManager
 import com.ultra.optimize.x.utils.RootManager
+import com.ultra.optimize.x.utils.ShizukuManager
 import com.ultra.optimize.x.utils.Utils
 
 class CpuControlFragment : Fragment() {

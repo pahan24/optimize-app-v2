@@ -14,6 +14,7 @@ import com.ultra.optimize.x.databinding.FragmentGameBoostBinding
 import com.ultra.optimize.x.utils.CpuManager
 import com.ultra.optimize.x.utils.RamManager
 import com.ultra.optimize.x.utils.RootManager
+import com.ultra.optimize.x.utils.ShizukuManager
 
 class GameBoostFragment : Fragment() {
     private var _binding: FragmentGameBoostBinding? = null
